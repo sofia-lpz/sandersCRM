@@ -11,4 +11,14 @@ const getUsers = async (req, res) => {
         }
 }
 
+const login = async (req, res) => {
+    try {
+        const user = await crmService.login(req.body);
+        res.send({ status: "OK", data: user });7
+        } catch (error) {
+        console.error(error);
+        res.status(500).send({ status: "Error", data: error.message });
+        }
+}
+
 export { getUsers };

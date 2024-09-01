@@ -10,4 +10,16 @@ const getUsers = async () => {
   }
 }
 
-export { getUsers };
+const login = async () => {
+  try {
+    const user = await crmMongo.login();
+    return user;
+  } catch (err) {
+    console.error(err);
+    return { error: err.message };
+  }
+}
+
+export { 
+  getUsers,
+login };
