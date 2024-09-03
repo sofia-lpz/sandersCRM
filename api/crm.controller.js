@@ -1,24 +1,23 @@
-import { router } from "./crm.routes.js";
-import * as crmService from "./crm.service.js";
-
-const getUsers = async (req, res) => {
-    try {
-        const users = await crmService.getUsers();
-        res.send({ status: "OK", data: users });
-        } catch (error) {
-        console.error(error);
-        res.status(500).send({ status: "Error", data: error.message });
-        }
-}
+import jwt from 'jsonwebtoken';
+import * as crmService from './crm.service.js';
 
 const login = async (req, res) => {
     try {
-        const user = await crmService.login(req.body);
-        res.send({ status: "OK", data: user });7
-        } catch (error) {
-        console.error(error);
-        res.status(500).send({ status: "Error", data: error.message });
+        const { username, password } = req.body;
+        const user = await crmService.login(username, password);
+        if (user) {
+            // Generate a JWT token
+            const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            res.send({ status: "OK", token });
+            console.log(`User ${username} logged in`);
+        } else {
+            res.status(401).send({ status: "Error", message: "Invalid credentials" });
+            console.log(`Failed login attempt for user ${username}`);
         }
-}
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ status: "Error", message: error.message });
+    }
+};
 
-export { getUsers };
+export { login };

@@ -1,24 +1,27 @@
-import express from 'express'
-import * as crmController from './crm.controller.js'
+import express from 'express';
+import * as crmController from './crm.controller.js';
+import { verifyToken } from './middleware/auth.js';
 
 const router = express.Router();
 
-router.get('/donadores', crmController.getDonadores);
-router.get('/donadores/:id', crmController.getDonadorById);
+router.post('/login', crmController.login);
 
-router.post('/donadores', crmController.createDonador);
-router.put('/donadores/:id', crmController.updateDonador);
+/*
 
-router.get('/donadores/:id/donaciones', crmController.getDonacionesByDonadorId);
-router.post('/donadores/:id/donaciones', crmController.createDonacion);
+router.get('/donadores', verifyToken, crmController.getDonadores);
+router.get('/donadores/:id', verifyToken, crmController.getDonadorById);
 
-router.get('donaciones/:donacionId', crmController.getDonacionById);
+router.post('/donadores', verifyToken, crmController.createDonador);
+router.put('/donadores/:id', verifyToken, crmController.updateDonador);
 
-router.get('/login', crmController.login);
+router.get('/donadores/:id/donaciones', verifyToken, crmController.getDonacionesByDonadorId);
+router.post('/donadores/:id/donaciones', verifyToken, crmController.createDonacion);
 
-router.get('/donaciones/:type', crmController.getDonacionesByType);
+router.get('donaciones/:donacionId', verifyToken, crmController.getDonacionById);
 
-router.get('/donaciones/fecha/:date', crmController.getDonacionesByDate);
+router.get('/donaciones/:type', verifyToken, crmController.getDonacionesByType);
 
+router.get('/donaciones/fecha/:date', verifyToken, crmController.getDonacionesByDate);
+*/
 
-export { router }
+export { router };

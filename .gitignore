@@ -25,3 +25,4 @@ dist-ssr
 
 # Api
 api/node_modules
+api/.env

@@ -1,15 +1,15 @@
-use sandersCRM;
+-- Dummy data for `usuarios` table
+INSERT INTO usuarios (username, contraseña, sudo) VALUES
+('user1', 'password1', false),
+('user2', 'password2', false),
+('user3', 'password3', true),
+('user4', 'password4', false),
+('user5', 'password5', true);
 
-INSERT INTO usuarios (email, telefono, contraseña, sudo) VALUES
-('user1@example.com', '1234567890', 'password1', false),
-('user2@example.com', '0987654321', 'password2', true),
-('user3@example.com', '1122334455', 'password3', false),
-('user4@example.com', '5566778899', 'password4', false),
-('user5@example.com', '6677889900', 'password5', true);
-
+-- Dummy data for `donaciones` table
 INSERT INTO donaciones (id_usuario, fecha, cantidad, tipo, estado, pais) VALUES
-(1, '2023-01-01', 100, 'digital', 'Pennsylvania', 'USA'),
-(2, '2023-02-01', 200, 'efectivo', 'Ottawa', 'Canada'),
-(3, '2023-03-01', 300, 'especie', 'Ciudad de Mexico', 'Mexico'),
-(4, '2023-04-01', 400, 'digital', 'no se', 'Brazil'),
-(5, '2023-05-01', 500, 'efectivo', 'Buenos Aires', 'Argentina');
+(1, '2022-01-01', 100, 'digital', 'cdmx', 'USA'),
+(2, '2022-01-02', 50, 'efectivo', 'cdmx', 'Canada'),
+(3, '2022-01-03', 200, 'especie', 'cdmx', 'Mexico'),
+(4, '2022-01-04', 150, 'digital', 'cdmx', 'Germany'),
+(5, '2022-01-05', 75, 'efectivo', 'cdmx', 'France');

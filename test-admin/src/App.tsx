@@ -16,8 +16,10 @@ import { CommentList, CommentEdit, CommentShow, CommentCreate } from "./comments
 import { AlbumList, AlbumEdit, AlbumShow, AlbumCreate } from "./albums";
 import { PhotoList, PhotoEdit, PhotoShow, PhotoCreate} from "./photos";
 
+import authProvider from './authProvider';
+
 export const App = () => (
-  <Admin layout={Layout} dataProvider={dataProvider}>
+  <Admin layout={Layout} dataProvider={dataProvider} authProvider={authProvider}>
     <Resource name="users" list={UserList} edit={UserEdit} show={UserShow} create={UserCreate}/>
     <Resource name="posts" list={PostList} edit={PostEdit} create={PostCreate} show={PostShow}/>
 

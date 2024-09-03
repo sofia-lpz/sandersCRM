@@ -1,25 +1,18 @@
-import * as crmMongo from './crm.mongo.js'
+import * as crmMongo from './crm.mysql.js'
 
-const getUsers = async () => {
+const login = async (username, password) => {
   try {
-    const users = await crmMongo.getUsers();
-    return users;
+      const user = await crmMongo.getUserByUsername(username);
+      if (user && user.contraseña === password) {
+          return user;
+      }
+      return null;
   } catch (err) {
-    console.error(err);
-    return { error: err.message };
+      console.error(err);
+      return { error: err.message };
   }
-}
-
-const login = async () => {
-  try {
-    const user = await crmMongo.login();
-    return user;
-  } catch (err) {
-    console.error(err);
-    return { error: err.message };
-  }
-}
+};
 
 export { 
-  getUsers,
-login };
+login
+};
