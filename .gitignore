@@ -26,3 +26,7 @@ dist-ssr
 # Api
 api/node_modules
 api/.env
+mailservice/.env
+
+
+test-admin/.env

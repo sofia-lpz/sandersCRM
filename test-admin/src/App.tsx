@@ -16,7 +16,10 @@ import { CommentList, CommentEdit, CommentShow, CommentCreate } from "./comments
 import { AlbumList, AlbumEdit, AlbumShow, AlbumCreate } from "./albums";
 import { PhotoList, PhotoEdit, PhotoShow, PhotoCreate} from "./photos";
 
+
 import authProvider from './authProvider';
+
+import Dashboard from './Dashboard';
 
 export const App = () => (
   <Admin layout={Layout} dataProvider={dataProvider} authProvider={authProvider}>
@@ -24,6 +27,9 @@ export const App = () => (
     <Resource name="posts" list={PostList} edit={PostEdit} create={PostCreate} show={PostShow}/>
 
     <Resource name="todos" list={TodoList} edit={TodoEdit} show={TodoShow} create={TodoCreate}/>
+
+    <Resource name="dashboard" list={Dashboard} options={{ label: 'Dashboard' }} />
+
 
     <Resource name="comments" list={CommentList} edit={CommentEdit} show={CommentShow} create={CommentCreate}/>
     <Resource name="albums" list={AlbumList} edit={AlbumEdit} show={AlbumShow} create={AlbumCreate}/>
