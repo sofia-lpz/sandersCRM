@@ -26,3 +26,6 @@ dist-ssr
 # Api
 api/node_modules
 api/.env
+
+# test-admin
+test-admin/.env

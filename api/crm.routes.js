@@ -4,24 +4,20 @@ import { verifyToken } from './middleware/auth.js';
 
 const router = express.Router();
 
+// Login endpoint
 router.post('/login', crmController.login);
 
-/*
 
-router.get('/donadores', verifyToken, crmController.getDonadores);
-router.get('/donadores/:id', verifyToken, crmController.getDonadorById);
+router.get('/:resource', crmController.getList); // GET List
+router.get('/:resource/:id', crmController.getOne); // GET One
+router.get('/:resource', crmController.getMany); // GET Many
+router.get('/:resource/:id/:relatedResource', crmController.getManyReference); // GET Many Reference
 
-router.post('/donadores', verifyToken, crmController.createDonador);
-router.put('/donadores/:id', verifyToken, crmController.updateDonador);
+router.post('/:resource', crmController.create); // CREATE
+router.put('/:resource/:id', crmController.update); // UPDATE
+router.put('/:resource', crmController.updateMany); // UPDATE Many
 
-router.get('/donadores/:id/donaciones', verifyToken, crmController.getDonacionesByDonadorId);
-router.post('/donadores/:id/donaciones', verifyToken, crmController.createDonacion);
-
-router.get('donaciones/:donacionId', verifyToken, crmController.getDonacionById);
-
-router.get('/donaciones/:type', verifyToken, crmController.getDonacionesByType);
-
-router.get('/donaciones/fecha/:date', verifyToken, crmController.getDonacionesByDate);
-*/
+router.delete('/:resource/:id', crmController.deleteOne); // DELETE
+router.delete('/:resource', crmController.deleteMany); // DELETE Many
 
 export { router };
