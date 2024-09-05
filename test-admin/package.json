@@ -1,6 +1,7 @@
 {
   "private": true,
   "scripts": {
+    "test": "jest",
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
@@ -30,14 +31,25 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "jest": "^29.7.0",
     "prettier": "^2.8.8",
     "typescript": "^5.1.6",
-    "vite": "^4.3.9"
+    "vite": "^4.3.9",
+    "@babel/core": "^7.21.0",
+    "@babel/preset-env": "^7.21.0",
+    "@babel/preset-react": "^7.21.0",
+    "@babel/preset-typescript": "^7.21.0",
+    "babel-jest": "^29.7.0"
   },
   "name": "test-admin",
   "version": "1.0.0",
   "description": "## Installation",
   "main": ".eslintrc.js",
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "jest": {
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    }
+  }
 }
