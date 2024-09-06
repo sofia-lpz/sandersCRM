@@ -16,13 +16,20 @@ import { CommentList, CommentEdit, CommentShow, CommentCreate } from "./comments
 import { AlbumList, AlbumEdit, AlbumShow, AlbumCreate } from "./albums";
 import { PhotoList, PhotoEdit, PhotoShow, PhotoCreate} from "./photos";
 
+import loginPage from './loginPage.jsx';
+
 
 import authProvider from './authProvider';
 
 import Dashboard from './Dashboard';
 
 export const App = () => (
-  <Admin layout={Layout} dataProvider={dataProvider} authProvider={authProvider}>
+  <Admin 
+  loginPage= {loginPage} 
+  layout={Layout} 
+  dataProvider={dataProvider} 
+  authProvider={authProvider}
+  >
     <Resource name="users" list={UserList} edit={UserEdit} show={UserShow} create={UserCreate}/>
     <Resource name="posts" list={PostList} edit={PostEdit} create={PostCreate} show={PostShow}/>
 
