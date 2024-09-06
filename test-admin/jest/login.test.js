@@ -1,50 +1,31 @@
-import authProvider from '../src/authProvider';
-import { AUTH_LOGIN } from 'react-admin';
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import CustomLoginPage from '../src/loginPage.jsx';
 
-describe('authProvider', () => {
-  beforeEach(() => {
-    global.fetch = jest.fn();
-    localStorage.clear();
-  });
+describe('CustomLoginPage', () => {
+  test('should render the login page and prevent empty form submission', async () => {
+    // render de la pag
+    render(
+      <MemoryRouter>
+        <CustomLoginPage />
+      </MemoryRouter>
+    );
 
-  it('should login successfully and store the token', async () => {
-    const mockResponse = {
-      token: 'mock-token',
-    };
+    // revisa que haya labels
+    const usernameField = screen.getByLabelText(/username/i);
+    const passwordField = screen.getByLabelText(/password/i);
+    const loginButton = screen.getByRole('button', { name: /sign in/i });
 
-    global.fetch.mockResolvedValueOnce({
-      status: 200,
-      json: jest.fn().mockResolvedValueOnce(mockResponse),
-    });
+    // inputs
+    expect(usernameField).toBeInTheDocument();
+    expect(passwordField).toBeInTheDocument();
+    expect(loginButton).toBeInTheDocument();
 
-    const params = {
-      username: 'testuser',
-      password: 'testpassword',
-    };
+    // manda login vacio
+    fireEvent.click(loginButton);
 
-    await authProvider(AUTH_LOGIN, params);
-
-    expect(global.fetch).toHaveBeenCalledWith('http://localhost:8080/api/login', {
-      method: 'POST',
-      body: JSON.stringify(params),
-      headers: new Headers({ 'Content-Type': 'application/json' }),
-    });
-
-    expect(localStorage.getItem('token')).toBe('mock-token');
-  });
-
-  it('should throw an error if login fails', async () => {
-    global.fetch.mockResolvedValueOnce({
-      status: 401,
-      statusText: 'Unauthorized',
-    });
-
-    const params = {
-      username: 'testuser',
-      password: 'testpassword',
-    };
-
-    await expect(authProvider(AUTH_LOGIN, params)).rejects.toThrow('Unauthorized');
-    expect(localStorage.getItem('token')).toBeNull();
+    // asume que hay un error
+    expect(await screen.findByText(/username and password are required/i)).toBeInTheDocument();
   });
 });
