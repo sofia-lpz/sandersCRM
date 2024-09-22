@@ -32,7 +32,7 @@ export const App = () => (
     <Resource name="todos" list={TodoList} edit={TodoEdit} show={TodoShow} create={TodoCreate}/>
 
     <Resource name="dashboard" list={Dashboard} options={{ label: 'Dashboard' }} />
-    <Resource name="donaciones" list={ListGuesser}/>
+    <Resource name="donaciones" list={ListGuesser} edit={EditGuesser} show={ShowGuesser}/>
 
 
     <Resource name="comments" list={CommentList} edit={CommentEdit} show={CommentShow} create={CommentCreate}/>
