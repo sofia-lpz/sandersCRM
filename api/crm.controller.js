@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import * as crmService from './crm.service.js';
+import * as crmMysql from './crm.mysql.js';
 
 const login = async (req, res) => {
     console.log('Login request');
@@ -21,130 +22,86 @@ const login = async (req, res) => {
     }
 };
 
-
-const getList = async (req, res) => {
-    console.log('Get list request with query:', req.query);
+const createUser = async (req, res) => {
     try {
-        const { resource } = req.params;
+        const { username, password, sudo } = req.body;
+        const userId = await crmService.createUser(username, password, sudo);
+        res.json({ id: userId, username, sudo });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
 
-        if (!req.query) {
-            const { sort, range, filter } = null;
+const getDonaciones = async (req, res) => {
+    try {
+        if ("_sort" in req.query) {
+            let sortBy = req.query._sort;
+            let sortOrder = req.query._order === "ASC" ? 1 : -1;
+            let start = Number(req.query._start);
+            let end = Number(req.query._end);
+            let sorter = {};
+            sorter[sortBy] = sortOrder;
+
+
+            let data = await crmMysql.getDonaciones(req, res);
+
+
+            res.set("Access-Control-Expose-Headers", "X-Total-Count");
+            res.set("X-Total-Count", data.length);
+            res.set("Content-Range", `${start}-${end}/${data.length}`);
+            data = data.slice(start, end);
+            res.json(data);
+        } else if ("id" in req.query) {
+            let data = [];
+            for (let index = 0; index < req.query.id.length; index++) {
+                let dbData = await crmMysql.getDonaciones(req, res);
+                data = data.concat(dbData);
+            }
+            res.json(data);
+        } else {
+            let data = await crmMysql.getDonaciones(req, res);
+            res.set("Access-Control-Expose-Headers", "X-Total-Count");
+            res.set("X-Total-Count", data.length);
+            res.set("Content-Range", `0-${data.length}/${data.length}`);
+            res.json(data);
         }
-        else{
-            const { sort, range, filter } = req.query;
-        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
 
-        const data = await crmService.getList(resource, { sort, range, filter });
-        res.send(data);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ status: "Error", message: error.message });
-    }
-};
-const getOne = async (req, res) => {
-    console.log('Get one request with params:', req.params);
+const updateDonacion = async (req, res) => {
     try {
-        const { resource, id } = req.params;
-        const data = await crmService.getOne(resource, id);
-        res.send(data);
+        const data = await crmService.updateDonacion(req.params.id, req.body);
+        res.json(data);
     } catch (error) {
-        console.error(error);
-        res.status(500).send({ status: "Error", message: error.message });
-    }
-};
-const getMany = async (req, res) => {
-    console.log('Get many request with query:', req.query);
-    try {
-        const { resource } = req.params;
-        const { filter } = req.query;
-        const data = await crmService.getMany(resource, filter);
-        res.send(data);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ status: "Error", message: error.message });
-    }
-};
-const getManyReference = async (req, res) => {
-    console.log('Get many reference request with params:', req.params);
-    try {
-        const { resource, id, relatedResource } = req.params;
-        const { sort, range, filter } = req.query;
-        const data = await crmService.getManyReference(resource, id, relatedResource, { sort, range, filter });
-        res.send(data);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ status: "Error", message: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
 
-const create = async (req, res) => {
-    console.log('Create request with params:', req.params, 'and body:', req.body);
+const createDonacion = async (req, res) => {
     try {
-        const { resource } = req.params;
-        const data = await crmService.create(resource, req.body);
-        res.send(data);
+        const data = await crmService.createDonacion(req.body);
+        res.json(data);
     } catch (error) {
-        console.error(error);
-        res.status(500).send({ status: "Error", message: error.message });
+        res.status(500).json({ error: error.message });
     }
-}
+};
 
-const update = async (req, res) => {
-    console.log('Update request with params:', req.params, 'and body:', req.body);
+const deleteDonacion = async (req, res) => {
     try {
-        const { resource, id } = req.params;
-        const data = await crmService.update(resource, id, req.body);
-        res.send(data);
+        const data = await crmService.deleteDonacion(req.params.id);
+        res.json(data);
     } catch (error) {
-        console.error(error);
-        res.status(500).send({ status: "Error", message: error.message });
+        res.status(500).json({ error: error.message });
     }
-}
+};
 
-const updateMany = async (req, res) => {
-    console.log('Update many request with params:', req.params, 'and body:', req.body);
-    try {
-        const { resource } = req.params;
-        const data = await crmService.updateMany(resource, req.body);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ status: "Error", message: error.message });
-    }
-}
-
-const deleteOne = async (req, res) => {
-    console.log('Delete one request with params:', req.params);
-    try {
-        const { resource, id } = req.params;
-        const data = await crmService.delete(resource, id);
-        res.send(data);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ status: "Error", message: error.message });
-    }
-}
-
-const deleteMany = async (req, res) => {
-    console.log('Delete many request with params:', req.params, 'and body:', req.body);
-    try {
-        const { resource } = req.params;
-        const data = await crmService.deleteMany(resource, req.body);
-        res.send(data);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ status: "Error", message: error.message });
-    }
-}
-
-export { 
+export {
     login,
-    getList, 
-    getOne, 
-    getMany, 
-    getManyReference,
-    create,
-    update,
-    updateMany,
-    deleteOne,
-    deleteMany
- };
+    getDonaciones,
+    updateDonacion,
+    createDonacion,
+    deleteDonacion ,
+    createUser
+}

@@ -7,17 +7,13 @@ const router = express.Router();
 // Login endpoint
 router.post('/login', crmController.login);
 
+router.get('/donaciones', crmController.getDonaciones);
+router.put('/donaciones/:id', crmController.updateDonacion);
+router.post('/donaciones', crmController.createDonacion);
+router.delete('/donaciones/:id', crmController.deleteDonacion);
 
-router.get('/:resource', crmController.getList); // GET List
-router.get('/:resource/:id', crmController.getOne); // GET One
-router.get('/:resource', crmController.getMany); // GET Many
-router.get('/:resource/:id/:relatedResource', crmController.getManyReference); // GET Many Reference
+// remove for prod
+router.post('/user', crmController.createUser);
 
-router.post('/:resource', crmController.create); // CREATE
-router.put('/:resource/:id', crmController.update); // UPDATE
-router.put('/:resource', crmController.updateMany); // UPDATE Many
-
-router.delete('/:resource/:id', crmController.deleteOne); // DELETE
-router.delete('/:resource', crmController.deleteMany); // DELETE Many
 
 export { router };

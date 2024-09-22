@@ -1,4 +1,5 @@
 import mysql from "mysql2/promise";
+import bcrypt from "bcrypt";
 
 async function connectToDB() {
     return await mysql.createConnection({
@@ -7,6 +8,29 @@ async function connectToDB() {
         database: process.env.DB_DATABASE,
         password: process.env.DB_PASSWORD,
     });
+}
+
+async function createUser(username, password, sudo) {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const conn = await connectToDB();
+    const [result] = await conn.execute(
+        "INSERT INTO usuarios (username, contraseña, sudo) VALUES (?, ?, ?)",
+        [username, hashedPassword, sudo]
+    );
+    conn.end();
+    return result.insertId;
+}
+
+async function verifyPassword(username, password) {
+    const user = await getUserByUsername(username);
+    if (!user) {
+        throw new Error('User not found');
+    }
+    const isMatch = await bcrypt.compare(password, user.contraseña);
+    if (!isMatch) {
+        throw new Error('Invalid password');
+    }
+    return user;
 }
 
 async function getUserByUsername(username) {
@@ -19,133 +43,66 @@ async function getUserByUsername(username) {
     return rows[0];
 }
 
-async function getList(resource, { sort, range, filter }) {
-    const conn = await connectToDB();
-  
-    // Construct WHERE clause manually
-    const whereClause = Object.keys(filter)
-        .map(key => `${mysql.escapeId(key)} = ?`)
-        .join(' AND ');
-    const queryParams = Object.values(filter);
-  
-    // Query to get the total count
-    const countQuery = `SELECT COUNT(*) as total FROM ${mysql.escapeId(resource)} WHERE ${whereClause}`;
-    const [countRows] = await conn.execute(countQuery, queryParams);
-    const total = countRows[0].total;
-  
-    // Query to get the data
-    const dataQuery = `
-        SELECT * FROM ${mysql.escapeId(resource)} 
-        WHERE ${whereClause}
-        ORDER BY ${mysql.escapeId(sort[0])} ${mysql.escape(sort[1])} 
-        LIMIT ? OFFSET ?
-    `;
-    const [dataRows] = await conn.execute(
-        dataQuery,
-        [...queryParams, range[1] - range[0] + 1, range[0]]
-    );
-  
-    conn.end();
-    return { data: dataRows, total };
-  }
+const getDonaciones = async (req, res) => {
+    try {
+        const connection = await connectToDB();  // Assuming you're using a connection pool
+        let query = "SELECT * FROM donaciones";
+        let params = [];
 
-async function getOne(resource, id) {
-    const conn = await connectToDB();
-    const [rows] = await conn.execute(
-        `SELECT * FROM ${mysql.escapeId(resource)} WHERE id = ?`,
-        [id]
-    );
-    conn.end();
-    return rows[0];
-}
+        // Sorting and pagination
+        if ("_sort" in req.query) {
+            let sortBy = req.query._sort;
+            let sortOrder = req.query._order === "ASC" ? "ASC" : "DESC";
+            let start = Number(req.query._start) || 0;
+            let end = Number(req.query._end) || 10;
 
-async function getMany(resource, filter) {
-    const conn = await connectToDB();
-    // Construct WHERE clause manually
-    const whereClause = Object.keys(filter)
-        .map(key => `${mysql.escapeId(key)} = ?`)
-        .join(' AND ');
-    const queryParams = Object.values(filter);
-    const query = `SELECT * FROM ${mysql.escapeId(resource)} WHERE ${whereClause}`;
-    const [rows] = await conn.execute(query, queryParams);
-    conn.end();
-    return rows;
-}
+            // Modify the query for sorting and pagination
+            query += ` ORDER BY ${connection.escapeId(sortBy)} ${sortOrder} LIMIT ?, ?`;
+            params.push(start, end - start);  // Limit takes (offset, count)
 
-async function getManyReference(resource, id, relatedResource, { sort, range }) {
-    const conn = await connectToDB();
-    const query = `
-        SELECT * FROM ${mysql.escapeId(relatedResource)} 
-        WHERE ${mysql.escapeId(resource)} = ? 
-        ORDER BY ${mysql.escapeId(sort[0])} ${mysql.escape(sort[1])} 
-        LIMIT ? OFFSET ?
-    `;
-    const [rows] = await conn.execute(
-        query,
-        [id, range[1] - range[0], range[0]]
-    );
-    conn.end();
-    return rows;
-}
+            // Execute the query
+            const [data] = await connection.query(query, params);
 
-async function create(resource, data) {
-    const conn = await connectToDB();
-    const [result] = await conn.execute(
-        `INSERT INTO ${mysql.escapeId(resource)} SET ?`,
-        [data]
-    );
-    conn.end();
-    return { id: result.insertId, ...data };
-}
+            // Get the total count
+            const [countResult] = await connection.query("SELECT COUNT(*) AS total FROM donaciones");
+            const totalCount = countResult[0].total;
 
-async function update(resource, id, data) {
-    const conn = await connectToDB();
-    const [result] = await conn.execute(
-        `UPDATE ${mysql.escapeId(resource)} SET ? WHERE id = ?`,
-        [data, id]
-    );
-    conn.end();
-    return { id, ...data };
-}
+            return (data);
 
-async function updateMany(resource, ids, data) {
-    const conn = await connectToDB();
-    const query = `
-        UPDATE ${mysql.escapeId(resource)} SET ? 
-        WHERE id IN (${ids.map(() => '?').join(', ')})
-    `;
-    const [result] = await conn.execute(query, [data, ...ids]);
-    conn.end();
-    return { ids, ...data };
-}
+        } else if ("id" in req.query) {
+            let ids = req.query.id;
+            if (!Array.isArray(ids)) {
+                ids = [ids];  // Convert to array if it's a single id
+            }
 
-async function deleteOne(resource, id) {
-    const conn = await connectToDB();
-    await conn.execute(
-        `DELETE FROM ${mysql.escapeId(resource)} WHERE id = ?`,
-        [id]
-    );
-    conn.end();
-    return { id };
-}
+            // Modify the query to fetch specific IDs
+            query += ` WHERE id_donacion IN (${ids.map(() => '?').join(',')})`;
+            params = ids;
 
-async function deleteMany(resource, ids) {
-    const conn = await connectToDB();
-    const query = `DELETE FROM ${mysql.escapeId(resource)} WHERE id IN (${ids.map(() => '?').join(', ')})`;
-    await conn.execute(query, ids);
-    conn.end();
-    return { ids };
-}
+            // Execute the query
+            const [data] = await connection.query(query, params);
+            return (data);
+
+        } else {
+            // Fetch all donations if no sorting or filtering
+            const [data] = await connection.query(query);
+
+            // Get the total count
+            const [countResult] = await connection.query("SELECT COUNT(*) AS total FROM donaciones");
+            const totalCount = countResult[0].total;
+
+            // Set headers and return the data
+            return (data);
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 
 export { 
     getUserByUsername,
-    getList, 
-    getOne, 
-    getMany, 
-    getManyReference, 
-    create, 
-    update, 
-    updateMany, 
-    deleteOne, 
-    deleteMany 
+    getDonaciones,
+    verifyPassword,
+    createUser
 };
