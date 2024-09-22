@@ -117,11 +117,22 @@ const createDonacion = async ({ id_usuario, fecha, cantidad, tipo, estado, pais 
     return result.insertId;
 };
 
+const deleteDonacion = async (id) => {
+    const connection = await connectToDB();
+    const [result] = await connection.execute(
+        "DELETE FROM donaciones WHERE id = ?",
+        [id]
+    );
+    connection.end();
+    return result.affectedRows;
+}
+
 export { 
     getUserByUsername,
     getDonaciones,
     verifyPassword,
     createUser,
     query,
-    createDonacion
+    createDonacion,
+    deleteDonacion
 };

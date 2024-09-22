@@ -65,8 +65,13 @@ const createDonacion = async (newData) => {
 };
 
 const deleteDonacion = async (id) => {
-    const [result] = await db.query(`DELETE FROM donaciones WHERE id_donacion = ?`, [Number(id)]);
-    return result;
+    try {
+        const result = await db.deleteDonacion(Number(id));
+        return result;
+    }
+    catch (error) {
+        throw error;
+    }
 };
 
 export {
