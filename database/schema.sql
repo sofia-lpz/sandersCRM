@@ -5,7 +5,7 @@ USE `sandersCRM`;
 CREATE TABLE usuarios (
     id_usuario int NOT NULL AUTO_INCREMENT,
     username varchar(50) NOT NULL DEFAULT 'none',
-    contraseña varchar(50) NOT NULL,
+    contraseña varchar(255) NOT NULL,
     sudo boolean NOT NULL DEFAULT false,
     PRIMARY KEY (id_usuario)
 );
