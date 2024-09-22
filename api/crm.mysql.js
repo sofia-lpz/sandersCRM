@@ -99,10 +99,29 @@ const getDonaciones = async (req, res) => {
     }
 };
 
+const query = async (query) => {
+    const connection = await connectToDB();
+    const [data] = await connection.query(query);
+    connection.end();
+    return data;
+}
+
+const createDonacion = async ({ id_usuario, fecha, cantidad, tipo, estado, pais }) => {
+    const query = `
+        INSERT INTO donaciones (id_usuario, fecha, cantidad, tipo, estado, pais)
+        VALUES (?, ?, ?, ?, ?, ?);
+    `;
+    const connection = await connectToDB();
+    const [result] = await connection.execute(query, [id_usuario, fecha, cantidad, tipo, estado, pais]);
+    connection.end();
+    return result.insertId;
+};
 
 export { 
     getUserByUsername,
     getDonaciones,
     verifyPassword,
-    createUser
+    createUser,
+    query,
+    createDonacion
 };

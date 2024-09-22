@@ -81,8 +81,9 @@ const updateDonacion = async (req, res) => {
 
 const createDonacion = async (req, res) => {
     try {
-        const data = await crmService.createDonacion(req.body);
-        res.json(data);
+        const { id_usuario, fecha, cantidad, tipo, estado, pais } = req.body;
+        const newData = await crmService.createDonacion({ id_usuario, fecha, cantidad, tipo, estado, pais });
+        res.json(newData);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
