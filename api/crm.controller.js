@@ -103,6 +103,6 @@ export {
     getDonaciones,
     updateDonacion,
     createDonacion,
-    deleteDonacion ,
+    deleteDonacion,
     createUser
 }

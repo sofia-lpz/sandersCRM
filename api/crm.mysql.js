@@ -127,6 +127,17 @@ const deleteDonacion = async (id) => {
     return result.affectedRows;
 }
 
+async function updateDonacion(id, donacionData) {
+    const { id_usuario, fecha, cantidad, tipo, estado, pais } = donacionData;
+    const conn = await connectToDB();
+    const [result] = await conn.execute(
+        `UPDATE donaciones SET id_usuario = ?, fecha = ?, cantidad = ?, tipo = ?, estado = ?, pais = ? WHERE id = ?`,
+        [id_usuario, fecha, cantidad, tipo, estado, pais, id]
+    );
+    conn.end();
+    return result;
+}
+
 export { 
     getUserByUsername,
     getDonaciones,
@@ -134,5 +145,6 @@ export {
     createUser,
     query,
     createDonacion,
-    deleteDonacion
+    deleteDonacion,
+    updateDonacion
 };

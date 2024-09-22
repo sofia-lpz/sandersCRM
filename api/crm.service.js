@@ -50,8 +50,13 @@ const getDonaciones = async (query) => {
 };
 
 const updateDonacion = async (id, updateData) => {
-    const [result] = await db.query(`UPDATE donaciones SET ? WHERE id_donacion = ?`, [updateData, Number(id)]);
-    return result;
+    try {
+        const result = await db.updateDonacion(Number(id), updateData);
+        return result;
+    }
+    catch (error) {
+        throw error;
+    }
 };
 
 const createDonacion = async (newData) => {
