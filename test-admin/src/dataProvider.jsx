@@ -1,17 +1,5 @@
 import jsonServerProvider from 'ra-data-json-server';
-import { fetchUtils } from 'react-admin';
 
-const apiUrl = 'https://127.0.0.1:8080/api';
-
-const httpClient = (url, options = {}) => {
-    if (!options.headers) {
-        options.headers = new Headers({ Accept: 'application/json' });
-    }
-    const token = localStorage.getItem('token');
-    options.headers.set('Authorization', token ? `Bearer ${token}` : '');
-    return fetchUtils.fetchJson(url, options);
-};
-
-const dataProvider = jsonServerProvider(apiUrl, httpClient);
+const dataProvider = jsonServerProvider('https://127.0.0.1:8080/api');
 
 export default dataProvider;
