@@ -138,6 +138,16 @@ async function updateDonacion(id, donacionData) {
     return result;
 }
 
+async function getOneDonacion(id) {
+    const conn = await connectToDB();
+    const [rows] = await conn.execute(
+        "SELECT * FROM donaciones WHERE id = ?",
+        [id]
+    );
+    conn.end();
+    return rows[0];
+}
+
 export { 
     getUserByUsername,
     getDonaciones,
@@ -146,5 +156,6 @@ export {
     query,
     createDonacion,
     deleteDonacion,
-    updateDonacion
+    updateDonacion,
+    getOneDonacion
 };

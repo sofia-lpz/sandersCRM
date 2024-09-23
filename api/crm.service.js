@@ -79,11 +79,22 @@ const deleteDonacion = async (id) => {
     }
 };
 
+const getOneDonacion = async (id) => {
+    try {
+        const result = await db.getOneDonacion(Number(id));
+        return result;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
 export {
     login,
     getDonaciones,
     updateDonacion,
     createDonacion,
     deleteDonacion,
-    createUser
+    createUser,
+    getOneDonacion
 };

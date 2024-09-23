@@ -15,5 +15,8 @@ router.delete('/donaciones/:id', crmController.deleteDonacion);
 // remove for prod
 router.post('/user', crmController.createUser);
 
+//get one
+router.get('/donaciones/:id', crmController.getOneDonacion);
+
 
 export { router };

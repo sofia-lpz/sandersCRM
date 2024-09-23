@@ -98,11 +98,23 @@ const deleteDonacion = async (req, res) => {
     }
 };
 
+const getOneDonacion = async (req, res) => {
+try {
+    const data = await crmService.getOneDonacion(req.params.id);
+    res.json(data);
+} catch (error) {
+    res.status(500).json({ error: error.message });
+}
+};
+
+
+
 export {
     login,
     getDonaciones,
     updateDonacion,
     createDonacion,
     deleteDonacion,
-    createUser
+    createUser,
+    getOneDonacion
 }
