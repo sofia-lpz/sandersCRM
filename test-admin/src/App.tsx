@@ -7,7 +7,8 @@ import {
 } from "react-admin";
 
 import { Layout } from "./Layout";
-import { dataProvider } from "./dataProvider";
+import dataProvider from "./dataProvider";
+import authProvider from './authProvider';
 
 import { UserList, UserShow, UserEdit, UserCreate } from "./users";
 import { PostEdit, PostList, PostCreate, PostShow } from "./posts";
@@ -15,11 +16,9 @@ import { TodoList, TodoEdit, TodoShow, TodoCreate } from "./todos";
 import { CommentList, CommentEdit, CommentShow, CommentCreate } from "./comments";
 import { AlbumList, AlbumEdit, AlbumShow, AlbumCreate } from "./albums";
 import { PhotoList, PhotoEdit, PhotoShow, PhotoCreate} from "./photos";
+import { DonacionCreate } from "./donaciones";
 
 import i18nProvider from './i18nProvider';
-
-import authProvider from './authProvider';
-
 import Dashboard from './Dashboard';
 
 export const App = () => (
@@ -34,6 +33,7 @@ export const App = () => (
     <Resource name="todos" list={TodoList} edit={TodoEdit} show={TodoShow} create={TodoCreate}/>
 
     <Resource name="dashboard" list={Dashboard} options={{ label: 'Dashboard' }} />
+    <Resource name="donaciones" create={DonacionCreate} list={ListGuesser} edit={EditGuesser} show={ShowGuesser}/>
 
 
     <Resource name="comments" list={CommentList} edit={CommentEdit} show={CommentShow} create={CommentCreate}/>

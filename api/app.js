@@ -17,8 +17,23 @@ const sslOptions = {
   cert: fs.readFileSync('../certificados/server.cert')
 };
 
+// CORS configuration
+const corsOptions = {
+  origin: 'https://localhost:5173', // Replace with your React Admin app URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true // If you're using cookies or HTTP authentication
+};
+
+// Use CORS middleware with options
+app.use(cors(corsOptions));
+
+// Handle OPTIONS preflight requests
+app.options('*', cors(corsOptions));
+
+// Body parser middleware
 app.use(bodyParser.json());
-app.use(cors());
+
+// Routes
 app.use("/api", router);
 
 // Create the HTTPS server

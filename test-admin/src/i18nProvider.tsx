@@ -56,6 +56,9 @@ const spanishMessages: TranslationMessages = {
       false: "No",
       null: " ",
     },
+    configurable: {
+      customize: "Personalizar"
+    },
     input: {
       file: {
         upload_several:

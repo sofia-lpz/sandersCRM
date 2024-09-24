@@ -4,24 +4,19 @@ import { verifyToken } from './middleware/auth.js';
 
 const router = express.Router();
 
+// Login endpoint (no token required)
 router.post('/login', crmController.login);
 
-/*
+// Protected routes (token required)
+router.get('/donaciones', verifyToken, crmController.getDonaciones);
+router.put('/donaciones/:id', verifyToken, crmController.updateDonacion);
+router.post('/donaciones', verifyToken, crmController.createDonacion);
+router.delete('/donaciones/:id', verifyToken, crmController.deleteDonacion);
 
-router.get('/donadores', verifyToken, crmController.getDonadores);
-router.get('/donadores/:id', verifyToken, crmController.getDonadorById);
+// Remove for prod (token required)
+router.post('/user', crmController.createUser);
 
-router.post('/donadores', verifyToken, crmController.createDonador);
-router.put('/donadores/:id', verifyToken, crmController.updateDonador);
-
-router.get('/donadores/:id/donaciones', verifyToken, crmController.getDonacionesByDonadorId);
-router.post('/donadores/:id/donaciones', verifyToken, crmController.createDonacion);
-
-router.get('donaciones/:donacionId', verifyToken, crmController.getDonacionById);
-
-router.get('/donaciones/:type', verifyToken, crmController.getDonacionesByType);
-
-router.get('/donaciones/fecha/:date', verifyToken, crmController.getDonacionesByDate);
-*/
+// Get one (token required)
+router.get('/donaciones/:id', verifyToken, crmController.getOneDonacion);
 
 export { router };

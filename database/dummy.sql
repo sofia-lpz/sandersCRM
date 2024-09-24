@@ -1,15 +1,13 @@
--- Dummy data for `usuarios` table
 INSERT INTO usuarios (username, contraseña, sudo) VALUES
 ('user1', 'password1', false),
-('user2', 'password2', false),
-('user3', 'password3', true),
-('user4', 'password4', false),
-('user5', 'password5', true);
+('user2', 'password2', true),
+('user3', 'password3', false),
+('user4', 'password4', true),
+('user5', 'password5', false);
 
--- Dummy data for `donaciones` table
 INSERT INTO donaciones (id_usuario, fecha, cantidad, tipo, estado, pais) VALUES
-(1, '2022-01-01', 100, 'digital', 'cdmx', 'USA'),
-(2, '2022-01-02', 50, 'efectivo', 'cdmx', 'Canada'),
-(3, '2022-01-03', 200, 'especie', 'cdmx', 'Mexico'),
-(4, '2022-01-04', 150, 'digital', 'cdmx', 'Germany'),
-(5, '2022-01-05', 75, 'efectivo', 'cdmx', 'France');
+(1, '2023-01-01', 100, 'digital', 'completed', 'USA'),
+(2, '2023-02-01', 200, 'efectivo', 'pending', 'Canada'),
+(3, '2023-03-01', 300, 'especie', 'completed', 'Mexico'),
+(4, '2023-04-01', 400, 'digital', 'failed', 'Brazil'),
+(5, '2023-05-01', 500, 'efectivo', 'completed', 'Argentina');
