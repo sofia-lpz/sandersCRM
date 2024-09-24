@@ -8,15 +8,15 @@ const router = express.Router();
 router.post('/login', crmController.login);
 
 // Protected routes (token required)
-router.get('/donaciones', crmController.getDonaciones);
-router.put('/donaciones/:id', crmController.updateDonacion);
-router.post('/donaciones', crmController.createDonacion);
-router.delete('/donaciones/:id', crmController.deleteDonacion);
+router.get('/donaciones', verifyToken, crmController.getDonaciones);
+router.put('/donaciones/:id', verifyToken, crmController.updateDonacion);
+router.post('/donaciones', verifyToken, crmController.createDonacion);
+router.delete('/donaciones/:id', verifyToken, crmController.deleteDonacion);
 
 // Remove for prod (token required)
 router.post('/user', crmController.createUser);
 
 // Get one (token required)
-router.get('/donaciones/:id', crmController.getOneDonacion);
+router.get('/donaciones/:id', verifyToken, crmController.getOneDonacion);
 
 export { router };
