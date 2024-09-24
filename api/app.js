@@ -19,7 +19,7 @@ const sslOptions = {
 
 // CORS configuration
 const corsOptions = {
-  origin: 'https://127.0.0.1:5173', // Replace with your React Admin app URL
+  origin: 'https://localhost:5173', // Replace with your React Admin app URL
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true // If you're using cookies or HTTP authentication
 };
