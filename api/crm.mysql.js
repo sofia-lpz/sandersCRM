@@ -148,6 +148,56 @@ async function getOneDonacion(id) {
     return rows[0];
 }
 
+async function getUsuarios(query) {
+    const conn = await connectToDB();
+    let sql = "SELECT * FROM usuarios";
+    let params = [];
+
+    if ("_sort" in query) {
+        let sortBy = query._sort;
+        let sortOrder = query._order === "ASC" ? "ASC" : "DESC";
+        let start = Number(query._start) || 0;
+        let end = Number(query._end) || 10;
+
+        sql += ` ORDER BY ${conn.escapeId(sortBy)} ${sortOrder} LIMIT ?, ?`;
+        params.push(start, end - start);
+    }
+
+    const [rows] = await conn.query(sql, params);
+    conn.end();
+    return rows;
+}
+
+async function updateUsuario(id, updateData) {
+    const conn = await connectToDB();
+    const [result] = await conn.execute(
+        `UPDATE usuarios SET ? WHERE id = ?`,
+        [updateData, id]
+    );
+    conn.end();
+    return result;
+}
+
+async function deleteUsuario(id) {
+    const conn = await connectToDB();
+    const [result] = await conn.execute(
+        "DELETE FROM usuarios WHERE id = ?",
+        [id]
+    );
+    conn.end();
+    return result;
+}
+
+async function getOneUsuario(id) {
+    const conn = await connectToDB();
+    const [rows] = await conn.execute(
+        "SELECT * FROM usuarios WHERE id = ?",
+        [id]
+    );
+    conn.end();
+    return rows[0];
+}
+
 export { 
     getUserByUsername,
     getDonaciones,
@@ -157,5 +207,9 @@ export {
     createDonacion,
     deleteDonacion,
     updateDonacion,
-    getOneDonacion
+    getOneDonacion,
+    getUsuarios,
+    updateUsuario,
+    deleteUsuario,
+    getOneUsuario
 };

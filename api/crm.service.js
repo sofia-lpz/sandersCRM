@@ -89,6 +89,77 @@ const getOneDonacion = async (id) => {
     }
 }
 
+const getUsuarios = async (query) => {
+    let result;
+    let totalCount;
+    
+    if ("_sort" in query) {
+        let sortBy = query._sort;
+        let sortOrder = query._order === "ASC" ? 'ASC' : 'DESC';
+        let start = Number(query._start);
+        let end = Number(query._end);
+
+        const [rows] = await db.query(
+            `SELECT * FROM usuarios ORDER BY ?? ${sortOrder} LIMIT ?, ?`, 
+            [sortBy, start, end - start]
+        );
+        const [count] = await db.query(`SELECT COUNT(*) AS total FROM usuarios`);
+        totalCount = count[0].total;
+        result = rows;
+    } else if ("id" in query) {
+        const ids = query.id.map(Number);
+        const [rows] = await db.query(`SELECT * FROM usuarios WHERE id_usuario IN (?)`, [ids]);
+        result = rows;
+    } else {
+        const [rows] = await db.query(`SELECT * FROM usuarios`);
+        const [count] = await db.query(`SELECT COUNT(*) AS total FROM usuarios`);
+        totalCount = count[0].total;
+        result = rows;
+    }
+
+    return { result, totalCount };
+}
+
+const updateUsuario = async (id, updateData) => {
+    try {
+        const result = await db.updateUsuario(Number(id), updateData);
+        return result;
+    }
+    catch (error) {
+        throw error;
+    }
+};
+
+const createUsuario = async (newData) => {
+    try {
+        const result = await db.createUsuario(newData);
+        return result;
+    }
+    catch (error) {
+        throw error;
+    }
+};
+
+const deleteUsuario = async (id) => {
+    try {
+        const result = await db.deleteUsuario(Number(id));
+        return result;
+    }
+    catch (error) {
+        throw error;
+    }
+};
+
+const getOneUsuario = async (id) => {
+    try {
+        const result = await db.getOneUsuario(Number(id));
+        return result;
+    }
+    catch (error) {
+        throw error;
+    }
+}   
+
 export {
     login,
     getDonaciones,
@@ -96,5 +167,10 @@ export {
     createDonacion,
     deleteDonacion,
     createUser,
-    getOneDonacion
+    getOneDonacion,
+    getUsuarios,
+    updateUsuario,
+    createUsuario,
+    deleteUsuario,
+    getOneUsuario
 };

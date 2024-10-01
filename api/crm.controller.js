@@ -42,9 +42,7 @@ const getDonaciones = async (req, res) => {
             let sorter = {};
             sorter[sortBy] = sortOrder;
 
-
             let data = await crmMysql.getDonaciones(req, res);
-
 
             res.set("Access-Control-Expose-Headers", "X-Total-Count");
             res.set("X-Total-Count", data.length);
@@ -107,7 +105,78 @@ try {
 }
 };
 
+const getUsuarios = async (req, res) => {
+    try {
+        if ("_sort" in req.query) {
+            let sortBy = req.query._sort;
+            let sortOrder = req.query._order === "ASC" ? 1 : -1;
+            let start = Number(req.query._start);
+            let end = Number(req.query._end);
+            let sorter = {};
+            sorter[sortBy] = sortOrder;
 
+            let data = await crmMysql.getUsuarios(req, res);
+
+            res.set("Access-Control-Expose-Headers", "X-Total-Count");
+            res.set("X-Total-Count", data.length);
+            res.set("Content-Range", `${start}-${end}/${data.length}`);
+            data = data.slice(start, end);
+            res.json(data);
+        } else if ("id" in req.query) {
+            let data = [];
+            for (let index = 0; index < req.query.id.length; index++) {
+                let dbData = await crmMysql.getUsuarios(req, res);
+                data = data.concat(dbData);
+            }
+            res.json(data);
+        } else {
+            let data = await crmMysql.getUsuarios(req, res);
+            res.set("Access-Control-Expose-Headers", "X-Total-Count");
+            res.set("X-Total-Count", data.length);
+            res.set("Content-Range", `0-${data.length}/${data.length}`);
+            res.json(data);
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+const updateUsuario = async (req, res) => {
+    try {
+        const data = await crmService.updateUsuario(req.params.id, req.body);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+const createUsuario = async (req, res) => {
+    try {
+        const { username, password, sudo } = req.body;
+        const newData = await crmService.createUsuario({ username, password, sudo });
+        res.json(newData);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+const deleteUsuario = async (req, res) => {
+    try {
+        const data = await crmService.deleteUsuario(req.params.id);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+const getOneUsuario = async (req, res) => {
+    try {
+        const data = await crmService.getOneUsuario(req.params.id);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
 
 export {
     login,
@@ -116,5 +185,10 @@ export {
     createDonacion,
     deleteDonacion,
     createUser,
-    getOneDonacion
+    getOneDonacion,
+    getUsuarios,
+    updateUsuario,
+    createUsuario,
+    deleteUsuario,
+    getOneUsuario
 }
