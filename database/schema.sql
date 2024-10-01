@@ -10,14 +10,23 @@ CREATE TABLE usuarios (
     PRIMARY KEY (id)  -- Corrected primary key column name
 );
 
+CREATE TABLE donantes (
+    id int NOT NULL AUTO_INCREMENT,
+    email varchar(50) NOT NULL,
+    nombre varchar(50) NOT NULL,
+    apellido varchar(50) NOT NULL,
+    PRIMARY KEY (id)    
+);
+
 CREATE TABLE donaciones (
     id int NOT NULL AUTO_INCREMENT,
-    id_usuario int NOT NULL,
+    id_donante int NOT NULL,
+    campana enum('reproductiva', 'agua', 'nutricion') NOT NULL,
     fecha date NOT NULL,
     cantidad int NOT NULL,
     tipo enum('digital', 'efectivo', 'especie') NOT NULL,
     estado varchar(50) NOT NULL DEFAULT 'none',
     pais varchar(50) NOT NULL DEFAULT 'none',
     PRIMARY KEY (id),
-    FOREIGN KEY (id_usuario) REFERENCES usuarios(id)  -- Corrected foreign key reference
+    FOREIGN KEY (id_donante) REFERENCES donantes(id)
 );
