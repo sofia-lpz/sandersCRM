@@ -1,49 +1,60 @@
-// Dashboard.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import { PieChart, Pie, Cell, Tooltip } from 'recharts';
-
-// Sample JSON data
-const donationData = [
-  { id: 1, date: '2022-01-01', quantity: 100, type: 'digital', estado: 'cdmx', country: 'USA' },
-  { id: 2, date: '2022-02-01', quantity: 50, type: 'efectivo', estado: 'cdmx', country: 'USA' },
-  // Add more data as needed
-];
-
-// Process the data to get totals for each type
-const processedData = donationData.reduce(
-  (acc, donation) => {
-    const type = donation.type;
-    const quantity = donation.quantity;
-
-    if (type === 'digital') {
-      acc[0].value += quantity;
-    } else if (type === 'efectivo') {
-      acc[1].value += quantity;
-    }
-
-    return acc;
-  },
-  [
-    { name: 'Digital', value: 0 },
-    { name: 'Efectivo', value: 0 }
-  ]
-);
-
-// Calculate total donations
-const totalDonations = processedData.reduce((acc, data) => acc + data.value, 0);
-
-// Colors for the pie charts
-const DIGITAL_EFECTIVO_COLORS = ['#094D92', '#053B06'];
-const BLUE_COLOR = '#094D92';
-const GREEN_color = '#053B06';
+import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
+import { useDataProvider } from 'react-admin';
 
 const Dashboard: React.FC = () => {
-  // State for the goal
+  const dataProvider = useDataProvider();
   const [goal, setGoal] = useState(1000); // Default goal set to 1000
+  const [donationData, setDonationData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    dataProvider.getDashboardData()
+      .then(data => {
+        setDonationData(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        setError(error);
+        setLoading(false);
+      });
+  }, [dataProvider]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  // Process the data to get totals for each type
+  const processedData = donationData.reduce(
+    (acc, donation) => {
+      const type = donation.name.toLowerCase();
+      const quantity = donation.value;
+
+      if (type === 'digital') {
+        acc[0].value += quantity;
+      } else if (type === 'efectivo') {
+        acc[1].value += quantity;
+      }
+
+      return acc;
+    },
+    [
+      { name: 'Digital', value: 0 },
+      { name: 'Efectivo', value: 0 }
+    ]
+  );
+
+  // Calculate total donations
+  const totalDonations = processedData.reduce((acc, data) => acc + data.value, 0);
+
+  // Colors for the pie charts
+  const DIGITAL_EFECTIVO_COLORS = ['#094D92', '#053B06'];
+  const BLUE_COLOR = '#094D92';
+const GREEN_color = '#053B06';
 
   // Calculate how many times the goal has been crossed
   const timesGoalCrossed = Math.floor(totalDonations / goal);

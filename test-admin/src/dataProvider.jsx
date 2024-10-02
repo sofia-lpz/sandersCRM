@@ -14,4 +14,21 @@ const httpClient = (url, options = {}) => {
 
 const dataProvider = jsonServerProvider(apiUrl, httpClient);
 
+// Add custom method to dataProvider
+dataProvider.getDashboardData = () => {
+    return fetch(`${apiUrl}/dashboard/donaciones/total`, { 
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    });
+};
+
 export default dataProvider;
