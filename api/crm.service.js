@@ -92,6 +92,7 @@ const getOneDonacion = async (id) => {
 const getUsuarios = async (query) => {
     let result;
     let totalCount;
+    const columns = ["username", "sudo"];
     
     if ("_sort" in query) {
         let sortBy = query._sort;
@@ -100,7 +101,7 @@ const getUsuarios = async (query) => {
         let end = Number(query._end);
 
         const [rows] = await db.query(
-            `SELECT * FROM usuarios ORDER BY ?? ${sortOrder} LIMIT ?, ?`, 
+            `SELECT ${columns} FROM usuarios ORDER BY ?? ${sortOrder} LIMIT ?, ?`, 
             [sortBy, start, end - start]
         );
         const [count] = await db.query(`SELECT COUNT(*) AS total FROM usuarios`);
@@ -108,10 +109,10 @@ const getUsuarios = async (query) => {
         result = rows;
     } else if ("id" in query) {
         const ids = query.id.map(Number);
-        const [rows] = await db.query(`SELECT * FROM usuarios WHERE id_usuario IN (?)`, [ids]);
+        const [rows] = await db.query(`SELECT ${columns} FROM usuarios WHERE id_usuario IN (?)`, [ids]);
         result = rows;
     } else {
-        const [rows] = await db.query(`SELECT * FROM usuarios`);
+        const [rows] = await db.query(`SELECT ${columns} FROM usuarios`);
         const [count] = await db.query(`SELECT COUNT(*) AS total FROM usuarios`);
         totalCount = count[0].total;
         result = rows;
@@ -160,6 +161,97 @@ const getOneUsuario = async (id) => {
     }
 }   
 
+const getDonantes = async (query) => {
+    let result;
+    let totalCount;
+    
+    if ("_sort" in query) {
+        let sortBy = query._sort;
+        let sortOrder = query._order === "ASC" ? 'ASC' : 'DESC';
+        let start = Number(query._start);
+        let end = Number(query._end);
+
+        const [rows] = await db.query(
+            `SELECT * FROM donantes ORDER BY ?? ${sortOrder} LIMIT ?, ?`, 
+            [sortBy, start, end - start]
+        );
+        const [count] = await db.query(`SELECT COUNT(*) AS total FROM donantes`);
+        totalCount = count[0].total;
+        result = rows;
+    } else if ("id" in query) {
+        const ids = query.id.map(Number);
+        const [rows] = await db.query(`SELECT * FROM donantes WHERE id_donante IN (?)`, [ids]);
+        result = rows;
+    } else {
+        const [rows] = await db.query(`SELECT * FROM donantes`);
+        const [count] = await db.query(`SELECT COUNT(*) AS total FROM donantes`);
+        totalCount = count[0].total;
+        result = rows;
+    }
+
+    return { result, totalCount };
+}
+
+const updateDonante = async (id, updateData) => {
+    try {
+        const result = await db.updateDonante(Number(id), updateData);
+        return result;
+    }
+    catch (error) {
+        throw error;
+    }
+};
+
+const createDonante = async (newData) => {
+    try {
+        const result = await db.createDonante(newData);
+        return result;
+    }
+    catch (error) {
+        throw error;
+    }
+};
+
+const deleteDonante = async (id) => {
+    try {
+        const result = await db.deleteDonante(Number(id));
+        return result;
+    }
+    catch (error) {
+        throw error;
+    }
+};
+
+const getOneDonante = async (id) => {
+    try {
+        const result = await db.getOneDonante(Number(id));
+        return result;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+const getDonacionesDashboardTotal = async () => {
+    try {
+        const result = await db.getDonacionesDashboardTotal();
+        return result;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
+const getDonacionesDashboard = async (tipo) => {
+    try {
+        const result = await db.getDonacionesDashboard(tipo);
+        return result;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
 export {
     login,
     getDonaciones,
@@ -172,5 +264,12 @@ export {
     updateUsuario,
     createUsuario,
     deleteUsuario,
-    getOneUsuario
+    getOneUsuario,
+    getDonantes,
+    updateDonante,
+    createDonante,
+    deleteDonante,
+    getOneDonante,
+    getDonacionesDashboardTotal,
+    getDonacionesDashboard
 };

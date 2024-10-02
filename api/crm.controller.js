@@ -178,6 +178,101 @@ const getOneUsuario = async (req, res) => {
     }
 };
 
+const getDonantes = async (req, res) => {
+    try {
+        if ("_sort" in req.query) {
+            let sortBy = req.query._sort;
+            let sortOrder = req.query._order === "ASC" ? 1 : -1;
+            let start = Number(req.query._start);
+            let end = Number(req.query._end);
+            let sorter = {};
+            sorter[sortBy] = sortOrder;
+
+            let data = await crmMysql.getDonantes(req, res);
+
+            res.set("Access-Control-Expose-Headers", "X-Total-Count");
+            res.set("X-Total-Count", data.length);
+            res.set("Content-Range", `${start}-${end}/${data.length}`);
+            data = data.slice(start, end);
+            res.json(data);
+        } else if ("id" in req.query) {
+            let data = [];
+            for (let index = 0; index < req.query.id.length; index++) {
+                let dbData = await crmMysql.getDonantes(req, res);
+                data = data.concat(dbData);
+            }
+            res.json(data);
+        } else {
+            let data = await crmMysql.getDonantes(req, res);
+            res.set("Access-Control-Expose-Headers", "X-Total-Count");
+            res.set("X-Total-Count", data.length);
+            res.set("Content-Range", `0-${data.length}/${data.length}`);
+            res.json(data);
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+const updateDonante = async (req, res) => {
+    try {
+        const data = await crmService.updateDonante(req.params.id, req.body);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+const createDonante = async (req, res) => {
+    try {
+        const { nombre, apellido, email, telefono, pais } = req.body;
+        const newData = await crmService.createDonante({ nombre, apellido, email, telefono, pais });
+        res.json(newData);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+const deleteDonante = async (req, res) => {
+    try {
+        const data = await crmService.deleteDonante(req.params.id);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+const getOneDonante = async (req, res) => {
+    try {
+        const data = await crmService.getOneDonante(req.params.id);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+const getDonacionesDashboardTotal = async (req, res) => {
+    try {
+        const data = await crmService.getDonacionesDashboardTotal();
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+const getDonacionesDashboard = async (req, res) => {
+    try {
+        const data = await crmService.getDonacionesDashboard(req.params.tipo);
+        res.set("Access-Control-Expose-Headers", "X-Total-Count");
+        res.set("X-Total-Count", data.length);
+        res.set("Content-Range", `0-${data.length}/${data.length}`);
+        
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
 export {
     login,
     getDonaciones,
@@ -190,5 +285,12 @@ export {
     updateUsuario,
     createUsuario,
     deleteUsuario,
-    getOneUsuario
+    getOneUsuario,
+    getDonantes,
+    updateDonante,
+    createDonante,
+    deleteDonante,
+    getOneDonante,
+    getDonacionesDashboardTotal,
+    getDonacionesDashboard
 }

@@ -198,6 +198,98 @@ async function getOneUsuario(id) {
     return rows[0];
 }
 
+async function getDonantes(query) {
+    const conn = await connectToDB();
+    let sql = "SELECT * FROM donantes"
+    let params = [];
+
+    if ("_sort" in query) {
+        let sortBy = query._sort;
+        let sortOrder = query._order === "ASC" ? "ASC" : "DESC";
+        let start = Number(query._start) || 0;
+        let end = Number(query._end) || 10;
+
+        sql += ` ORDER BY ${conn.escapeId(sortBy)} ${sortOrder} LIMIT ?, ?`;
+        params.push(start, end - start);
+    }
+
+    const [rows] = await conn.query(sql, params);
+    conn.end();
+    return rows;
+}
+
+async function updateDonante(id, updateData) {
+    const conn = await connectToDB();
+    const [result] = await conn.execute(
+        `UPDATE donantes SET ? WHERE id = ?`,
+        [updateData, id]
+    );
+    conn.end();
+    return result;
+}
+
+async function deleteDonante(id) {
+    const conn = await connectToDB();
+    const [result] = await conn.execute(
+        "DELETE FROM donantes WHERE id = ?",
+        [id]
+    );
+    conn.end();
+    return result;
+}
+
+async function getOneDonante(id) {
+    const conn = await connectToDB();
+    const [rows] = await conn.execute(
+        "SELECT * FROM donantes WHERE id = ?",
+        [id]
+    );
+    conn.end();
+    return rows[0];
+}
+
+async function createDonante(newData) {
+    const conn = await connectToDB();
+    const [result] = await conn.execute(
+        "INSERT INTO donantes SET ?",
+        [newData]
+    );
+    conn.end();
+    return result.insertId;
+}
+
+async function getDonacionesDashboardTotal() {
+    const conn = await connectToDB();
+    const [rows] = await conn.execute(
+        "SELECT tipo, SUM(cantidad) AS total FROM donaciones GROUP BY tipo"
+    );
+    conn.end();
+
+    const result = rows.map(row => ({
+        name: row.tipo.charAt(0).toUpperCase() + row.tipo.slice(1), // Capitalize first letter
+        value: row.total
+    }));
+
+    // Ensure all types are included, even if they have no donations
+    const types = ['Digital', 'Efectivo'];
+    const formattedResult = types.map(type => {
+        const found = result.find(r => r.name === type);
+        return found ? found : { name: type, value: 0 };
+    });
+
+    return formattedResult;
+}
+
+async function getDonacionesDashboard(tipo) {
+    const conn = await connectToDB();
+    const [rows] = await conn.execute(
+        "SELECT SUM(cantidad) AS total FROM donaciones WHERE tipo = ?",
+        [tipo]
+    );
+    conn.end();
+    return rows;
+}
+
 export { 
     getUserByUsername,
     getDonaciones,
@@ -211,5 +303,12 @@ export {
     getUsuarios,
     updateUsuario,
     deleteUsuario,
-    getOneUsuario
+    getOneUsuario,
+    getDonantes,
+    updateDonante,
+    createDonante,
+    deleteDonante,
+    getOneDonante,
+    getDonacionesDashboardTotal,
+    getDonacionesDashboard
 };
