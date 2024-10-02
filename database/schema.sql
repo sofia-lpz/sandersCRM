@@ -7,7 +7,7 @@ CREATE TABLE usuarios (
     username varchar(50) NOT NULL DEFAULT 'none',
     contraseña varchar(255) NOT NULL,
     sudo boolean NOT NULL DEFAULT false,
-    PRIMARY KEY (id)  -- Corrected primary key column name
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE donantes (
@@ -15,7 +15,7 @@ CREATE TABLE donantes (
     email varchar(50) NOT NULL,
     nombre varchar(50) NOT NULL,
     apellido varchar(50) NOT NULL,
-    PRIMARY KEY (id)    
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE donaciones (
@@ -23,10 +23,18 @@ CREATE TABLE donaciones (
     id_donante int NOT NULL,
     campana enum('reproductiva', 'agua', 'nutricion') NOT NULL,
     fecha date NOT NULL,
-    cantidad int NOT NULL,
+    cantidad float NOT NULL,
     tipo enum('digital', 'efectivo', 'especie') NOT NULL,
     estado varchar(50) NOT NULL DEFAULT 'none',
     pais varchar(50) NOT NULL DEFAULT 'none',
     PRIMARY KEY (id),
     FOREIGN KEY (id_donante) REFERENCES donantes(id)
+);
+
+CREATE TABLE stats (
+    id int NOT NULL AUTO_INCREMENT,
+    total_donaciones int NOT NULL,
+    total_donantes int NOT NULL,
+    fecha_actualizacion timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
 );
