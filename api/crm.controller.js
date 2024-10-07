@@ -12,21 +12,22 @@ const login = async (req, res) => {
             const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
             res.send({ status: "OK", token });
             console.log(`User ${username} logged in`);
-        } else {
-            res.status(401).send({ status: "Error", message: "Invalid credentials" });
-            console.log(`Failed login attempt for user ${username}`);
         }
     } catch (error) {
-        console.error(error);
-        res.status(500).send({ status: "Error", message: error.message });
+        if (error.message === 'User not found' || error.message === 'Invalid password') {
+            res.status(401).send({ status: "Error", message: "Invalid credentials" });
+        } else {
+            console.error(error);
+            res.status(500).send({ status: "Error", message: "Internal Server Error" });
+        }
     }
 };
 
 const createUser = async (req, res) => {
     try {
-        const { username, password, sudo } = req.body;
-        const userId = await crmService.createUser(username, password, sudo);
-        res.json({ id: userId, username, sudo });
+        const { username, password, role } = req.body;
+        const userId = await crmService.createUser(username, password, role);
+        res.json({ id: userId, username, role });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -152,8 +153,8 @@ const updateUsuario = async (req, res) => {
 
 const createUsuario = async (req, res) => {
     try {
-        const { username, password, sudo } = req.body;
-        const newData = await crmService.createUsuario({ username, password, sudo });
+        const { username, password, role } = req.body;
+        const newData = await crmService.createUsuario({ username, password, role });
         res.json(newData);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -226,7 +227,7 @@ const updateDonante = async (req, res) => {
 const createDonante = async (req, res) => {
     try {
         const { nombre, apellido, email, telefono, pais } = req.body;
-        const newData = await crmService.createDonante({ nombre, apellido, email, telefono, pais });
+        const newData = await crmService.createDonante({ nombre, apellido, email });
         res.json(newData);
     } catch (error) {
         res.status(500).json({ error: error.message });

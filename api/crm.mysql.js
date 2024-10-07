@@ -10,12 +10,12 @@ async function connectToDB() {
     });
 }
 
-async function createUser(username, password, sudo) {
+async function createUser(username, password, role) {
     const hashedPassword = await bcrypt.hash(password, 10);
     const conn = await connectToDB();
     const [result] = await conn.execute(
-        "INSERT INTO usuarios (username, contraseña, sudo) VALUES (?, ?, ?)",
-        [username, hashedPassword, sudo]
+        "INSERT INTO usuarios (username, contraseña, role) VALUES (?, ?, ?)",
+        [username, hashedPassword, role]
     );
     conn.end();
     return result.insertId;
@@ -200,7 +200,7 @@ async function getOneUsuario(id) {
 
 async function getDonantes(query) {
     const conn = await connectToDB();
-    let sql = "SELECT * FROM donantes"
+    let sql = "SELECT * FROM donantes";
     let params = [];
 
     if ("_sort" in query) {
@@ -211,6 +211,9 @@ async function getDonantes(query) {
 
         sql += ` ORDER BY ${conn.escapeId(sortBy)} ${sortOrder} LIMIT ?, ?`;
         params.push(start, end - start);
+
+        console.log(`SQL Query: ${sql}`);
+        console.log(`Params: ${params}`);
     }
 
     const [rows] = await conn.query(sql, params);
@@ -248,14 +251,18 @@ async function getOneDonante(id) {
     return rows[0];
 }
 
-async function createDonante(newData) {
+async function createDonante({ nombre, apellido, email }) {
     const conn = await connectToDB();
     const [result] = await conn.execute(
-        "INSERT INTO donantes SET ?",
-        [newData]
+        "INSERT INTO donantes (nombre, apellido, email) VALUES (?, ?, ?)",
+        [nombre, apellido, email]
+    );
+    const [rows] = await conn.execute(
+        "SELECT * FROM donantes WHERE id = ?",
+        [result.insertId]
     );
     conn.end();
-    return result.insertId;
+    return rows[0]; // Return the newly created record
 }
 
 async function getDonacionesDashboardTotal() {

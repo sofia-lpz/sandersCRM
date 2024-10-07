@@ -6,7 +6,7 @@ CREATE TABLE usuarios (
     id int NOT NULL AUTO_INCREMENT,
     username varchar(50) NOT NULL DEFAULT 'none',
     contraseña varchar(255) NOT NULL,
-    sudo boolean NOT NULL DEFAULT false,
+    role enum('admin', 'user') NOT NULL DEFAULT 'user',
     PRIMARY KEY (id)
 );
 

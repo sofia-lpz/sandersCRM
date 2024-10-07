@@ -9,9 +9,9 @@ const login = async (username, password) => {
     }
 };
 
-const createUser = async (username, password, sudo) => {
+const createUser = async (username, password, role) => {
     try {
-        const userId = await db.createUser(username, password, sudo);
+        const userId = await db.createUser(username, password, role);
         return userId;
     } catch (error) {
         throw error;
@@ -92,7 +92,7 @@ const getOneDonacion = async (id) => {
 const getUsuarios = async (query) => {
     let result;
     let totalCount;
-    const columns = ["username", "sudo"];
+    const columns = ["username", "role"];
     
     if ("_sort" in query) {
         let sortBy = query._sort;
@@ -175,6 +175,8 @@ const getDonantes = async (query) => {
             `SELECT * FROM donantes ORDER BY ?? ${sortOrder} LIMIT ?, ?`, 
             [sortBy, start, end - start]
         );
+        console.log (`SELECT * FROM donantes ORDER BY ?? ${sortOrder} LIMIT ?, ?`, 
+            [sortBy, start, end - start])
         const [count] = await db.query(`SELECT COUNT(*) AS total FROM donantes`);
         totalCount = count[0].total;
         result = rows;
