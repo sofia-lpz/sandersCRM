@@ -3,7 +3,6 @@ import * as crmService from './crm.service.js';
 import * as crmMysql from './crm.mysql.js';
 
 export const login = async (req, res) => {
-    console.log('Login request');
     try {
         const { username, password } = req.body;
         const user = await crmService.login(username, password);
@@ -27,29 +26,18 @@ export const login = async (req, res) => {
 export const getDonaciones = async (req, res) => {
     try {
         if ("_sort" in req.query) {
-            let sortBy = req.query._sort;
-            let sortOrder = req.query._order === "ASC" ? 1 : -1;
             let start = Number(req.query._start);
             let end = Number(req.query._end);
-            let sorter = {};
-            sorter[sortBy] = sortOrder;
 
-            let data = await crmMysql.getDonaciones(req, res);
+            let data = await crmService.getDonaciones(req);
 
             res.set("Access-Control-Expose-Headers", "X-Total-Count");
             res.set("X-Total-Count", data.length);
             res.set("Content-Range", `${start}-${end}/${data.length}`);
             data = data.slice(start, end);
             res.json(data);
-        } else if ("id" in req.query) {
-            let data = [];
-            for (let index = 0; index < req.query.id.length; index++) {
-                let dbData = await crmMysql.getDonaciones(req, res);
-                data = data.concat(dbData);
-            }
-            res.json(data);
         } else {
-            let data = await crmMysql.getDonaciones(req, res);
+            let data = await crmService.getDonaciones(req);
             res.set("Access-Control-Expose-Headers", "X-Total-Count");
             res.set("X-Total-Count", data.length);
             res.set("Content-Range", `0-${data.length}/${data.length}`);
@@ -102,29 +90,18 @@ try {
 export const getUsuarios = async (req, res) => {
     try {
         if ("_sort" in req.query) {
-            let sortBy = req.query._sort;
-            let sortOrder = req.query._order === "ASC" ? 1 : -1;
             let start = Number(req.query._start);
             let end = Number(req.query._end);
-            let sorter = {};
-            sorter[sortBy] = sortOrder;
 
-            let data = await crmMysql.getUsuarios(req, res);
+            let data = await crmService.getUsuarios(req);
 
             res.set("Access-Control-Expose-Headers", "X-Total-Count");
             res.set("X-Total-Count", data.length);
             res.set("Content-Range", `${start}-${end}/${data.length}`);
             data = data.slice(start, end);
             res.json(data);
-        } else if ("id" in req.query) {
-            let data = [];
-            for (let index = 0; index < req.query.id.length; index++) {
-                let dbData = await crmMysql.getUsuarios(req, res);
-                data = data.concat(dbData);
-            }
-            res.json(data);
         } else {
-            let data = await crmMysql.getUsuarios(req, res);
+            let data = await crmService.getUsuarios(req);
             res.set("Access-Control-Expose-Headers", "X-Total-Count");
             res.set("X-Total-Count", data.length);
             res.set("Content-Range", `0-${data.length}/${data.length}`);
@@ -177,29 +154,18 @@ export const getOneUsuario = async (req, res) => {
 export const getDonantes = async (req, res) => {
     try {
         if ("_sort" in req.query) {
-            let sortBy = req.query._sort;
-            let sortOrder = req.query._order === "ASC" ? 1 : -1;
             let start = Number(req.query._start);
             let end = Number(req.query._end);
-            let sorter = {};
-            sorter[sortBy] = sortOrder;
 
-            let data = await crmMysql.getDonantes(req, res);
+            let data = await crmService.getDonantes(req);
 
             res.set("Access-Control-Expose-Headers", "X-Total-Count");
             res.set("X-Total-Count", data.length);
             res.set("Content-Range", `${start}-${end}/${data.length}`);
             data = data.slice(start, end);
             res.json(data);
-        } else if ("id" in req.query) {
-            let data = [];
-            for (let index = 0; index < req.query.id.length; index++) {
-                let dbData = await crmMysql.getDonantes(req, res);
-                data = data.concat(dbData);
-            }
-            res.json(data);
         } else {
-            let data = await crmMysql.getDonantes(req, res);
+            let data = await crmService.getDonantes(req);
             res.set("Access-Control-Expose-Headers", "X-Total-Count");
             res.set("X-Total-Count", data.length);
             res.set("Content-Range", `0-${data.length}/${data.length}`);

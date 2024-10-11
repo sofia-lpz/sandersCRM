@@ -40,55 +40,28 @@ export async function getUserByUsername(username) {
 }
 
 //Donaciones
-export const getDonaciones = async (req, res) => {
+export const getDonaciones = async (req) => {
     try {
-        const connection = await connectToDB();  // Assuming you're using a connection pool
+        const connection = await connectToDB();
         let query = "SELECT * FROM donaciones";
         let params = [];
 
-        // Sorting and pagination
         if ("_sort" in req.query) {
             let sortBy = req.query._sort;
             let sortOrder = req.query._order === "ASC" ? "ASC" : "DESC";
             let start = Number(req.query._start) || 0;
             let end = Number(req.query._end) || 10;
 
-            // Modify the query for sorting and pagination
             query += ` ORDER BY ${connection.escapeId(sortBy)} ${sortOrder} LIMIT ?, ?`;
             params.push(start, end - start);  // Limit takes (offset, count)
 
-            // Execute the query
             const [data] = await connection.query(query, params);
 
-            // Get the total count
-            const [countResult] = await connection.query("SELECT COUNT(*) AS total FROM donaciones");
-            const totalCount = countResult[0].total;
-
-            return (data);
-
-        } else if ("id" in req.query) {
-            let ids = req.query.id;
-            if (!Array.isArray(ids)) {
-                ids = [ids];  // Convert to array if it's a single id
-            }
-
-            // Modify the query to fetch specific IDs
-            query += ` WHERE id_donacion IN (${ids.map(() => '?').join(',')})`;
-            params = ids;
-
-            // Execute the query
-            const [data] = await connection.query(query, params);
             return (data);
 
         } else {
             // Fetch all donations if no sorting or filtering
             const [data] = await connection.query(query);
-
-            // Get the total count
-            const [countResult] = await connection.query("SELECT COUNT(*) AS total FROM donaciones");
-            const totalCount = countResult[0].total;
-
-            // Set headers and return the data
             return (data);
         }
     } catch (error) {
@@ -140,24 +113,34 @@ export async function getOneDonacion(id) {
 //Donaciones end
 
 //Usuarios
-export async function getUsuarios(query) {
-    const conn = await connectToDB();
-    let sql = "SELECT * FROM usuarios";
-    let params = [];
+export async function getUsuarios(req) {
+    try {
+        const connection = await connectToDB();
+        let query = "SELECT * FROM usuarios";
+        let params = [];
 
-    if ("_sort" in query) {
-        let sortBy = query._sort;
-        let sortOrder = query._order === "ASC" ? "ASC" : "DESC";
-        let start = Number(query._start) || 0;
-        let end = Number(query._end) || 10;
+        // Sorting and pagination
+        if ("_sort" in req.query) {
+            let sortBy = req.query._sort;
+            let sortOrder = req.query._order === "ASC" ? "ASC" : "DESC";
+            let start = Number(req.query._start) || 0;
+            let end = Number(req.query._end) || 10;
 
-        sql += ` ORDER BY ${conn.escapeId(sortBy)} ${sortOrder} LIMIT ?, ?`;
-        params.push(start, end - start);
+            // Modify the query for sorting and pagination
+            query += ` ORDER BY ${connection.escapeId(sortBy)} ${sortOrder} LIMIT ?, ?`;
+            params.push(start, end - start);  // Limit takes (offset, count)
+
+            // Execute the query
+            const [data] = await connection.query(query, params);
+            return (data);
+
+        } else {
+            const [data] = await connection.query(query);
+            return (data);
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
-
-    const [rows] = await conn.query(sql, params);
-    conn.end();
-    return rows;
 }
 
 export async function updateUsuario(id, updateData) {
@@ -215,27 +198,33 @@ export async function createUsuario(username, password, role) {
 //Usuarios End
 
 //Donantes
-export async function getDonantes(query) {
-    const conn = await connectToDB();
-    let sql = "SELECT * FROM donantes";
-    let params = [];
+export async function getDonantes(req) {
+    try {
+        const connection = await connectToDB();
+        let query = "SELECT * FROM donantes";
+        let params = [];
 
-    if ("_sort" in query) {
-        let sortBy = query._sort;
-        let sortOrder = query._order === "ASC" ? "ASC" : "DESC";
-        let start = Number(query._start) || 0;
-        let end = Number(query._end) || 10;
+        if ("_sort" in req.query) {
+            let sortBy = req.query._sort;
+            let sortOrder = req.query._order === "ASC" ? "ASC" : "DESC";
+            let start = Number(req.query._start) || 0;
+            let end = Number(req.query._end) || 10;
 
-        sql += ` ORDER BY ${conn.escapeId(sortBy)} ${sortOrder} LIMIT ?, ?`;
-        params.push(start, end - start);
+            query += ` ORDER BY ${connection.escapeId(sortBy)} ${sortOrder} LIMIT ?, ?`;
+            params.push(start, end - start);  // Limit takes (offset, count)
 
-        console.log(`SQL Query: ${sql}`);
-        console.log(`Params: ${params}`);
+            const [data] = await connection.query(query, params);
+
+            return (data);
+
+        } else {
+            // Fetch all donations if no sorting or filtering
+            const [data] = await connection.query(query);
+            return (data);
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
-
-    const [rows] = await conn.query(sql, params);
-    conn.end();
-    return rows;
 }
 
 export async function updateDonante(id, updateData) {

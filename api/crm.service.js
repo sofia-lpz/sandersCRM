@@ -10,35 +10,14 @@ export const login = async (username, password) => {
 };
 
 //Donanciones
-export const getDonaciones = async (query) => {
-    let result;
-    let totalCount;
-    
-    if ("_sort" in query) {
-        let sortBy = query._sort;
-        let sortOrder = query._order === "ASC" ? 'ASC' : 'DESC';
-        let start = Number(query._start);
-        let end = Number(query._end);
-
-        const [rows] = await db.query(
-            `SELECT * FROM donaciones ORDER BY ?? ${sortOrder} LIMIT ?, ?`, 
-            [sortBy, start, end - start]
-        );
-        const [count] = await db.query(`SELECT COUNT(*) AS total FROM donaciones`);
-        totalCount = count[0].total;
-        result = rows;
-    } else if ("id" in query) {
-        const ids = query.id.map(Number);
-        const [rows] = await db.query(`SELECT * FROM donaciones WHERE id_donacion IN (?)`, [ids]);
-        result = rows;
-    } else {
-        const [rows] = await db.query(`SELECT * FROM donaciones`);
-        const [count] = await db.query(`SELECT COUNT(*) AS total FROM donaciones`);
-        totalCount = count[0].total;
-        result = rows;
+export const getDonaciones = async (req) => {
+    try {
+        const result = await db.getDonaciones(req);
+        return result;
     }
-
-    return { result, totalCount };
+    catch (error) {
+        throw error;
+    }
 };
 
 export const updateDonacion = async (id, updateData) => {
@@ -83,36 +62,14 @@ export const getOneDonacion = async (id) => {
 //Donaciones end
 
 //Usuarios
-export const getUsuarios = async (query) => {
-    let result;
-    let totalCount;
-    const columns = ["username", "role"];
-    
-    if ("_sort" in query) {
-        let sortBy = query._sort;
-        let sortOrder = query._order === "ASC" ? 'ASC' : 'DESC';
-        let start = Number(query._start);
-        let end = Number(query._end);
-
-        const [rows] = await db.query(
-            `SELECT ${columns} FROM usuarios ORDER BY ?? ${sortOrder} LIMIT ?, ?`, 
-            [sortBy, start, end - start]
-        );
-        const [count] = await db.query(`SELECT COUNT(*) AS total FROM usuarios`);
-        totalCount = count[0].total;
-        result = rows;
-    } else if ("id" in query) {
-        const ids = query.id.map(Number);
-        const [rows] = await db.query(`SELECT ${columns} FROM usuarios WHERE id_usuario IN (?)`, [ids]);
-        result = rows;
-    } else {
-        const [rows] = await db.query(`SELECT ${columns} FROM usuarios`);
-        const [count] = await db.query(`SELECT COUNT(*) AS total FROM usuarios`);
-        totalCount = count[0].total;
-        result = rows;
+export const getUsuarios = async (req) => {
+    try {
+        const result = await db.getUsuarios(req);
+        return result;
     }
-
-    return { result, totalCount };
+    catch (error) {
+        throw error;
+    }
 }
 
 export const updateUsuario = async (id, updateData) => {
@@ -158,36 +115,13 @@ export const getOneUsuario = async (id) => {
 
 //Donantes
 export const getDonantes = async (query) => {
-    let result;
-    let totalCount;
-    
-    if ("_sort" in query) {
-        let sortBy = query._sort;
-        let sortOrder = query._order === "ASC" ? 'ASC' : 'DESC';
-        let start = Number(query._start);
-        let end = Number(query._end);
-
-        const [rows] = await db.query(
-            `SELECT * FROM donantes ORDER BY ?? ${sortOrder} LIMIT ?, ?`, 
-            [sortBy, start, end - start]
-        );
-        console.log (`SELECT * FROM donantes ORDER BY ?? ${sortOrder} LIMIT ?, ?`, 
-            [sortBy, start, end - start])
-        const [count] = await db.query(`SELECT COUNT(*) AS total FROM donantes`);
-        totalCount = count[0].total;
-        result = rows;
-    } else if ("id" in query) {
-        const ids = query.id.map(Number);
-        const [rows] = await db.query(`SELECT * FROM donantes WHERE id_donante IN (?)`, [ids]);
-        result = rows;
-    } else {
-        const [rows] = await db.query(`SELECT * FROM donantes`);
-        const [count] = await db.query(`SELECT COUNT(*) AS total FROM donantes`);
-        totalCount = count[0].total;
-        result = rows;
+    try {
+        const result = await db.getDonantes(query);
+        return result;
     }
-
-    return { result, totalCount };
+    catch (error) {
+        throw error;
+    }
 }
 
 export const updateDonante = async (id, updateData) => {
