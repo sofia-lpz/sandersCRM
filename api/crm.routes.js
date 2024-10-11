@@ -1,14 +1,22 @@
 import express from 'express';
 import * as crmController from './crm.controller.js';
 import { verifyToken } from './middleware/auth.js';
+//import { checkAdminRole } from './middleware/role.js';
 
 const router = express.Router();
 
 // Remove for prod
-router.post('/user', crmController.createUser);
+router.post('/create-user', crmController.createUsuario);
 
 // Login endpoint (no token required)
 router.post('/login', crmController.login);
+
+//admin routes
+router.get('/usuarios', verifyToken, crmController.getUsuarios);
+router.put('/usuarios/:id', verifyToken, crmController.updateUsuario);
+router.post('/usuarios', verifyToken, crmController.createUsuario);
+router.delete('/usuarios/:id', verifyToken, crmController.deleteUsuario);
+router.get('/usuarios/:id', verifyToken, crmController.getOneUsuario);
 
 // Protected routes (token required)
 router.get('/donaciones', verifyToken, crmController.getDonaciones);
@@ -23,16 +31,8 @@ router.post('/donantes', verifyToken, crmController.createDonante);
 router.delete('/donantes/:id', verifyToken, crmController.deleteDonante);
 router.get('/donantes/:id', verifyToken, crmController.getOneDonante);
 
-//dashboard endpointsmake 
 
-//router.get('/dashboard/donantes/:tipo', verifyToken, crmController.getDonantesDashboard);
 router.get('/dashboard/donaciones/total', crmController.getDonacionesDashboardTotal);
 router.get('/dashboard/donaciones/:tipo', crmController.getDonacionesDashboard);
-
-router.get('/usuarios', verifyToken, crmController.getUsuarios);
-router.put('/usuarios/:id', verifyToken, crmController.updateUsuario);
-router.post('/usuarios', verifyToken, crmController.createUsuario);
-router.delete('/usuarios/:id', verifyToken, crmController.deleteUsuario);
-router.get('/usuarios/:id', verifyToken, crmController.getOneUsuario);
 
 export { router };

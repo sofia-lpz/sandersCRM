@@ -10,15 +10,11 @@ async function connectToDB() {
     });
 }
 
-async function createUser(username, password, role) {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const conn = await connectToDB();
-    const [result] = await conn.execute(
-        "INSERT INTO usuarios (username, contraseña, role) VALUES (?, ?, ?)",
-        [username, hashedPassword, role]
-    );
-    conn.end();
-    return result.insertId;
+const query = async (query) => {
+    const connection = await connectToDB();
+    const [data] = await connection.query(query);
+    connection.end();
+    return data;
 }
 
 async function verifyPassword(username, password) {
@@ -43,6 +39,7 @@ async function getUserByUsername(username) {
     return rows[0];
 }
 
+//Donaciones
 const getDonaciones = async (req, res) => {
     try {
         const connection = await connectToDB();  // Assuming you're using a connection pool
@@ -99,13 +96,6 @@ const getDonaciones = async (req, res) => {
     }
 };
 
-const query = async (query) => {
-    const connection = await connectToDB();
-    const [data] = await connection.query(query);
-    connection.end();
-    return data;
-}
-
 const createDonacion = async ({ id_usuario, fecha, cantidad, tipo, estado, pais }) => {
     const query = `
         INSERT INTO donaciones (id_usuario, fecha, cantidad, tipo, estado, pais)
@@ -147,7 +137,9 @@ async function getOneDonacion(id) {
     conn.end();
     return rows[0];
 }
+//Donaciones end
 
+//Usuarios
 async function getUsuarios(query) {
     const conn = await connectToDB();
     let sql = "SELECT * FROM usuarios";
@@ -198,6 +190,31 @@ async function getOneUsuario(id) {
     return rows[0];
 }
 
+async function createUsuario(username, password, role) {
+    if (!username || !password || !role) {
+        throw new Error('Username, password, and role are required');
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const conn = await connectToDB();
+    try {
+        const [result] = await conn.execute(
+            "INSERT INTO usuarios (username, contraseña, role) VALUES (?, ?, ?)",
+            [username, hashedPassword, role]
+        );
+        conn.end();
+        return result.insertId;
+    } catch (error) {
+        conn.end();
+        if (error.code === 'ER_DUP_ENTRY') {
+            throw new Error('Username already exists');
+        }
+        throw error;
+    }
+}
+//Usuarios End
+
+//Donantes
 async function getDonantes(query) {
     const conn = await connectToDB();
     let sql = "SELECT * FROM donantes";
@@ -264,7 +281,9 @@ async function createDonante({ nombre, apellido, email }) {
     conn.end();
     return rows[0]; // Return the newly created record
 }
+//Donantes end
 
+//Dashboard
 async function getDonacionesDashboardTotal() {
     const conn = await connectToDB();
     const [rows] = await conn.execute(
@@ -301,7 +320,7 @@ export {
     getUserByUsername,
     getDonaciones,
     verifyPassword,
-    createUser,
+    createUsuario,
     query,
     createDonacion,
     deleteDonacion,

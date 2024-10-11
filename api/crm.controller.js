@@ -23,16 +23,7 @@ const login = async (req, res) => {
     }
 };
 
-const createUser = async (req, res) => {
-    try {
-        const { username, password, role } = req.body;
-        const userId = await crmService.createUser(username, password, role);
-        res.json({ id: userId, username, role });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-}
-
+//Donanciones
 const getDonaciones = async (req, res) => {
     try {
         if ("_sort" in req.query) {
@@ -105,7 +96,9 @@ try {
     res.status(500).json({ error: error.message });
 }
 };
+// Donaciones End
 
+//Usuarios
 const getUsuarios = async (req, res) => {
     try {
         if ("_sort" in req.query) {
@@ -154,8 +147,8 @@ const updateUsuario = async (req, res) => {
 const createUsuario = async (req, res) => {
     try {
         const { username, password, role } = req.body;
-        const newData = await crmService.createUsuario({ username, password, role });
-        res.json(newData);
+        const userId = await crmService.createUsuario(username, password, role);
+        res.json({ id: userId, username, role });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -178,7 +171,9 @@ const getOneUsuario = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+//Usuarios End
 
+//Donantes
 const getDonantes = async (req, res) => {
     try {
         if ("_sort" in req.query) {
@@ -251,7 +246,9 @@ const getOneDonante = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+//Donantes End
 
+// extra
 const getDonacionesDashboardTotal = async (req, res) => {
     try {
         const data = await crmService.getDonacionesDashboardTotal();
@@ -280,7 +277,6 @@ export {
     updateDonacion,
     createDonacion,
     deleteDonacion,
-    createUser,
     getOneDonacion,
     getUsuarios,
     updateUsuario,

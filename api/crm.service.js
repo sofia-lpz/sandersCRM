@@ -1,6 +1,6 @@
 import * as db from './crm.mysql.js'
 
-const login = async (username, password) => {
+export const login = async (username, password) => {
   try {
       const user = await db.verifyPassword(username, password);
       return user;
@@ -9,6 +9,7 @@ const login = async (username, password) => {
     }
 };
 
+/*
 const createUser = async (username, password, role) => {
     try {
         const userId = await db.createUser(username, password, role);
@@ -17,8 +18,10 @@ const createUser = async (username, password, role) => {
         throw error;
     }
 }
+*/
 
-const getDonaciones = async (query) => {
+//Donanciones
+export const getDonaciones = async (query) => {
     let result;
     let totalCount;
     
@@ -49,7 +52,7 @@ const getDonaciones = async (query) => {
     return { result, totalCount };
 };
 
-const updateDonacion = async (id, updateData) => {
+export const updateDonacion = async (id, updateData) => {
     try {
         const result = await db.updateDonacion(Number(id), updateData);
         return result;
@@ -59,7 +62,7 @@ const updateDonacion = async (id, updateData) => {
     }
 };
 
-const createDonacion = async (newData) => {
+export const createDonacion = async (newData) => {
     try {
         const result = await db.createDonacion(newData);
         return result;
@@ -69,7 +72,7 @@ const createDonacion = async (newData) => {
     }
 };
 
-const deleteDonacion = async (id) => {
+export const deleteDonacion = async (id) => {
     try {
         const result = await db.deleteDonacion(Number(id));
         return result;
@@ -79,7 +82,7 @@ const deleteDonacion = async (id) => {
     }
 };
 
-const getOneDonacion = async (id) => {
+export const getOneDonacion = async (id) => {
     try {
         const result = await db.getOneDonacion(Number(id));
         return result;
@@ -88,8 +91,10 @@ const getOneDonacion = async (id) => {
         throw error;
     }
 }
+//Donaciones end
 
-const getUsuarios = async (query) => {
+//Usuarios
+export const getUsuarios = async (query) => {
     let result;
     let totalCount;
     const columns = ["username", "role"];
@@ -121,7 +126,7 @@ const getUsuarios = async (query) => {
     return { result, totalCount };
 }
 
-const updateUsuario = async (id, updateData) => {
+export const updateUsuario = async (id, updateData) => {
     try {
         const result = await db.updateUsuario(Number(id), updateData);
         return result;
@@ -131,9 +136,9 @@ const updateUsuario = async (id, updateData) => {
     }
 };
 
-const createUsuario = async (newData) => {
+export const createUsuario = async (username, password, role) => {
     try {
-        const result = await db.createUsuario(newData);
+        const result = await db.createUsuario(username, password, role);
         return result;
     }
     catch (error) {
@@ -141,7 +146,7 @@ const createUsuario = async (newData) => {
     }
 };
 
-const deleteUsuario = async (id) => {
+export const deleteUsuario = async (id) => {
     try {
         const result = await db.deleteUsuario(Number(id));
         return result;
@@ -151,7 +156,7 @@ const deleteUsuario = async (id) => {
     }
 };
 
-const getOneUsuario = async (id) => {
+export const getOneUsuario = async (id) => {
     try {
         const result = await db.getOneUsuario(Number(id));
         return result;
@@ -160,8 +165,10 @@ const getOneUsuario = async (id) => {
         throw error;
     }
 }   
+//Usuarios end
 
-const getDonantes = async (query) => {
+//Donantes
+export const getDonantes = async (query) => {
     let result;
     let totalCount;
     
@@ -194,7 +201,7 @@ const getDonantes = async (query) => {
     return { result, totalCount };
 }
 
-const updateDonante = async (id, updateData) => {
+export const updateDonante = async (id, updateData) => {
     try {
         const result = await db.updateDonante(Number(id), updateData);
         return result;
@@ -204,7 +211,7 @@ const updateDonante = async (id, updateData) => {
     }
 };
 
-const createDonante = async (newData) => {
+export const createDonante = async (newData) => {
     try {
         const result = await db.createDonante(newData);
         return result;
@@ -214,7 +221,7 @@ const createDonante = async (newData) => {
     }
 };
 
-const deleteDonante = async (id) => {
+export  const deleteDonante = async (id) => {
     try {
         const result = await db.deleteDonante(Number(id));
         return result;
@@ -224,7 +231,7 @@ const deleteDonante = async (id) => {
     }
 };
 
-const getOneDonante = async (id) => {
+export const getOneDonante = async (id) => {
     try {
         const result = await db.getOneDonante(Number(id));
         return result;
@@ -233,8 +240,9 @@ const getOneDonante = async (id) => {
         throw error;
     }
 }
+//Donantes end
 
-const getDonacionesDashboardTotal = async () => {
+export const getDonacionesDashboardTotal = async () => {
     try {
         const result = await db.getDonacionesDashboardTotal();
         return result;
@@ -244,7 +252,7 @@ const getDonacionesDashboardTotal = async () => {
     }
 }
 
-const getDonacionesDashboard = async (tipo) => {
+export const getDonacionesDashboard = async (tipo) => {
     try {
         const result = await db.getDonacionesDashboard(tipo);
         return result;
@@ -253,25 +261,3 @@ const getDonacionesDashboard = async (tipo) => {
         throw error;
     }
 }
-
-export {
-    login,
-    getDonaciones,
-    updateDonacion,
-    createDonacion,
-    deleteDonacion,
-    createUser,
-    getOneDonacion,
-    getUsuarios,
-    updateUsuario,
-    createUsuario,
-    deleteUsuario,
-    getOneUsuario,
-    getDonantes,
-    updateDonante,
-    createDonante,
-    deleteDonante,
-    getOneDonante,
-    getDonacionesDashboardTotal,
-    getDonacionesDashboard
-};
