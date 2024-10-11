@@ -10,14 +10,14 @@ async function connectToDB() {
     });
 }
 
-const query = async (query) => {
+export const query = async (query) => {
     const connection = await connectToDB();
     const [data] = await connection.query(query);
     connection.end();
     return data;
 }
 
-async function verifyPassword(username, password) {
+export async function verifyPassword(username, password) {
     const user = await getUserByUsername(username);
     if (!user) {
         throw new Error('User not found');
@@ -29,7 +29,7 @@ async function verifyPassword(username, password) {
     return user;
 }
 
-async function getUserByUsername(username) {
+export async function getUserByUsername(username) {
     const conn = await connectToDB();
     const [rows] = await conn.execute(
         "SELECT * FROM usuarios WHERE username = ?",
@@ -40,7 +40,7 @@ async function getUserByUsername(username) {
 }
 
 //Donaciones
-const getDonaciones = async (req, res) => {
+export const getDonaciones = async (req, res) => {
     try {
         const connection = await connectToDB();  // Assuming you're using a connection pool
         let query = "SELECT * FROM donaciones";
@@ -96,7 +96,7 @@ const getDonaciones = async (req, res) => {
     }
 };
 
-const createDonacion = async ({ id_usuario, fecha, cantidad, tipo, estado, pais }) => {
+export const createDonacion = async ({ id_usuario, fecha, cantidad, tipo, estado, pais }) => {
     const query = `
         INSERT INTO donaciones (id_usuario, fecha, cantidad, tipo, estado, pais)
         VALUES (?, ?, ?, ?, ?, ?);
@@ -107,7 +107,7 @@ const createDonacion = async ({ id_usuario, fecha, cantidad, tipo, estado, pais 
     return result.insertId;
 };
 
-const deleteDonacion = async (id) => {
+export const deleteDonacion = async (id) => {
     const connection = await connectToDB();
     const [result] = await connection.execute(
         "DELETE FROM donaciones WHERE id = ?",
@@ -117,7 +117,7 @@ const deleteDonacion = async (id) => {
     return result.affectedRows;
 }
 
-async function updateDonacion(id, donacionData) {
+export async function updateDonacion(id, donacionData) {
     const { id_usuario, fecha, cantidad, tipo, estado, pais } = donacionData;
     const conn = await connectToDB();
     const [result] = await conn.execute(
@@ -128,7 +128,7 @@ async function updateDonacion(id, donacionData) {
     return result;
 }
 
-async function getOneDonacion(id) {
+export async function getOneDonacion(id) {
     const conn = await connectToDB();
     const [rows] = await conn.execute(
         "SELECT * FROM donaciones WHERE id = ?",
@@ -140,7 +140,7 @@ async function getOneDonacion(id) {
 //Donaciones end
 
 //Usuarios
-async function getUsuarios(query) {
+export async function getUsuarios(query) {
     const conn = await connectToDB();
     let sql = "SELECT * FROM usuarios";
     let params = [];
@@ -160,7 +160,7 @@ async function getUsuarios(query) {
     return rows;
 }
 
-async function updateUsuario(id, updateData) {
+export async function updateUsuario(id, updateData) {
     const conn = await connectToDB();
     const [result] = await conn.execute(
         `UPDATE usuarios SET ? WHERE id = ?`,
@@ -170,7 +170,7 @@ async function updateUsuario(id, updateData) {
     return result;
 }
 
-async function deleteUsuario(id) {
+export async function deleteUsuario(id) {
     const conn = await connectToDB();
     const [result] = await conn.execute(
         "DELETE FROM usuarios WHERE id = ?",
@@ -180,7 +180,7 @@ async function deleteUsuario(id) {
     return result;
 }
 
-async function getOneUsuario(id) {
+export async function getOneUsuario(id) {
     const conn = await connectToDB();
     const [rows] = await conn.execute(
         "SELECT * FROM usuarios WHERE id = ?",
@@ -190,7 +190,7 @@ async function getOneUsuario(id) {
     return rows[0];
 }
 
-async function createUsuario(username, password, role) {
+export async function createUsuario(username, password, role) {
     if (!username || !password || !role) {
         throw new Error('Username, password, and role are required');
     }
@@ -215,7 +215,7 @@ async function createUsuario(username, password, role) {
 //Usuarios End
 
 //Donantes
-async function getDonantes(query) {
+export async function getDonantes(query) {
     const conn = await connectToDB();
     let sql = "SELECT * FROM donantes";
     let params = [];
@@ -238,7 +238,7 @@ async function getDonantes(query) {
     return rows;
 }
 
-async function updateDonante(id, updateData) {
+export async function updateDonante(id, updateData) {
     const conn = await connectToDB();
     const [result] = await conn.execute(
         `UPDATE donantes SET ? WHERE id = ?`,
@@ -248,7 +248,7 @@ async function updateDonante(id, updateData) {
     return result;
 }
 
-async function deleteDonante(id) {
+export async function deleteDonante(id) {
     const conn = await connectToDB();
     const [result] = await conn.execute(
         "DELETE FROM donantes WHERE id = ?",
@@ -258,7 +258,7 @@ async function deleteDonante(id) {
     return result;
 }
 
-async function getOneDonante(id) {
+export async function getOneDonante(id) {
     const conn = await connectToDB();
     const [rows] = await conn.execute(
         "SELECT * FROM donantes WHERE id = ?",
@@ -268,7 +268,7 @@ async function getOneDonante(id) {
     return rows[0];
 }
 
-async function createDonante({ nombre, apellido, email }) {
+export async function createDonante({ nombre, apellido, email }) {
     const conn = await connectToDB();
     const [result] = await conn.execute(
         "INSERT INTO donantes (nombre, apellido, email) VALUES (?, ?, ?)",
@@ -284,7 +284,7 @@ async function createDonante({ nombre, apellido, email }) {
 //Donantes end
 
 //Dashboard
-async function getDonacionesDashboardTotal() {
+export async function getDonacionesDashboardTotal() {
     const conn = await connectToDB();
     const [rows] = await conn.execute(
         "SELECT tipo, SUM(cantidad) AS total FROM donaciones GROUP BY tipo"
@@ -306,7 +306,7 @@ async function getDonacionesDashboardTotal() {
     return formattedResult;
 }
 
-async function getDonacionesDashboard(tipo) {
+export async function getDonacionesDashboard(tipo) {
     const conn = await connectToDB();
     const [rows] = await conn.execute(
         "SELECT SUM(cantidad) AS total FROM donaciones WHERE tipo = ?",
@@ -315,26 +315,3 @@ async function getDonacionesDashboard(tipo) {
     conn.end();
     return rows;
 }
-
-export { 
-    getUserByUsername,
-    getDonaciones,
-    verifyPassword,
-    createUsuario,
-    query,
-    createDonacion,
-    deleteDonacion,
-    updateDonacion,
-    getOneDonacion,
-    getUsuarios,
-    updateUsuario,
-    deleteUsuario,
-    getOneUsuario,
-    getDonantes,
-    updateDonante,
-    createDonante,
-    deleteDonante,
-    getOneDonante,
-    getDonacionesDashboardTotal,
-    getDonacionesDashboard
-};

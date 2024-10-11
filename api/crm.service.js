@@ -9,17 +9,6 @@ export const login = async (username, password) => {
     }
 };
 
-/*
-const createUser = async (username, password, role) => {
-    try {
-        const userId = await db.createUser(username, password, role);
-        return userId;
-    } catch (error) {
-        throw error;
-    }
-}
-*/
-
 //Donanciones
 export const getDonaciones = async (query) => {
     let result;

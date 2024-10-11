@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import * as crmService from './crm.service.js';
 import * as crmMysql from './crm.mysql.js';
 
-const login = async (req, res) => {
+export const login = async (req, res) => {
     console.log('Login request');
     try {
         const { username, password } = req.body;
@@ -24,7 +24,7 @@ const login = async (req, res) => {
 };
 
 //Donanciones
-const getDonaciones = async (req, res) => {
+export const getDonaciones = async (req, res) => {
     try {
         if ("_sort" in req.query) {
             let sortBy = req.query._sort;
@@ -60,7 +60,7 @@ const getDonaciones = async (req, res) => {
     }
 }
 
-const updateDonacion = async (req, res) => {
+export const updateDonacion = async (req, res) => {
     try {
         const data = await crmService.updateDonacion(req.params.id, req.body);
         res.json(data);
@@ -69,7 +69,7 @@ const updateDonacion = async (req, res) => {
     }
 };
 
-const createDonacion = async (req, res) => {
+export const createDonacion = async (req, res) => {
     try {
         const { id_usuario, fecha, cantidad, tipo, estado, pais } = req.body;
         const newData = await crmService.createDonacion({ id_usuario, fecha, cantidad, tipo, estado, pais });
@@ -79,7 +79,7 @@ const createDonacion = async (req, res) => {
     }
 };
 
-const deleteDonacion = async (req, res) => {
+export const deleteDonacion = async (req, res) => {
     try {
         const data = await crmService.deleteDonacion(req.params.id);
         res.json(data);
@@ -88,7 +88,7 @@ const deleteDonacion = async (req, res) => {
     }
 };
 
-const getOneDonacion = async (req, res) => {
+export const getOneDonacion = async (req, res) => {
 try {
     const data = await crmService.getOneDonacion(req.params.id);
     res.json(data);
@@ -99,7 +99,7 @@ try {
 // Donaciones End
 
 //Usuarios
-const getUsuarios = async (req, res) => {
+export const getUsuarios = async (req, res) => {
     try {
         if ("_sort" in req.query) {
             let sortBy = req.query._sort;
@@ -135,7 +135,7 @@ const getUsuarios = async (req, res) => {
     }
 }
 
-const updateUsuario = async (req, res) => {
+export const updateUsuario = async (req, res) => {
     try {
         const data = await crmService.updateUsuario(req.params.id, req.body);
         res.json(data);
@@ -144,7 +144,7 @@ const updateUsuario = async (req, res) => {
     }
 };
 
-const createUsuario = async (req, res) => {
+export const createUsuario = async (req, res) => {
     try {
         const { username, password, role } = req.body;
         const userId = await crmService.createUsuario(username, password, role);
@@ -154,7 +154,7 @@ const createUsuario = async (req, res) => {
     }
 };
 
-const deleteUsuario = async (req, res) => {
+export const deleteUsuario = async (req, res) => {
     try {
         const data = await crmService.deleteUsuario(req.params.id);
         res.json(data);
@@ -163,7 +163,7 @@ const deleteUsuario = async (req, res) => {
     }
 };
 
-const getOneUsuario = async (req, res) => {
+export const getOneUsuario = async (req, res) => {
     try {
         const data = await crmService.getOneUsuario(req.params.id);
         res.json(data);
@@ -174,7 +174,7 @@ const getOneUsuario = async (req, res) => {
 //Usuarios End
 
 //Donantes
-const getDonantes = async (req, res) => {
+export const getDonantes = async (req, res) => {
     try {
         if ("_sort" in req.query) {
             let sortBy = req.query._sort;
@@ -210,7 +210,7 @@ const getDonantes = async (req, res) => {
     }
 }
 
-const updateDonante = async (req, res) => {
+export const updateDonante = async (req, res) => {
     try {
         const data = await crmService.updateDonante(req.params.id, req.body);
         res.json(data);
@@ -219,7 +219,7 @@ const updateDonante = async (req, res) => {
     }
 };
 
-const createDonante = async (req, res) => {
+export const createDonante = async (req, res) => {
     try {
         const { nombre, apellido, email, telefono, pais } = req.body;
         const newData = await crmService.createDonante({ nombre, apellido, email });
@@ -229,7 +229,7 @@ const createDonante = async (req, res) => {
     }
 };
 
-const deleteDonante = async (req, res) => {
+export const deleteDonante = async (req, res) => {
     try {
         const data = await crmService.deleteDonante(req.params.id);
         res.json(data);
@@ -238,7 +238,7 @@ const deleteDonante = async (req, res) => {
     }
 };
 
-const getOneDonante = async (req, res) => {
+export const getOneDonante = async (req, res) => {
     try {
         const data = await crmService.getOneDonante(req.params.id);
         res.json(data);
@@ -249,7 +249,7 @@ const getOneDonante = async (req, res) => {
 //Donantes End
 
 // extra
-const getDonacionesDashboardTotal = async (req, res) => {
+export const getDonacionesDashboardTotal = async (req, res) => {
     try {
         const data = await crmService.getDonacionesDashboardTotal();
         res.json(data);
@@ -258,7 +258,7 @@ const getDonacionesDashboardTotal = async (req, res) => {
     }
 }
 
-const getDonacionesDashboard = async (req, res) => {
+export const getDonacionesDashboard = async (req, res) => {
     try {
         const data = await crmService.getDonacionesDashboard(req.params.tipo);
         res.set("Access-Control-Expose-Headers", "X-Total-Count");
@@ -269,25 +269,4 @@ const getDonacionesDashboard = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-}
-
-export {
-    login,
-    getDonaciones,
-    updateDonacion,
-    createDonacion,
-    deleteDonacion,
-    getOneDonacion,
-    getUsuarios,
-    updateUsuario,
-    createUsuario,
-    deleteUsuario,
-    getOneUsuario,
-    getDonantes,
-    updateDonante,
-    createDonante,
-    deleteDonante,
-    getOneDonante,
-    getDonacionesDashboardTotal,
-    getDonacionesDashboard
 }
