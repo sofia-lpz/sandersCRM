@@ -74,6 +74,10 @@ export const createDonacion = async (req, res) => {
 };
 
 export const deleteDonacion = async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).json({ error: "ID is required" });
+        return;
+    }
     try {
         const data = await crmService.deleteDonacion(req.params.id);
         res.json(data);
@@ -83,6 +87,10 @@ export const deleteDonacion = async (req, res) => {
 };
 
 export const getOneDonacion = async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).json({ error: "ID is required" });
+        return;
+    }
 try {
     const data = await crmService.getOneDonacion(req.params.id);
     res.json(data);
@@ -138,6 +146,10 @@ export const createUsuario = async (req, res) => {
 };
 
 export const deleteUsuario = async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).json({ error: "ID is required" });
+        return;
+    }
     try {
         const data = await crmService.deleteUsuario(req.params.id);
         res.json(data);
@@ -147,6 +159,10 @@ export const deleteUsuario = async (req, res) => {
 };
 
 export const getOneUsuario = async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).json({ error: "ID is required" });
+        return;
+    }
     try {
         const data = await crmService.getOneUsuario(req.params.id);
         res.json(data);
@@ -201,6 +217,10 @@ export const createDonante = async (req, res) => {
 };
 
 export const deleteDonante = async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).json({ error: "ID is required" });
+        return;
+    }
     try {
         const data = await crmService.deleteDonante(req.params.id);
         res.json(data);
@@ -210,6 +230,10 @@ export const deleteDonante = async (req, res) => {
 };
 
 export const getOneDonante = async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).json({ error: "ID is required" });
+        return;
+    }
     try {
         const data = await crmService.getOneDonante(req.params.id);
         res.json(data);
