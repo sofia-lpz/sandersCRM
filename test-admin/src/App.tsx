@@ -10,9 +10,9 @@ import { Layout } from "./Layout";
 import dataProvider from "./dataProvider";
 import authProvider from './authProvider';
 
-import { DonacionCreate, DonacionEdit, DonacionList } from "./donaciones";
-import { UsuarioCreate, UsuarioList } from "./usuarios";
-import { DonanteCreate } from "./donantes";
+import { DonacionCreate, DonacionEdit, DonacionList, DonacionShow } from "./donaciones";
+import { UsuarioCreate, UsuarioList, UsuarioEdit, UsuarioShow } from "./usuarios";
+import { DonanteCreate, DonanteEdit, DonanteShow, DonanteList } from "./donantes";
 
 import i18nProvider from './i18nProvider';
 import Dashboard from './Dashboard';
@@ -30,9 +30,9 @@ export const App = () => (
           <Resource
             name="usuarios"
             list={UsuarioList}
-            edit={EditGuesser}
+            edit={UsuarioEdit}
             create={UsuarioCreate}
-            show={ShowGuesser}
+            show={UsuarioShow}
           />
         )}
         <Resource
@@ -45,13 +45,13 @@ export const App = () => (
           create={DonacionCreate}
           list={DonacionList}
           edit={DonacionEdit}
-          show={ShowGuesser}
+          show={DonacionShow}
         />
         <Resource
           name="donantes"
-          list={ListGuesser}
-          edit={EditGuesser}
-          show={ShowGuesser}
+          list={DonanteList}
+          edit={DonanteEdit}
+          show={DonanteShow}
           create={DonanteCreate}
         />
       </>
