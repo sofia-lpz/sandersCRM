@@ -10,13 +10,6 @@ async function connectToDB() {
     });
 }
 
-export const query = async (query) => {
-    const connection = await connectToDB();
-    const [data] = await connection.query(query);
-    connection.end();
-    return data;
-}
-
 export async function verifyPassword(username, password) {
     const user = await getUserByUsername(username);
     if (!user) {
