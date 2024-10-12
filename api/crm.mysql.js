@@ -39,6 +39,18 @@ export const getDonaciones = async (req) => {
         let query = "SELECT * FROM donaciones";
         let params = [];
 
+        const filters = [];
+        for (const [key, value] of Object.entries(req.query)) {
+            if (key !== "_sort" && key !== "_order" && key !== "_start" && key !== "_end") {
+                filters.push(`${connection.escapeId(key)} = ?`);
+                params.push(value);
+            }
+        }
+
+        if (filters.length > 0) {
+            query += " WHERE " + filters.join(" AND ");
+        }
+
         if ("_sort" in req.query) {
             let sortBy = req.query._sort;
             let sortOrder = req.query._order === "ASC" ? "ASC" : "DESC";
@@ -46,17 +58,10 @@ export const getDonaciones = async (req) => {
             let end = Number(req.query._end) || 10;
 
             query += ` ORDER BY ${connection.escapeId(sortBy)} ${sortOrder} LIMIT ?, ?`;
-            params.push(start, end - start);  // Limit takes (offset, count)
-
-            const [data] = await connection.query(query, params);
-
-            return (data);
-
-        } else {
-            // Fetch all donations if no sorting or filtering
-            const [data] = await connection.query(query);
-            return (data);
+            params.push(start, end - start);
         }
+        const [data] = await connection.query(query, params);
+        return data;
     } catch (error) {
         throw error;
     }
@@ -139,27 +144,31 @@ export async function getUsuarios(req) {
         let query = "SELECT * FROM usuarios";
         let params = [];
 
-        // Sorting and pagination
+        const filters = [];
+        for (const [key, value] of Object.entries(req.query)) {
+            if (key !== "_sort" && key !== "_order" && key !== "_start" && key !== "_end") {
+                filters.push(`${connection.escapeId(key)} = ?`);
+                params.push(value);
+            }
+        }
+
+        if (filters.length > 0) {
+            query += " WHERE " + filters.join(" AND ");
+        }
+
         if ("_sort" in req.query) {
             let sortBy = req.query._sort;
             let sortOrder = req.query._order === "ASC" ? "ASC" : "DESC";
             let start = Number(req.query._start) || 0;
             let end = Number(req.query._end) || 10;
 
-            // Modify the query for sorting and pagination
             query += ` ORDER BY ${connection.escapeId(sortBy)} ${sortOrder} LIMIT ?, ?`;
-            params.push(start, end - start);  // Limit takes (offset, count)
-
-            // Execute the query
-            const [data] = await connection.query(query, params);
-            return (data);
-
-        } else {
-            const [data] = await connection.query(query);
-            return (data);
+            params.push(start, end - start);
         }
+        const [data] = await connection.query(query, params);
+        return data;
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        throw error;
     }
 }
 
@@ -236,6 +245,18 @@ export async function getDonantes(req) {
         let query = "SELECT * FROM donantes";
         let params = [];
 
+        const filters = [];
+        for (const [key, value] of Object.entries(req.query)) {
+            if (key !== "_sort" && key !== "_order" && key !== "_start" && key !== "_end") {
+                filters.push(`${connection.escapeId(key)} = ?`);
+                params.push(value);
+            }
+        }
+
+        if (filters.length > 0) {
+            query += " WHERE " + filters.join(" AND ");
+        }
+
         if ("_sort" in req.query) {
             let sortBy = req.query._sort;
             let sortOrder = req.query._order === "ASC" ? "ASC" : "DESC";
@@ -243,19 +264,12 @@ export async function getDonantes(req) {
             let end = Number(req.query._end) || 10;
 
             query += ` ORDER BY ${connection.escapeId(sortBy)} ${sortOrder} LIMIT ?, ?`;
-            params.push(start, end - start);  // Limit takes (offset, count)
-
-            const [data] = await connection.query(query, params);
-
-            return (data);
-
-        } else {
-            // Fetch all donations if no sorting or filtering
-            const [data] = await connection.query(query);
-            return (data);
+            params.push(start, end - start);
         }
+        const [data] = await connection.query(query, params);
+        return data;
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        throw error;
     }
 }
 
