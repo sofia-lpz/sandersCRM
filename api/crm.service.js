@@ -114,9 +114,9 @@ export const getOneUsuario = async (id) => {
 //Usuarios end
 
 //Donantes
-export const getDonantes = async (query) => {
+export const getDonantes = async (req) => {
     try {
-        const result = await db.getDonantes(query);
+        const result = await db.getDonantes(req);
         return result;
     }
     catch (error) {

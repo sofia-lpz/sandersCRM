@@ -65,9 +65,31 @@ export const getDonaciones = async (req) => {
             return (data);
         }
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        throw error;
     }
 };
+
+export async function updateDonacion(id, updateData) {
+    try{
+    const conn = await connectToDB();
+
+    const keys = Object.keys(updateData);
+    const values = Object.values(updateData);
+    const setClause = keys.map(key => `${key} = ?`).join(', ');
+    
+    values.push(id);
+    const query = `UPDATE donaciones SET ${setClause} WHERE id = ?`;
+    
+    await conn.execute(query, values);
+    
+    const [updatedRow] = await conn.execute("SELECT * FROM donaciones WHERE id = ?", [id]);
+    conn.end();
+    return updatedRow[0];
+    }
+    catch (error) {
+        throw error;
+    }
+}
 
 export const createDonacion = async ({ id_usuario, fecha, cantidad, tipo, estado, pais }) => {
     const query = `
@@ -88,17 +110,6 @@ export const deleteDonacion = async (id) => {
     );
     connection.end();
     return result.affectedRows;
-}
-
-export async function updateDonacion(id, donacionData) {
-    const { id_usuario, fecha, cantidad, tipo, estado, pais } = donacionData;
-    const conn = await connectToDB();
-    const [result] = await conn.execute(
-        `UPDATE donaciones SET id_usuario = ?, fecha = ?, cantidad = ?, tipo = ?, estado = ?, pais = ? WHERE id = ?`,
-        [id_usuario, fecha, cantidad, tipo, estado, pais, id]
-    );
-    conn.end();
-    return result;
 }
 
 export async function getOneDonacion(id) {
@@ -144,13 +155,25 @@ export async function getUsuarios(req) {
 }
 
 export async function updateUsuario(id, updateData) {
+    try{
     const conn = await connectToDB();
-    const [result] = await conn.execute(
-        `UPDATE usuarios SET ? WHERE id = ?`,
-        [updateData, id]
-    );
+
+    const keys = Object.keys(updateData);
+    const values = Object.values(updateData);
+    const setClause = keys.map(key => `${key} = ?`).join(', ');
+    
+    values.push(id);
+    const query = `UPDATE usuarios SET ${setClause} WHERE id = ?`;
+    
+    await conn.execute(query, values);
+    
+    const [updatedRow] = await conn.execute("SELECT * FROM usuarios WHERE id = ?", [id]);
     conn.end();
-    return result;
+    return updatedRow[0];
+    }
+    catch (error) {
+        throw error;
+    }
 }
 
 export async function deleteUsuario(id) {
@@ -228,13 +251,25 @@ export async function getDonantes(req) {
 }
 
 export async function updateDonante(id, updateData) {
-    const conn = await connectToDB();
-    const [result] = await conn.execute(
-        `UPDATE donantes SET ? WHERE id = ?`,
-        [updateData, id]
-    );
-    conn.end();
-    return result;
+    try{
+        const conn = await connectToDB();
+    
+        const keys = Object.keys(updateData);
+        const values = Object.values(updateData);
+        const setClause = keys.map(key => `${key} = ?`).join(', ');
+        
+        values.push(id);
+        const query = `UPDATE donantes SET ${setClause} WHERE id = ?`;
+        
+        await conn.execute(query, values);
+        
+        const [updatedRow] = await conn.execute("SELECT * FROM donantes WHERE id = ?", [id]);
+        conn.end();
+        return updatedRow[0];
+        }
+        catch (error) {
+            throw error;
+        }
 }
 
 export async function deleteDonante(id) {

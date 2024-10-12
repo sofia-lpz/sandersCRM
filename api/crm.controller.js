@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 import * as crmService from './crm.service.js';
-import * as crmMysql from './crm.mysql.js';
 
 export const login = async (req, res) => {
     try {
