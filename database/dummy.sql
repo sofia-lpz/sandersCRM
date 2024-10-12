@@ -48,7 +48,3 @@ INSERT INTO donaciones (id_donante, campana, fecha, cantidad, tipo, estado, pais
 (18, 'agua', '2024-11-10', 1600, 'efectivo', 'England', 'UK'),
 (19, 'nutricion', '2024-12-05', 1700, 'efectivo', 'New South Wales', 'Australia'),
 (20, 'reproductiva', '2025-01-25', 1800, 'digital', 'Maharashtra', 'India');
-
--- Insert dummy data into stats table
-INSERT INTO stats (total_donaciones, total_donantes) VALUES
-(2000, 20);
