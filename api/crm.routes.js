@@ -5,9 +5,6 @@ import { checkAdminRole } from './middleware/role.js';
 
 const router = express.Router();
 
-// Remove for prod
-router.post('/create-user', crmController.createUsuario);
-
 // Login endpoint (no token required)
 router.post('/login', crmController.login);
 
@@ -32,7 +29,7 @@ router.delete('/donantes/:id', verifyToken, crmController.deleteDonante);
 router.get('/donantes/:id', verifyToken, crmController.getOneDonante);
 
 
-router.get('/dashboard/donaciones/total', crmController.getDonacionesDashboardTotal);
-router.get('/dashboard/donaciones/:tipo', crmController.getDonacionesDashboard);
+router.get('/dashboard/donaciones/total', verifyToken, crmController.getDonacionesDashboardTotal);
+router.get('/dashboard/donaciones/:tipo', verifyToken, crmController.getDonacionesDashboard);
 
 export { router };
