@@ -23,6 +23,7 @@ export const DonanteCreate = () => (
             <TextInput label="Nombre" source="nombre" validate={validateNotEmpty}/>
             <TextInput label="Apellido" source="apellido" validate={validateNotEmpty}/>
             <TextInput label="Email" source="email" validate={validateEmail}/>
+            <TextInput label="Telefono" source="telefono"/>
         </SimpleForm>
     </Create>
 );
@@ -34,6 +35,7 @@ export const DonanteShow = () => (
             <TextField label="Nombre" source="nombre" />
             <TextField label="Apellido" source="apellido" />
             <TextField label="Email" source="email" />
+            <TextField label="Telefono" source="telefono" />
         </SimpleShowLayout>
     </Show>
 );
@@ -44,6 +46,7 @@ export const DonanteEdit = () => (
             <TextInput label="Nombre" source="nombre" validate={validateNotEmpty}/>
             <TextInput label="Apellido" source="apellido" validate={validateNotEmpty}/>
             <TextInput label="Email" source="email" validate={validateEmail}/>
+            <TextInput label="Telefono" source="telefono"/>
         </SimpleForm >
     </Edit>
 );
@@ -55,6 +58,7 @@ export const DonanteList = () => (
             <TextField label="Nombre" source="nombre" />
             <TextField label="Apellido" source="apellido" />
             <TextField label="Email" source="email" />
+            <TextField label="Telefono" source="telefono" />
         </Datagrid>
     </List>
 );
