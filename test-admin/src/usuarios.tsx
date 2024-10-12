@@ -9,6 +9,7 @@ import { Create,
     Show,
     SimpleShowLayout,
     required,
+    PasswordInput
 } from 'react-admin';
 import { useState } from 'react';
 
@@ -25,20 +26,20 @@ export const UsuarioCreate = () => {
     return (
         <Create>
             <SimpleForm>
-                <TextInput source="username" validate={validateNotEmpty}/>
-                <SelectInput source="role" choices={[
+                <TextInput label="Username" source="username" validate={validateNotEmpty}/>
+                <SelectInput label="Role" source="role" choices={[
                     { id: 'admin', name: 'Admin' },
                     { id: 'user', name: 'User' }
                 ]} validate={validateNotEmpty}/>
-                <TextInput 
+                <PasswordInput 
+                    label="Password"
                     source="password" 
-                    type="password" 
                     validate={validateNotEmpty} 
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <TextInput 
+                <PasswordInput 
+                    label="Confirm Password"
                     source="confirmPassword" 
-                    type="password" 
                     validate={[required(), validatePasswordsMatch]} 
                     onChange={(e) => setConfirmPassword(e.target.value)}
                 />
@@ -50,9 +51,9 @@ export const UsuarioCreate = () => {
 export const UsuarioList = () => (
     <List>
         <Datagrid>
-            <TextField source="id" />
-            <TextField source="username" />
-            <TextField source="role" />
+            <TextField label="ID" source="id" />
+            <TextField label="Username" source="username" />
+            <TextField label="Role" source="role" />
         </Datagrid>
     </List>
 );
@@ -60,8 +61,8 @@ export const UsuarioList = () => (
 export const UsuarioEdit = () => (
     <Edit>
         <SimpleForm>
-            <TextInput source="username" validate={validateNotEmpty}/>
-            <SelectInput source="role" choices={[
+            <TextInput label="Username" source="username" validate={validateNotEmpty}/>
+            <SelectInput label="Role" source="role" choices={[
                 { id: 'admin', name: 'Admin' },
                 { id: 'user', name: 'User' }
             ]} validate={validateNotEmpty}/>
@@ -72,9 +73,9 @@ export const UsuarioEdit = () => (
 export const UsuarioShow = () => (
     <Show>
         <SimpleShowLayout>
-            <TextField source="id" />
-            <TextField source="username" />
-            <TextField source="role" />
+            <TextField label="ID" source="id" />
+            <TextField label="Username" source="username" />
+            <TextField label="Role" source="role" />
         </SimpleShowLayout>
     </Show>
 );

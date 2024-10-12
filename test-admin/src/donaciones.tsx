@@ -15,13 +15,35 @@ import { Create,
     NumberField,
     TextField,
     Show,
-    SimpleShowLayout
+    SimpleShowLayout,
+    ChipField,
+    RadioButtonGroupInput,
  } from 'react-admin';
 
 const validateNotEmpty = [required()];
-const validateCantidad = [required(), (value: any) => (value > 0 ? undefined : 'Cantidad must be greater than zero')];
+const validateCantidad = [required(), (value: number) => (value > 0 ? undefined : 'Cantidad must be greater than zero')];
 
-// TODO: ADD VALIDATION FOR CANTIDAD THAT WORKS
+import { Filter, useListContext } from 'react-admin';
+
+const DonacionFilter = (props) => (
+    <Filter {...props}>
+        <TextInput label="Pais" source="pais" />
+        <ReferenceInput label="Donante" source="id_donante" reference="donantes">
+            <AutocompleteInput optionText="nombre" />
+        </ReferenceInput>
+        <SelectInput label="Campaña" source="campana" choices={[
+            { id: 'reproductiva', name: 'Salud Reproductiva' },
+            { id: 'agua', name: 'Campaña de Agua' },
+            { id: 'nutricion', name: 'Nutricion' }
+        ]} />
+        <DateInput label="Fecha Desde" source="fecha_gte" />
+        <DateInput label="Fecha Hasta" source="fecha_lte" />
+        <RadioButtonGroupInput label="Tipo" source="tipo" choices={[
+            { id: 'digital', name: 'Digital' },
+            { id: 'efectivo', name: 'Efectivo' }
+        ]} />
+    </Filter>
+);
 
 export const DonacionCreate = () => (
     <Create>
@@ -29,19 +51,19 @@ export const DonacionCreate = () => (
             <ReferenceInput label="Donante" source="id_donante" reference="donantes">
                 <AutocompleteInput optionText="nombre" validate={validateNotEmpty}/>
             </ReferenceInput>
-            <SelectInput source="campana" choices={[
+            <SelectInput label="Campaña" source="campana" choices={[
                 { id: 'reproductiva', name: 'Salud Reproductiva' },
                 { id: 'agua', name: 'Campaña de Agua' },
                 { id: 'nutricion', name: 'Nutricion' }
             ]} validate={validateNotEmpty}/>
-            <DateInput source="fecha" validate={validateNotEmpty}/>
-            <NumberInput source="cantidad" validate={validateCantidad} />
-            <SelectInput source="tipo" choices={[
+            <DateInput label="Fecha" source="fecha" validate={validateNotEmpty}/>
+            <NumberInput label="Cantidad" source="cantidad" validate={validateCantidad} />
+            <RadioButtonGroupInput label="Tipo" source="tipo" choices={[
                 { id: 'digital', name: 'Digital' },
                 { id: 'efectivo', name: 'Efectivo' }
             ]} validate={validateNotEmpty}/>
-            <TextInput source="estado" />
-            <TextInput source="pais" />
+            <TextInput label="Estado" source="estado" />
+            <TextInput label="Pais" source="pais" />
         </SimpleForm>
     </Create>
 );
@@ -52,35 +74,36 @@ export const DonacionEdit = () => (
             <ReferenceInput label="Donante" source="id_donante" reference="donantes">
                 <AutocompleteInput optionText="nombre" validate={validateNotEmpty}/>
             </ReferenceInput>
-            <SelectInput source="campana" choices={[
+            <SelectInput label="Campaña" source="campana" choices={[
                 { id: 'reproductiva', name: 'Salud Reproductiva' },
                 { id: 'agua', name: 'Campaña de Agua' },
                 { id: 'nutricion', name: 'Nutricion' }
             ]} validate={validateNotEmpty}/>
-            <DateInput source="fecha" validate={validateNotEmpty}/>
-            <NumberInput source="cantidad" validate={validateNotEmpty}/>
-            <SelectInput source="tipo" choices={[
+            <DateInput label="Fecha" source="fecha" validate={validateNotEmpty}/>
+            <NumberInput label="Cantidad" source="cantidad" validate={validateCantidad}/>
+            <RadioButtonGroupInput label="Tipo" source="tipo" choices={[
                 { id: 'digital', name: 'Digital' },
                 { id: 'efectivo', name: 'Efectivo' }
             ]} validate={validateNotEmpty}/>
-            <TextInput source="estado" />
-            <TextInput source="pais" />
+            <TextInput label="Estado" source="estado" />
+            <TextInput label="Pais" source="pais" />
         </SimpleForm>
     </Edit>
 );
 
 export const DonacionList = () => (
-    <List>
+    <List filters={<DonacionFilter />}>
         <Datagrid>
-            <TextField source="id" />
+            <TextField label="ID" source="id" />
             <ReferenceField label="Donante" source="id_donante" reference="donantes">
                 <TextField source="nombre" />
             </ReferenceField>
-            <DateField source="fecha" />
-            <NumberField source="cantidad" />
-            <TextField source="tipo" />
-            <TextField source="estado" />
-            <TextField source="pais" />
+            <ChipField label="Campaña" source="campana" />
+            <DateField label="Fecha" source="fecha" />
+            <NumberField label="Cantidad" source="cantidad" />
+            <TextField label="Tipo" source="tipo" />
+            <TextField label="Estado" source="estado" />
+            <TextField label="Pais" source="pais" />
         </Datagrid>
     </List>
 );
@@ -88,15 +111,16 @@ export const DonacionList = () => (
 export const DonacionShow = () => (
     <Show>
         <SimpleShowLayout>
-            <TextField source="id" />
+            <TextField label="ID" source="id" />
             <ReferenceField label="Donante" source="id_donante" reference="donantes">
                 <TextField source="nombre" />
             </ReferenceField>
-            <DateField source="fecha" />
-            <NumberField source="cantidad" />
-            <TextField source="tipo" />
-            <TextField source="estado" />
-            <TextField source="pais" />
+            <ChipField label="Campaña" source="campana" />
+            <DateField label="Fecha" source="fecha" />
+            <NumberField label="Cantidad" source="cantidad" />
+            <TextField label="Tipo" source="tipo" />
+            <TextField label="Estado" source="estado" />
+            <TextField label="Pais" source="pais" />
         </SimpleShowLayout>
     </Show>
 );
