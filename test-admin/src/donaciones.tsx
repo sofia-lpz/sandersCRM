@@ -9,7 +9,13 @@ import { Create,
     ReferenceInput,
     required,
     Edit,
-
+    Datagrid,
+    DateField,
+    List,
+    NumberField,
+    TextField,
+    Show,
+    SimpleShowLayout
  } from 'react-admin';
 
 const validateNotEmpty = [required()];
@@ -63,30 +69,29 @@ export const DonacionEdit = () => (
     </Edit>
 );
 
-import { Datagrid, DateField, List, NumberField, TextField } from 'react-admin';
-
 export const DonacionList = () => (
     <List>
         <Datagrid>
             <TextField source="id" />
+            <ReferenceField label="Donante" source="id_donante" reference="donantes">
+                <TextField source="nombre" />
+            </ReferenceField>
             <DateField source="fecha" />
             <NumberField source="cantidad" />
             <TextField source="tipo" />
             <TextField source="estado" />
             <TextField source="pais" />
-            <ReferenceField label="Donante" source="id_donante" reference="donantes">
-                <TextField source="nombre" />
-            </ReferenceField>
         </Datagrid>
     </List>
 );
-
-import { Show, SimpleShowLayout } from 'react-admin';
 
 export const DonacionShow = () => (
     <Show>
         <SimpleShowLayout>
             <TextField source="id" />
+            <ReferenceField label="Donante" source="id_donante" reference="donantes">
+                <TextField source="nombre" />
+            </ReferenceField>
             <DateField source="fecha" />
             <NumberField source="cantidad" />
             <TextField source="tipo" />

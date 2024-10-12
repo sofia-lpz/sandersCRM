@@ -1,12 +1,25 @@
-import { Create, SimpleForm, TextInput, DateInput, NumberInput, SelectInput, ReferenceField,
-    Show, SimpleShowLayout, TextField } from 'react-admin';
+import { Create, 
+    SimpleForm, 
+    TextInput, 
+    required,
+    Edit,
+    Show,
+    SimpleShowLayout,
+    TextField,
+    email,
+    List,
+    Datagrid
+ } from 'react-admin';
+
+ const validateNotEmpty = [required()];
+ const validateEmail = [email()];
 
 export const DonanteCreate = () => (
     <Create>
         <SimpleForm>
-            <TextInput source="nombre" />
-            <TextInput source="apellido" />
-            <TextInput source="email" />
+            <TextInput source="nombre" validate={validateNotEmpty}/>
+            <TextInput source="apellido" validate={validateNotEmpty}/>
+            <TextInput source="email" validate={validateEmail}/>
         </SimpleForm>
     </Create>
 );
@@ -18,9 +31,27 @@ export const DonanteShow = () => (
             <TextField source="nombre" />
             <TextField source="apellido" />
             <TextField source="email" />
-            <ReferenceField label="Donaciones" source="id" reference="donaciones">
-                <TextField source="cantidad" />
-            </ReferenceField>
         </SimpleShowLayout>
     </Show>
+);
+
+export const DonanteEdit = () => (
+    <Edit>
+        <SimpleForm>
+            <TextInput source="nombre" validate={validateNotEmpty}/>
+            <TextInput source="apellido" validate={validateNotEmpty}/>
+            <TextInput source="email" validate={validateEmail}/>
+        </SimpleForm>
+    </Edit>
+);
+
+export const DonanteList = () => (
+    <List>
+        <Datagrid>
+            <TextField source="id" />
+            <TextField source="nombre" />
+            <TextField source="apellido" />
+            <TextField source="email" />
+        </Datagrid>
+    </List>
 );
