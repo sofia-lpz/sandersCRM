@@ -12,9 +12,9 @@ CREATE TABLE usuarios (
 
 CREATE TABLE donantes (
     id int NOT NULL AUTO_INCREMENT,
-    email varchar(50) NOT NULL,
-    nombre varchar(50) NOT NULL,
-    apellido varchar(50) NOT NULL,
+    email varchar(50) NOT NULL DEFAULT 'Sin registro',
+    nombre varchar(50) NOT NULL DEFAULT 'Sin registro',
+    apellido varchar(50) NOT NULL DEFAULT 'Sin registro',
     PRIMARY KEY (id)
 );
 
@@ -25,16 +25,8 @@ CREATE TABLE donaciones (
     fecha date NOT NULL,
     cantidad float NOT NULL,
     tipo enum('digital', 'efectivo', 'especie') NOT NULL,
-    estado varchar(50) NOT NULL DEFAULT 'none',
-    pais varchar(50) NOT NULL DEFAULT 'none',
+    estado varchar(50) NOT NULL DEFAULT 'Sin registro',
+    pais varchar(50) NOT NULL DEFAULT 'Sin registro',
     PRIMARY KEY (id),
-    FOREIGN KEY (id_donante) REFERENCES donantes(id)
-);
-
-CREATE TABLE stats (
-    id int NOT NULL AUTO_INCREMENT,
-    total_donaciones int NOT NULL,
-    total_donantes int NOT NULL,
-    fecha_actualizacion timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id)
+    CONSTRAINT fk_donaciones_donante FOREIGN KEY (id_donante) REFERENCES donantes(id) ON DELETE CASCADE
 );
