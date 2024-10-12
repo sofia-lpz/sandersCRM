@@ -1,7 +1,7 @@
 import express from 'express';
 import * as crmController from './crm.controller.js';
 import { verifyToken } from './middleware/auth.js';
-//import { checkAdminRole } from './middleware/role.js';
+import { checkAdminRole } from './middleware/role.js';
 
 const router = express.Router();
 
@@ -12,11 +12,11 @@ router.post('/create-user', crmController.createUsuario);
 router.post('/login', crmController.login);
 
 //admin routes
-router.get('/usuarios', verifyToken, crmController.getUsuarios);
-router.put('/usuarios/:id', verifyToken, crmController.updateUsuario);
-router.post('/usuarios', verifyToken, crmController.createUsuario);
-router.delete('/usuarios/:id', verifyToken, crmController.deleteUsuario);
-router.get('/usuarios/:id', verifyToken, crmController.getOneUsuario);
+router.get('/usuarios', verifyToken, checkAdminRole, crmController.getUsuarios);
+router.put('/usuarios/:id', verifyToken, checkAdminRole, crmController.updateUsuario);
+router.post('/usuarios', verifyToken, checkAdminRole, crmController.createUsuario);
+router.delete('/usuarios/:id', verifyToken, checkAdminRole, crmController.deleteUsuario);
+router.get('/usuarios/:id', verifyToken, checkAdminRole, crmController.getOneUsuario);
 
 // Protected routes (token required)
 router.get('/donaciones', verifyToken, crmController.getDonaciones);

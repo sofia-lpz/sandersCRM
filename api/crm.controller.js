@@ -8,7 +8,8 @@ export const login = async (req, res) => {
         if (user) {
             // Generate a JWT token
             const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
-            res.send({ status: "OK", token });
+            const role = user.role;
+            res.send({ status: "OK", token, role });
             console.log(`User ${username} logged in`);
         }
     } catch (error) {
