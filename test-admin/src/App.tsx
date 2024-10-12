@@ -11,7 +11,7 @@ import { Layout } from "./Layout";
 import dataProvider from "./dataProvider";
 import authProvider from './authProvider';
 
-import { DonacionCreate, DonacionList } from "./donaciones";
+import { DonacionCreate, DonacionEdit, DonacionList } from "./donaciones";
 import { UsuarioCreate, UsuarioList } from "./usuarios";
 import { DonanteCreate, DonanteShow } from "./donantes";
 
@@ -26,7 +26,7 @@ export const App = () => (
   >
     <Resource name="usuarios" list={UsuarioList} edit={EditGuesser} create={UsuarioCreate} show={ShowGuesser}/>
     <Resource name="dashboard" list={Dashboard} options={{ label: 'Dashboard' }} />
-    <Resource name="donaciones" create={DonacionCreate} list={DonacionList} edit={EditGuesser} show={ShowGuesser}/>
+    <Resource name="donaciones" create={DonacionCreate} list={DonacionList} edit={DonacionEdit} show={ShowGuesser}/>
     <Resource name="donantes" list={ListGuesser} edit={EditGuesser} show={ShowGuesser} create={DonanteCreate}/>
 
   </Admin>
