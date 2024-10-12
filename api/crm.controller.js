@@ -1,65 +1,43 @@
 import jwt from 'jsonwebtoken';
 import * as crmService from './crm.service.js';
-import * as crmMysql from './crm.mysql.js';
 
-const login = async (req, res) => {
-    console.log('Login request');
+export const login = async (req, res) => {
     try {
         const { username, password } = req.body;
         const user = await crmService.login(username, password);
         if (user) {
             // Generate a JWT token
             const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
-            res.send({ status: "OK", token });
+            const role = user.role;
+            res.send({ status: "OK", token, role });
             console.log(`User ${username} logged in`);
-        } else {
-            res.status(401).send({ status: "Error", message: "Invalid credentials" });
-            console.log(`Failed login attempt for user ${username}`);
         }
     } catch (error) {
-        console.error(error);
-        res.status(500).send({ status: "Error", message: error.message });
+        if (error.message === 'User not found' || error.message === 'Invalid password') {
+            res.status(401).send({ status: "Error", message: "Invalid credentials" });
+        } else {
+            console.error(error);
+            res.status(500).send({ status: "Error", message: "Internal Server Error" });
+        }
     }
 };
 
-const createUser = async (req, res) => {
-    try {
-        const { username, password, sudo } = req.body;
-        const userId = await crmService.createUser(username, password, sudo);
-        res.json({ id: userId, username, sudo });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-}
-
-const getDonaciones = async (req, res) => {
+//Donanciones
+export const getDonaciones = async (req, res) => {
     try {
         if ("_sort" in req.query) {
-            let sortBy = req.query._sort;
-            let sortOrder = req.query._order === "ASC" ? 1 : -1;
             let start = Number(req.query._start);
             let end = Number(req.query._end);
-            let sorter = {};
-            sorter[sortBy] = sortOrder;
 
-
-            let data = await crmMysql.getDonaciones(req, res);
-
+            let data = await crmService.getDonaciones(req);
 
             res.set("Access-Control-Expose-Headers", "X-Total-Count");
             res.set("X-Total-Count", data.length);
             res.set("Content-Range", `${start}-${end}/${data.length}`);
             data = data.slice(start, end);
             res.json(data);
-        } else if ("id" in req.query) {
-            let data = [];
-            for (let index = 0; index < req.query.id.length; index++) {
-                let dbData = await crmMysql.getDonaciones(req, res);
-                data = data.concat(dbData);
-            }
-            res.json(data);
         } else {
-            let data = await crmMysql.getDonaciones(req, res);
+            let data = await crmService.getDonaciones(req);
             res.set("Access-Control-Expose-Headers", "X-Total-Count");
             res.set("X-Total-Count", data.length);
             res.set("Content-Range", `0-${data.length}/${data.length}`);
@@ -70,7 +48,15 @@ const getDonaciones = async (req, res) => {
     }
 }
 
-const updateDonacion = async (req, res) => {
+// TODO: Add validation for the fields in updates: robustness
+export const updateDonacion = async (req, res) => {
+    if (!req.body.id_donante || !req.body.campana || !req.body.fecha || !req.body.cantidad || !req.body.tipo) {
+        res.status(400).json({ error: "Data is required" });
+        return;
+    } else if (req.body.cantidad <= 0) {
+        res.status(400).json({ error: "Cantidad must be greater than 0" });
+        return;
+    }
     try {
         const data = await crmService.updateDonacion(req.params.id, req.body);
         res.json(data);
@@ -79,17 +65,20 @@ const updateDonacion = async (req, res) => {
     }
 };
 
-const createDonacion = async (req, res) => {
+export const createDonacion = async (req, res) => {
     try {
-        const { id_usuario, fecha, cantidad, tipo, estado, pais } = req.body;
-        const newData = await crmService.createDonacion({ id_usuario, fecha, cantidad, tipo, estado, pais });
+        const newData = await crmService.createDonacion(req);
         res.json(newData);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
 
-const deleteDonacion = async (req, res) => {
+export const deleteDonacion = async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).json({ error: "ID is required" });
+        return;
+    }
     try {
         const data = await crmService.deleteDonacion(req.params.id);
         res.json(data);
@@ -98,7 +87,11 @@ const deleteDonacion = async (req, res) => {
     }
 };
 
-const getOneDonacion = async (req, res) => {
+export const getOneDonacion = async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).json({ error: "ID is required" });
+        return;
+    }
 try {
     const data = await crmService.getOneDonacion(req.params.id);
     res.json(data);
@@ -106,15 +99,170 @@ try {
     res.status(500).json({ error: error.message });
 }
 };
+// Donaciones End
 
+//Usuarios
+export const getUsuarios = async (req, res) => {
+    try {
+        if ("_sort" in req.query) {
+            let start = Number(req.query._start);
+            let end = Number(req.query._end);
 
+            let data = await crmService.getUsuarios(req);
 
-export {
-    login,
-    getDonaciones,
-    updateDonacion,
-    createDonacion,
-    deleteDonacion,
-    createUser,
-    getOneDonacion
+            res.set("Access-Control-Expose-Headers", "X-Total-Count");
+            res.set("X-Total-Count", data.length);
+            res.set("Content-Range", `${start}-${end}/${data.length}`);
+            data = data.slice(start, end);
+            res.json(data);
+        } else {
+            let data = await crmService.getUsuarios(req);
+            res.set("Access-Control-Expose-Headers", "X-Total-Count");
+            res.set("X-Total-Count", data.length);
+            res.set("Content-Range", `0-${data.length}/${data.length}`);
+            res.json(data);
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+export const updateUsuario = async (req, res) => {
+    try {
+        const data = await crmService.updateUsuario(req.params.id, req.body);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+export const createUsuario = async (req, res) => {
+    try {
+        const { username, password, role } = req.body;
+        const userId = await crmService.createUsuario(username, password, role);
+        res.json({ id: userId, username, role });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+export const deleteUsuario = async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).json({ error: "ID is required" });
+        return;
+    }
+    try {
+        const data = await crmService.deleteUsuario(req.params.id);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+export const getOneUsuario = async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).json({ error: "ID is required" });
+        return;
+    }
+    try {
+        const data = await crmService.getOneUsuario(req.params.id);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+//Usuarios End
+
+//Donantes
+export const getDonantes = async (req, res) => {
+    try {
+        if ("_sort" in req.query) {
+            let start = Number(req.query._start);
+            let end = Number(req.query._end);
+
+            let data = await crmService.getDonantes(req);
+
+            res.set("Access-Control-Expose-Headers", "X-Total-Count");
+            res.set("X-Total-Count", data.length);
+            res.set("Content-Range", `${start}-${end}/${data.length}`);
+            data = data.slice(start, end);
+            res.json(data);
+        } else {
+            let data = await crmService.getDonantes(req);
+            res.set("Access-Control-Expose-Headers", "X-Total-Count");
+            res.set("X-Total-Count", data.length);
+            res.set("Content-Range", `0-${data.length}/${data.length}`);
+            res.json(data);
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+export const updateDonante = async (req, res) => {
+    try {
+        const data = await crmService.updateDonante(req.params.id, req.body);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+export const createDonante = async (req, res) => {
+    try {
+        const newData = await crmService.createDonante(req);
+        res.json(newData);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+export const deleteDonante = async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).json({ error: "ID is required" });
+        return;
+    }
+    try {
+        const data = await crmService.deleteDonante(req.params.id);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+export const getOneDonante = async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).json({ error: "ID is required" });
+        return;
+    }
+    try {
+        const data = await crmService.getOneDonante(req.params.id);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+//Donantes End
+
+// extra
+export const getDonacionesDashboardTotal = async (req, res) => {
+    try {
+        const data = await crmService.getDonacionesDashboardTotal();
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+export const getDonacionesDashboard = async (req, res) => {
+    try {
+        const data = await crmService.getDonacionesDashboard(req.params.tipo);
+        res.set("Access-Control-Expose-Headers", "X-Total-Count");
+        res.set("X-Total-Count", data.length);
+        res.set("Content-Range", `0-${data.length}/${data.length}`);
+        
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 }
