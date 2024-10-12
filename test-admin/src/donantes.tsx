@@ -8,8 +8,11 @@ import { Create,
     TextField,
     email,
     List,
-    Datagrid
+    Datagrid,
+    Confirm
  } from 'react-admin';
+
+ import { MyToolbar } from './Donante_toolbar';
 
  const validateNotEmpty = [required()];
  const validateEmail = [email()];
@@ -37,11 +40,11 @@ export const DonanteShow = () => (
 
 export const DonanteEdit = () => (
     <Edit>
-        <SimpleForm>
+        <SimpleForm toolbar={<MyToolbar />}>
             <TextInput label="Nombre" source="nombre" validate={validateNotEmpty}/>
             <TextInput label="Apellido" source="apellido" validate={validateNotEmpty}/>
             <TextInput label="Email" source="email" validate={validateEmail}/>
-        </SimpleForm>
+        </SimpleForm >
     </Edit>
 );
 
