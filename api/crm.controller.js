@@ -47,7 +47,15 @@ export const getDonaciones = async (req, res) => {
     }
 }
 
+// TODO: Add validation for the fields in updates: robustness
 export const updateDonacion = async (req, res) => {
+    if (!req.body.id_donante || !req.body.campana || !req.body.fecha || !req.body.cantidad || !req.body.tipo) {
+        res.status(400).json({ error: "Data is required" });
+        return;
+    } else if (req.body.cantidad <= 0) {
+        res.status(400).json({ error: "Cantidad must be greater than 0" });
+        return;
+    }
     try {
         const data = await crmService.updateDonacion(req.params.id, req.body);
         res.json(data);
@@ -58,8 +66,7 @@ export const updateDonacion = async (req, res) => {
 
 export const createDonacion = async (req, res) => {
     try {
-        const { id_usuario, fecha, cantidad, tipo, estado, pais } = req.body;
-        const newData = await crmService.createDonacion({ id_usuario, fecha, cantidad, tipo, estado, pais });
+        const newData = await crmService.createDonacion(req);
         res.json(newData);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -186,8 +193,7 @@ export const updateDonante = async (req, res) => {
 
 export const createDonante = async (req, res) => {
     try {
-        const { nombre, apellido, email, telefono, pais } = req.body;
-        const newData = await crmService.createDonante({ nombre, apellido, email });
+        const newData = await crmService.createDonante(req);
         res.json(newData);
     } catch (error) {
         res.status(500).json({ error: error.message });

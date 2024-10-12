@@ -20,7 +20,7 @@ router.get('/usuarios/:id', verifyToken, crmController.getOneUsuario);
 
 // Protected routes (token required)
 router.get('/donaciones', verifyToken, crmController.getDonaciones);
-router.put('/donaciones/:id', verifyToken, crmController.updateDonacion);
+router.put('/donaciones/:id', crmController.updateDonacion);
 router.post('/donaciones', verifyToken, crmController.createDonacion);
 router.delete('/donaciones/:id', verifyToken, crmController.deleteDonacion);
 router.get('/donaciones/:id', verifyToken, crmController.getOneDonacion);

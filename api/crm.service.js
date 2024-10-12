@@ -30,9 +30,9 @@ export const updateDonacion = async (id, updateData) => {
     }
 };
 
-export const createDonacion = async (newData) => {
+export const createDonacion = async (req) => {
     try {
-        const result = await db.createDonacion(newData);
+        const result = await db.createDonacion(req);
         return result;
     }
     catch (error) {
@@ -134,9 +134,9 @@ export const updateDonante = async (id, updateData) => {
     }
 };
 
-export const createDonante = async (newData) => {
+export const createDonante = async (req) => {
     try {
-        const result = await db.createDonante(newData);
+        const result = await db.createDonante(req);
         return result;
     }
     catch (error) {

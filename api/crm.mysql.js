@@ -91,15 +91,31 @@ export async function updateDonacion(id, updateData) {
     }
 }
 
-export const createDonacion = async ({ id_usuario, fecha, cantidad, tipo, estado, pais }) => {
-    const query = `
-        INSERT INTO donaciones (id_usuario, fecha, cantidad, tipo, estado, pais)
-        VALUES (?, ?, ?, ?, ?, ?);
-    `;
-    const connection = await connectToDB();
-    const [result] = await connection.execute(query, [id_usuario, fecha, cantidad, tipo, estado, pais]);
-    connection.end();
-    return result.insertId;
+export const createDonacion = async (req) => {
+    try {
+        const conn = await connectToDB();
+        const {
+            id_donante,
+            campana,
+            fecha = new Date().toISOString().split('T')[0],
+            cantidad = 0,
+            tipo = 'digital',
+            estado = 'Sin registro', 
+            pais = 'Sin registro'
+        } = req.body;
+
+        const query = `
+            INSERT INTO donaciones (id_donante, campana, fecha, cantidad, tipo, estado, pais)
+            VALUES (?, ?, ?, ?, ?, ?, ?);
+        `;
+        const [result] = await conn.execute(query, [id_donante, campana, fecha, cantidad, tipo, estado, pais]);
+
+        const [newData] = await conn.execute("SELECT * FROM donaciones WHERE id = ?", [result.insertId]);
+        conn.end();
+        return newData[0];
+    } catch (error) {
+        throw error;
+    }
 };
 
 export const deleteDonacion = async (id) => {
@@ -292,18 +308,27 @@ export async function getOneDonante(id) {
     return rows[0];
 }
 
-export async function createDonante({ nombre, apellido, email }) {
-    const conn = await connectToDB();
-    const [result] = await conn.execute(
-        "INSERT INTO donantes (nombre, apellido, email) VALUES (?, ?, ?)",
-        [nombre, apellido, email]
-    );
-    const [rows] = await conn.execute(
-        "SELECT * FROM donantes WHERE id = ?",
-        [result.insertId]
-    );
-    conn.end();
-    return rows[0]; // Return the newly created record
+export async function createDonante(req) {
+    try {
+        const conn = await connectToDB();
+        const {
+            email = 'Sin registro',
+            nombre = 'Sin registro',
+            apellido = 'Sin registro',
+        } = req.body;
+
+        const query = `
+            INSERT INTO donantes (email, nombre, apellido)
+            VALUES (?, ?, ?);
+        `;
+        const [result] = await conn.execute(query, [email, nombre, apellido]);
+
+        const [newData] = await conn.execute("SELECT * FROM donantes WHERE id = ?", [result.insertId]);
+        conn.end();
+        return newData[0];
+    } catch (error) {
+        throw error;
+    }
 }
 //Donantes end
 
