@@ -17,9 +17,9 @@ import { Create,
 export const DonanteCreate = () => (
     <Create>
         <SimpleForm>
-            <TextInput source="nombre" validate={validateNotEmpty}/>
-            <TextInput source="apellido" validate={validateNotEmpty}/>
-            <TextInput source="email" validate={validateEmail}/>
+            <TextInput label="Nombre" source="nombre" validate={validateNotEmpty}/>
+            <TextInput label="Apellido" source="apellido" validate={validateNotEmpty}/>
+            <TextInput label="Email" source="email" validate={validateEmail}/>
         </SimpleForm>
     </Create>
 );
@@ -27,10 +27,10 @@ export const DonanteCreate = () => (
 export const DonanteShow = () => (
     <Show>
         <SimpleShowLayout>
-            <TextField source="id" />
-            <TextField source="nombre" />
-            <TextField source="apellido" />
-            <TextField source="email" />
+            <TextField label="ID" source="id" />
+            <TextField label="Nombre" source="nombre" />
+            <TextField label="Apellido" source="apellido" />
+            <TextField label="Email" source="email" />
         </SimpleShowLayout>
     </Show>
 );
@@ -38,9 +38,9 @@ export const DonanteShow = () => (
 export const DonanteEdit = () => (
     <Edit>
         <SimpleForm>
-            <TextInput source="nombre" validate={validateNotEmpty}/>
-            <TextInput source="apellido" validate={validateNotEmpty}/>
-            <TextInput source="email" validate={validateEmail}/>
+            <TextInput label="Nombre" source="nombre" validate={validateNotEmpty}/>
+            <TextInput label="Apellido" source="apellido" validate={validateNotEmpty}/>
+            <TextInput label="Email" source="email" validate={validateEmail}/>
         </SimpleForm>
     </Edit>
 );
@@ -48,10 +48,10 @@ export const DonanteEdit = () => (
 export const DonanteList = () => (
     <List>
         <Datagrid>
-            <TextField source="id" />
-            <TextField source="nombre" />
-            <TextField source="apellido" />
-            <TextField source="email" />
+            <TextField label="ID" source="id" />
+            <TextField label="Nombre" source="nombre" />
+            <TextField label="Apellido" source="apellido" />
+            <TextField label="Email" source="email" />
         </Datagrid>
     </List>
 );
