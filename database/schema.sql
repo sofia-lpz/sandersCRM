@@ -12,6 +12,7 @@ CREATE TABLE usuarios (
 
 CREATE TABLE donantes (
     id int NOT NULL AUTO_INCREMENT,
+    telefono varchar(50) NOT NULL DEFAULT 'Sin registro',
     email varchar(50) NOT NULL DEFAULT 'Sin registro',
     nombre varchar(50) NOT NULL DEFAULT 'Sin registro',
     apellido varchar(50) NOT NULL DEFAULT 'Sin registro',

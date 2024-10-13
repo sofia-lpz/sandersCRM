@@ -9,9 +9,13 @@ import { Create,
     Show,
     SimpleShowLayout,
     required,
-    PasswordInput
+    PasswordInput,
+    FilterList,
+    FilterListItem,
+    CardContentInner
 } from 'react-admin';
 import { useState } from 'react';
+import PersonIcon from '@mui/icons-material/Person';
 
 const validateNotEmpty = [required()];
 
@@ -48,8 +52,17 @@ export const UsuarioCreate = () => {
     );
 };
 
+const UsuarioFilterList = () => (
+    <CardContentInner>
+        <FilterList label="Role" icon={<PersonIcon />}>
+            <FilterListItem label="Admin" value={{ role: 'admin' }} />
+            <FilterListItem label="User" value={{ role: 'user' }} />
+        </FilterList>
+    </CardContentInner>
+);
+
 export const UsuarioList = () => (
-    <List>
+    <List aside={<UsuarioFilterList />}>
         <Datagrid>
             <TextField label="ID" source="id" />
             <TextField label="Username" source="username" />
