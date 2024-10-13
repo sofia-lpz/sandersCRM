@@ -18,21 +18,61 @@ import { Create,
     SimpleShowLayout,
     ChipField,
     RadioButtonGroupInput,
+    CreateButton,
+    FilterButton,
+    FilterForm,
+    ListBase,
+    Pagination,
+    SearchInput
  } from 'react-admin';
+ import { Stack } from '@mui/material';
 
- import { DonacionFilter } from './filters';
 const validateNotEmpty = [required()];
 const validateCantidad = [required(), (value: number) => (value > 0 ? undefined : 'Cantidad must be greater than zero')];
-import { FilterLiveSearch } from 'react-admin';
-import { Card, CardContent } from '@mui/material';
 
-const FilterSidebar = () => (
-    <Card sx={{ order: -1, mr: 2, mt: 9, width: 200 }}>
-        <CardContent>
-            <FilterLiveSearch source="q" label="Search" />
-            <DonacionFilter context="button" />
-        </CardContent>
-    </Card>
+const DonacionesFilters = [
+    <SearchInput source="q" alwaysOn />,
+    <TextInput label="Pais" source="pais" />,
+    <ReferenceInput label="Donante" source="id_donante" reference="donantes">
+        <AutocompleteInput optionText="nombre" />
+    </ReferenceInput>,
+    <SelectInput label="Campaña" source="campana" choices={[
+        { id: 'reproductiva', name: 'Salud Reproductiva' },
+        { id: 'agua', name: 'Campaña de Agua' },
+        { id: 'nutricion', name: 'Nutricion' }
+        ]} />,
+    <DateInput label="Fecha Desde" source="fecha_gte" />,
+    <DateInput label="Fecha Hasta" source="fecha_lte" />,
+        <RadioButtonGroupInput label="Tipo" source="tipo" choices={[
+            { id: 'digital', name: 'Digital' },
+            { id: 'efectivo', name: 'Efectivo' }
+        ]} />
+];
+
+const ListToolbar = () => (
+    <Stack direction="row" justifyContent="space-between">
+        <FilterForm filters={DonacionesFilters} />
+        <FilterButton filters={DonacionesFilters} />
+        <CreateButton />
+    </Stack>
+)
+
+export const DonacionList = () => (
+    <ListBase>
+        <ListToolbar />
+        <Datagrid>
+            <TextField label="ID" source="id" />
+            <ReferenceField label="Donante" source="id_donante" reference="donantes">
+                <TextField source="nombre" />
+            </ReferenceField>
+            <ChipField label="Campaña" source="campana" />
+            <DateField label="Fecha" source="fecha" />
+            <NumberField label="Cantidad" source="cantidad" options={{ style: 'currency', currency: 'MXN' }}/>
+            <TextField label="Tipo" source="tipo" />
+            <TextField label="Estado" source="estado" />
+            <TextField label="Pais" source="pais" />
+        </Datagrid>
+    </ListBase>
 );
 
 export const DonacionCreate = () => (
@@ -79,23 +119,6 @@ export const DonacionEdit = () => (
             <TextInput label="Pais" source="pais" />
         </SimpleForm>
     </Edit>
-);
-
-export const DonacionList = () => (
-    <List aside={<FilterSidebar />}>
-        <Datagrid>
-            <TextField label="ID" source="id" />
-            <ReferenceField label="Donante" source="id_donante" reference="donantes">
-                <TextField source="nombre" />
-            </ReferenceField>
-            <ChipField label="Campaña" source="campana" />
-            <DateField label="Fecha" source="fecha" />
-            <NumberField label="Cantidad" source="cantidad" options={{ style: 'currency', currency: 'MXN' }}/>
-            <TextField label="Tipo" source="tipo" />
-            <TextField label="Estado" source="estado" />
-            <TextField label="Pais" source="pais" />
-        </Datagrid>
-    </List>
 );
 
 export const DonacionShow = () => (

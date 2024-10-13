@@ -12,16 +12,50 @@ import { Create,
     PasswordInput,
     FilterList,
     FilterListItem,
-    CardContentInner
+    CardContentInner,
+    FilterButton,
+    CreateButton,
+    FilterForm,
+    RadioButtonGroupInput,
+    SearchInput,
+    ListBase,
 } from 'react-admin';
 import { useState } from 'react';
 import PersonIcon from '@mui/icons-material/Person';
+import { Stack } from '@mui/material';
 
 const validateNotEmpty = [required()];
-
 const validatePasswordsMatch = (value: string, allValues: { password: string }) => {
     return value === allValues.password ? undefined : 'Passwords do not match';
 };
+
+const UsuariosFilters = [
+    <SearchInput source="q" alwaysOn />,
+    <TextInput label="Nombre de Usuario" source="username" />,
+    <RadioButtonGroupInput label="Role" source="role" choices={[
+        { id: 'admin', name: 'Admin' },
+        { id: 'user', name: 'User' }
+    ]} />,
+];
+
+const ListToolbar = () => (
+    <Stack direction="row" justifyContent="center">
+        <FilterForm filters={UsuariosFilters} />
+        <FilterButton filters={UsuariosFilters} />
+        <CreateButton />
+    </Stack>
+)
+
+export const UsuarioList = () => (
+    <ListBase>
+        <ListToolbar />
+        <Datagrid>
+            <TextField label="ID" source="id" />
+            <TextField label="Username" source="username" />
+            <TextField label="Role" source="role" />
+        </Datagrid>
+    </ListBase>
+);
 
 export const UsuarioCreate = () => {
     const [password, setPassword] = useState('');
@@ -59,16 +93,6 @@ const UsuarioFilterList = () => (
             <FilterListItem label="User" value={{ role: 'user' }} />
         </FilterList>
     </CardContentInner>
-);
-
-export const UsuarioList = () => (
-    <List aside={<UsuarioFilterList />}>
-        <Datagrid>
-            <TextField label="ID" source="id" />
-            <TextField label="Username" source="username" />
-            <TextField label="Role" source="role" />
-        </Datagrid>
-    </List>
 );
 
 export const UsuarioEdit = () => (
