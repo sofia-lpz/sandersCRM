@@ -12,7 +12,7 @@ import { Create,
     Confirm
  } from 'react-admin';
 
- import { MyToolbar } from './Donante_toolbar';
+ import { MyToolbar } from '../components/Donante_toolbar';
 
  const validateNotEmpty = [required()];
  const validateEmail = [email()];

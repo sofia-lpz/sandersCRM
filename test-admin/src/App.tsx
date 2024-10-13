@@ -1,21 +1,18 @@
 import {
   Admin,
   Resource,
-  ListGuesser,
-  EditGuesser,
-  ShowGuesser,
 } from "react-admin";
 
 import { Layout } from "./Layout";
-import dataProvider from "./dataProvider";
-import authProvider from './authProvider';
+import dataProvider from "./providers/dataProvider";
+import authProvider from './providers/authProvider';
 
-import { DonacionCreate, DonacionEdit, DonacionList, DonacionShow } from "./donaciones";
-import { UsuarioCreate, UsuarioList, UsuarioEdit, UsuarioShow } from "./usuarios";
-import { DonanteCreate, DonanteEdit, DonanteShow, DonanteList } from "./donantes";
+import { DonacionCreate, DonacionEdit, DonacionList, DonacionShow } from "./resources/donaciones";
+import { UsuarioCreate, UsuarioList, UsuarioEdit, UsuarioShow } from "./resources/usuarios";
+import { DonanteCreate, DonanteEdit, DonanteShow, DonanteList } from "./resources/donantes";
 
 import i18nProvider from './i18nProvider';
-import Dashboard from './Dashboard';
+import Dashboard from './resources/Dashboard';
 
 export const App = () => (
   <Admin
