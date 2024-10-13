@@ -7,26 +7,22 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Donaciones</h1>
-        <p>Apóyanos con una donación para seguir mejorando nuestros servicios.</p>
+    <div id="donate-button-container">
+        <div id="donate-button"></div>
+        <script src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js" charset="UTF-8"></script>
+        <script>
+        PayPal.Donation.Button({
+        env:'sandbox',
+        hosted_button_id:'LELTJ352VUTA4',
+        image: {
+        src:'https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif',
+        alt:'Donate with PayPal button',
+        title:'PayPal - The safer, easier way to pay online!',
+        }
+        }).render('#donate-button');
+        </script>
+        </div>
         
-        <!-- Botón de donación de PayPal -->
-        <div id="donate-button-container">
-            <div id="donate-button"></div>
-            <script src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js" charset="UTF-8"></script>
-            <script>
-            PayPal.Donation.Button({
-            env:'production',
-            hosted_button_id:'7FGNRFXZ5G68S',
-            image: {
-            src:'https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif',
-            alt:'Donate with PayPal button',
-            title:'PayPal - The safer, easier way to pay online!',
-            }
-            }).render('#donate-button');
-            </script>
-            </div>
             
     </div>
 </body>
