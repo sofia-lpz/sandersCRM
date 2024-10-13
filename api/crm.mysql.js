@@ -54,15 +54,15 @@ export const getDonaciones = async (req) => {
                 const searchValue = `%${req.query.q}%`;
                 filters.push("(tipo LIKE ? OR campana LIKE ? OR estado LIKE ? OR pais LIKE ?)");
                 params.push(searchValue, searchValue, searchValue, searchValue);
-            } else {
-                for (const [key, value] of Object.entries(req.query)) {
-                    if (key !== "_sort" && key !== "_order" && key !== "_start" && key !== "_end" && key !== "id") {
-                        filters.push(`${connection.escapeId(key)} = ?`);
-                        params.push(value);
-                    }
+            }
+            
+            for (const [key, value] of Object.entries(req.query)) {
+                if (key !== "_sort" && key !== "_order" && key !== "_start" && key !== "_end" && key !== "id" && key !== "q") {
+                    filters.push(`${connection.escapeId(key)} = ?`);
+                    params.push(value);
                 }
             }
-    
+            
             if (filters.length > 0) {
                 query += " WHERE " + filters.join(" AND ");
             }
@@ -77,7 +77,8 @@ export const getDonaciones = async (req) => {
                 query += ` ORDER BY ${connection.escapeId(sortBy)} ${sortOrder} LIMIT ?, ?`;
                 params.push(start, end - start);
             }
-    
+
+            console.log(query);
             const [data] = await connection.query(query, params);
             return data;
         } catch (error) {
@@ -173,13 +174,19 @@ export async function getUsuarios(req) {
             params = params.concat(ids);
         }
 
+        if ("q" in req.query) {
+            const searchValue = `%${req.query.q}%`;
+            filters.push("(username LIKE ? OR role LIKE ?)");
+            params.push(searchValue, searchValue);
+        }
+        
         for (const [key, value] of Object.entries(req.query)) {
-            if (key !== "_sort" && key !== "_order" && key !== "_start" && key !== "_end" && key !== "id") {
+            if (key !== "_sort" && key !== "_order" && key !== "_start" && key !== "_end" && key !== "id" && key !== "q") {
                 filters.push(`${connection.escapeId(key)} = ?`);
                 params.push(value);
             }
         }
-
+        
         if (filters.length > 0) {
             query += " WHERE " + filters.join(" AND ");
         }
@@ -195,6 +202,7 @@ export async function getUsuarios(req) {
             params.push(start, end - start);
         }
 
+        console.log(query);
         const [data] = await connection.query(query, params);
         return data;
     } catch (error) {
@@ -286,13 +294,19 @@ export async function getDonantes(req) {
             params = params.concat(ids);
         }
 
+        if ("q" in req.query) {
+            const searchValue = `%${req.query.q}%`;
+            filters.push("(telefono LIKE ? OR email LIKE ? OR nombre LIKE ? OR apellido LIKE ?)");
+            params.push(searchValue, searchValue, searchValue, searchValue);
+        }
+        
         for (const [key, value] of Object.entries(req.query)) {
-            if (key !== "_sort" && key !== "_order" && key !== "_start" && key !== "_end" && key !== "id") {
+            if (key !== "_sort" && key !== "_order" && key !== "_start" && key !== "_end" && key !== "id" && key !== "q") {
                 filters.push(`${connection.escapeId(key)} = ?`);
                 params.push(value);
             }
         }
-
+        
         if (filters.length > 0) {
             query += " WHERE " + filters.join(" AND ");
         }
@@ -308,6 +322,7 @@ export async function getDonantes(req) {
             params.push(start, end - start);
         }
 
+        console.log(query);
         const [data] = await connection.query(query, params);
         return data;
     } catch (error) {
