@@ -57,10 +57,20 @@ export const getDonaciones = async (req) => {
             }
             
             for (const [key, value] of Object.entries(req.query)) {
-                if (key !== "_sort" && key !== "_order" && key !== "_start" && key !== "_end" && key !== "id" && key !== "q") {
+                if (key !== "_sort" && key !== "_order" && key !== "_start" && key !== "_end" && key !== "id" && key !== "q" && key !== "fecha_gte" && key !== "fecha_lte") {
                     filters.push(`${connection.escapeId(key)} = ?`);
                     params.push(value);
                 }
+            }
+
+            if ("fecha_gte" in req.query) {
+                filters.push("fecha >= ?");
+                params.push(req.query.fecha_gte);
+            }
+
+            if ("fecha_lte" in req.query) {
+                filters.push("fecha <= ?");
+                params.push(req.query.fecha_lte);
             }
             
             if (filters.length > 0) {
