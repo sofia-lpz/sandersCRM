@@ -10,6 +10,13 @@ async function connectToDB() {
     });
 }
 
+export async function countAdminUsers() {
+    const conn = await connectToDB();
+    const [rows] = await conn.execute("SELECT COUNT(*) as count FROM usuarios WHERE role = 'admin'");
+    conn.end();
+    return rows[0].count;
+}
+
 export async function verifyPassword(username, password) {
     const user = await getUserByUsername(username);
     if (!user) {

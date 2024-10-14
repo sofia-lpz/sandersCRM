@@ -144,6 +144,14 @@ export const getUsuarios = async (req, res) => {
 
 export const updateUsuario = async (req, res) => {
     try {
+        const user = await crmService.getOneUsuario(req.params.id);
+        if (user.role === 'admin' && req.body.role !== 'admin') {
+            const adminCount = await crmService.countAdminUsers();
+            if (adminCount <= 1) {
+                res.status(400).json({ error: "Cannot demote the last admin user" });
+                return;
+            }
+        }
         const data = await crmService.updateUsuario(req.params.id, req.body);
         res.json(data);
     } catch (error) {
@@ -167,6 +175,14 @@ export const deleteUsuario = async (req, res) => {
         return;
     }
     try {
+        const user = await crmService.getOneUsuario(req.params.id);
+        if (user.role === 'admin') {
+            const adminCount = await crmService.countAdminUsers();
+            if (adminCount <= 1) {
+                res.status(400).json({ error: "Cannot delete the last admin user" });
+                return;
+            }
+        }
         const data = await crmService.deleteUsuario(req.params.id);
         res.json(data);
     } catch (error) {
