@@ -3,8 +3,9 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { useDataProvider } from 'react-admin';
+import { Box } from '@mui/material'; // Import Box for flex styling
 
 const Dashboard: React.FC = () => {
   const dataProvider = useDataProvider();
@@ -53,13 +54,9 @@ const Dashboard: React.FC = () => {
 
   // Colors for the pie charts
   const DIGITAL_EFECTIVO_COLORS = ['#094D92', '#053B06'];
-  const BLUE_COLOR = '#094D92';
-const GREEN_color = '#053B06';
 
   // Calculate how many times the goal has been crossed
   const timesGoalCrossed = Math.floor(totalDonations / goal);
-  const digitalTimesGoalCrossed = Math.floor(processedData[0].value / goal);
-  const efectivoTimesGoalCrossed = Math.floor(processedData[1].value / goal);
 
   // Calculate data for pie charts
   const goalData = [
@@ -67,38 +64,36 @@ const GREEN_color = '#053B06';
     { name: 'Remaining', value: Math.max(goal - (totalDonations % goal), 0) },
   ];
 
-  const digitalGoalData = [
-    { name: 'Achieved', value: processedData[0].value % goal },
-    { name: 'Remaining', value: Math.max(goal - (processedData[0].value % goal), 0) },
-  ];
-
-  const efectivoGoalData = [
-    { name: 'Achieved', value: processedData[1].value % goal },
-    { name: 'Remaining', value: Math.max(goal - (processedData[1].value % goal), 0) },
-  ];
-
   return (
-    <Card>
-      <CardContent>
-        <Typography variant="h5">Total de Donaciones</Typography>
-        {/* Digital and Efectivo Donations Chart */}
-        <PieChart width={400} height={300}>
-          <Pie
-            data={processedData}
-            cx={200}
-            cy={150}
-            outerRadius={100}
-            dataKey="value"
-            label
-          >
-            {processedData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={DIGITAL_EFECTIVO_COLORS[index % DIGITAL_EFECTIVO_COLORS.length]} />
-            ))}
-          </Pie>
-          <Tooltip />
-        </PieChart>
+    <Card style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <CardContent style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Typography variant="h5" style={{ marginBottom: '20px' }}>Total de Donaciones</Typography>
 
-        <Typography variant="h6" style={{ marginTop: '20px' }}>
+        {/* Display total donations above the pie chart */}
+        <Typography variant="h6" style={{ marginBottom: '20px' }}>
+          Total Recaudado: ${totalDonations}
+        </Typography>
+        
+        {/* Digital and Efectivo Donations Chart */}
+        <Box display="flex" justifyContent="center" flexGrow={1} width="100%">
+          <PieChart width={400} height={400} style={{ flexGrow: 1 }}>
+            <Pie
+              data={processedData}
+              cx="50%"
+              cy="50%"
+              outerRadius="80%"
+              dataKey="value"
+              label
+            >
+              {processedData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={DIGITAL_EFECTIVO_COLORS[index % DIGITAL_EFECTIVO_COLORS.length]} />
+              ))}
+            </Pie>
+            <Tooltip />
+          </PieChart>
+        </Box>
+
+        <Typography variant="h6" style={{ marginTop: '40px' }}>
           Costo de Sistema de filtrado de agua
         </Typography>
         <TextField
@@ -107,7 +102,12 @@ const GREEN_color = '#053B06';
           variant="outlined"
           value={goal}
           onChange={(e) => setGoal(Number(e.target.value))}
-          style={{ marginBottom: '20px', marginTop: '10px' }}
+          style={{ marginBottom: '40px', marginTop: '40px', flexGrow: 1, width: 'auto' }} // Flex width with auto size
+          InputProps={{
+            style: {
+              width: `${goal.toString().length}ch` + 0.1, // Dynamic width based on input length
+            },
+          }}
         />
 
         {/* Total Goal Achievement Chart */}
@@ -115,66 +115,6 @@ const GREEN_color = '#053B06';
         <Typography variant="body1">
           Cuantos sistemas se pueden construir: {timesGoalCrossed}
         </Typography>
-        <PieChart width={400} height={300}>
-          <Pie
-            data={goalData}
-            cx={200}
-            cy={150}
-            outerRadius={100}
-            dataKey="value"
-            label
-            fill={BLUE_COLOR}
-          >
-            {goalData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={index === 0 ? BLUE_COLOR : '#ffffff'} />
-            ))}
-          </Pie>
-          <Tooltip />
-        </PieChart>
-
-        {/* Digital Donations Goal Achievement Chart */}
-        <Typography variant="h5">Porcentaje de dinero recaudado para un sistema (digital)</Typography>
-        <Typography variant="body1">
-          Cuantos sistemas se pueden construir: {digitalTimesGoalCrossed}
-        </Typography>
-        <PieChart width={400} height={300}>
-          <Pie
-            data={digitalGoalData}
-            cx={200}
-            cy={150}
-            outerRadius={100}
-            dataKey="value"
-            label
-            fill={BLUE_COLOR}
-          >
-            {digitalGoalData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={index === 0 ? BLUE_COLOR : '#ffffff'} />
-            ))}
-          </Pie>
-          <Tooltip />
-        </PieChart>
-
-        {/* Efectivo Donations Goal Achievement Chart */}
-        <Typography variant="h5">Porcentaje de dinero recaudado para un sistema (efectivo)</Typography>
-        <Typography variant="body1">
-          Cuantos sistemas se pueden construir: {efectivoTimesGoalCrossed}
-        </Typography>
-        <PieChart width={400} height={300}>
-          <Pie
-            data={efectivoGoalData}
-            cx={200}
-            cy={150}
-            outerRadius={100}
-            dataKey="value"
-            label
-            fill={GREEN_color}
-          >
-            {efectivoGoalData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={index === 0 ? GREEN_color : '#ffffff'} />
-            ))}
-          </Pie>
-          <Tooltip />
-        </PieChart>
       </CardContent>
     </Card>
   );
