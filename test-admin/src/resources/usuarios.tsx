@@ -32,8 +32,13 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 const UsuariosExporter = (usuarios) => {
+    const currentDate = new Date().toLocaleDateString('es-MX');
     const doc = new jsPDF();
-    doc.text('Usuarios de CRM', 10, 10);
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    
+    doc.text(`Reporte de usuarios CRM - Creado: ${currentDate}`, 10, 10);
 
     const tableColumns = ['ID', 'Nombre de Usuario', 'Rol'];
     const tableRows = [];
