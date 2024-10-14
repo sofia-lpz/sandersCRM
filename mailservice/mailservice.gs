@@ -23,11 +23,13 @@ function sendThankYouEmail(recipient, name, donationAmount) {
   `;
 
   try {
+    Logger.log(`Sending email to ${recipient} with subject "${subject}"`);
     MailApp.sendEmail({
       to: recipient,
       subject: subject,
       htmlBody: body
     });
+    Logger.log('Thank You email sent successfully.');
     return 'Thank You email sent!';
   } catch (error) {
     Logger.log('Error sending email: ' + error.message);
@@ -42,24 +44,25 @@ function test(){
 
 function doPost(e) {
   try {
+    Logger.log('Received POST request with data: ' + e.postData.contents);
     var data = JSON.parse(e.postData.contents);
-    var recipient = data.recipient;
-    var subject = data.subject;
-    var body = data.body;
-
-    var email = data.email;
-    var name = data.name;
-    var donationAmount = data.donationAmount;
+    var recipient = data.email;
+    var name = data.nombre;
+    var donationAmount = data.cantidad;
     
-    MailApp.sendEmail({
-      to: recipient,
-      subject: subject,
-      body: body
-    });
+    Logger.log(`Parsed data - Recipient: ${recipient}, Name: ${name}, Donation Amount: ${donationAmount}`);
     
-    return ContentService.createTextOutput('Email sent!');
+    var result = sendThankYouEmail(recipient, name, donationAmount);
+    
+    if (result === 'Thank You email sent!') {
+      Logger.log('Email sent successfully.');
+      return ContentService.createTextOutput('Email sent!').setMimeType(ContentService.MimeType.TEXT).setResponseCode(200);
+    } else {
+      Logger.log('Failed to send email.');
+      return ContentService.createTextOutput('Failed to send email.').setMimeType(ContentService.MimeType.TEXT).setResponseCode(500);
+    }
   } catch (error) {
     Logger.log('Error in doPost: ' + error.message);
-    return ContentService.createTextOutput('Failed to send email.');
+    return ContentService.createTextOutput('Failed to send email.').setMimeType(ContentService.MimeType.TEXT).setResponseCode(500);
   }
 }
