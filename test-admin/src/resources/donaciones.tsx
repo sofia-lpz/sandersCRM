@@ -22,18 +22,59 @@ import { Create,
     FilterButton,
     FilterForm,
     Pagination,
-    SearchInput
+    SearchInput,
+    FetchRelatedRecords
  } from 'react-admin';
- import { Stack } from '@mui/material';
+ import { Stack } from '@mui/material'; 
 
 const validateNotEmpty = [required()];
 const validateCantidad = [required(), (value: number) => (value > 0 ? undefined : 'Cantidad must be greater than zero')];
+
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
+const DonacionesExporter = async (donaciones, fetchRelatedRecords: FetchRelatedRecords) => {
+    const doc = new jsPDF();
+    doc.text('Donaciones Report', 10, 10);
+
+    const tableColumns = ['ID', 'Donante', 'Campaña', 'Fecha', 'Cantidad', 'Tipo', 'Estado', 'Pais'];
+    const tableRows: string[][] = [];
+
+    const donantes = await fetchRelatedRecords<any>(donaciones, 'id_donante', 'donantes');
+    const formatter = new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        currency: 'MXN',
+    });
+
+    donaciones.forEach((donacion) => {
+        const donante = donantes[donacion.id_donante];
+        const row = [
+            donacion.id.toString(),
+            donante ? donante.email : 'Error de registro',
+            donacion.campana,
+            donacion.fecha.slice(0, 10),
+            formatter.format(donacion.cantidad),
+            donacion.tipo,
+            donacion.estado,
+            donacion.pais,
+        ];
+        tableRows.push(row);
+    });
+
+    autoTable(doc, {
+        head: [tableColumns],
+        body: tableRows,
+    });
+
+    // Save the PDF document
+    doc.save('donaciones_report.pdf');
+};
 
 const DonacionesFilters = [
     <SearchInput source="q" alwaysOn />,
     <TextInput label="Pais" source="pais" />,
     <ReferenceInput label="Donante" source="id_donante" reference="donantes">
-        <AutocompleteInput optionText="nombre" />
+        <AutocompleteInput optionText="email" />
     </ReferenceInput>,
     <SelectInput label="Campaña" source="campana" choices={[
         { id: 'reproductiva', name: 'Salud Reproductiva' },
@@ -49,11 +90,11 @@ const DonacionesFilters = [
 ];
 
 export const DonacionList = () => (
-    <List filters = {DonacionesFilters}>
+    <List filters = {DonacionesFilters} exporter={DonacionesExporter}>
         <Datagrid>
             <TextField label="ID" source="id" />
             <ReferenceField label="Donante" source="id_donante" reference="donantes">
-                <TextField source="nombre" />
+                <TextField source="email" />
             </ReferenceField>
             <ChipField label="Campaña" source="campana" />
             <DateField label="Fecha" source="fecha" />
@@ -69,7 +110,7 @@ export const DonacionCreate = () => (
     <Create>
         <SimpleForm>
             <ReferenceInput label="Donante" source="id_donante" reference="donantes">
-                <AutocompleteInput optionText="nombre" validate={validateNotEmpty}/>
+                <AutocompleteInput optionText="email" validate={validateNotEmpty}/>
             </ReferenceInput>
             <SelectInput label="Campaña" source="campana" choices={[
                 { id: 'reproductiva', name: 'Salud Reproductiva' },
@@ -92,7 +133,7 @@ export const DonacionEdit = () => (
     <Edit>
         <SimpleForm>
             <ReferenceInput label="Donante" source="id_donante" reference="donantes">
-                <AutocompleteInput optionText="nombre" validate={validateNotEmpty}/>
+                <AutocompleteInput optionText="email" validate={validateNotEmpty}/>
             </ReferenceInput>
             <SelectInput label="Campaña" source="campana" choices={[
                 { id: 'reproductiva', name: 'Salud Reproductiva' },
@@ -116,7 +157,7 @@ export const DonacionShow = () => (
         <SimpleShowLayout>
             <TextField label="ID" source="id" />
             <ReferenceField label="Donante" source="id_donante" reference="donantes">
-                <TextField source="nombre" />
+                <TextField source="email" />
             </ReferenceField>
             <ChipField label="Campaña" source="campana" />
             <DateField label="Fecha" source="fecha" />
