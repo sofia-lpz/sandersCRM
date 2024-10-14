@@ -4,7 +4,6 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import https from 'https';
-import http from 'http';
 import { router } from './crm.routes.js';
 
 dotenv.config();
@@ -42,8 +41,4 @@ app.use("/api", router);
 // Create the HTTPS server
 https.createServer(sslOptions, app).listen(PORT, () => {
   console.log(`Sanders API listening on HTTPS at port ${PORT}`);
-});
-
-http.createServer(app).listen(8081, () => {
-  console.log(`Sanders API listening on HTTP at port 8081`);
 });
