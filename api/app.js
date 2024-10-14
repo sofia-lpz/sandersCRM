@@ -4,12 +4,15 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import https from 'https';
+import http from 'http';
 import { router } from './crm.routes.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://localhost:5173';
+const MOCK_URL = process.env.MOCK_URL || 'http://localhost:9090';
 
 // Load SSL certificates
 const sslOptions = {
@@ -19,7 +22,7 @@ const sslOptions = {
 
 // CORS configuration
 const corsOptions = {
-  origin: 'https://localhost:5173', // Replace with your React Admin app URL
+  origin: [FRONTEND_URL, MOCK_URL], // Add your HTTP URL here
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true // If you're using cookies or HTTP authentication
 };
@@ -39,4 +42,8 @@ app.use("/api", router);
 // Create the HTTPS server
 https.createServer(sslOptions, app).listen(PORT, () => {
   console.log(`Sanders API listening on HTTPS at port ${PORT}`);
+});
+
+http.createServer(app).listen(8081, () => {
+  console.log(`Sanders API listening on HTTP at port 8081`);
 });
