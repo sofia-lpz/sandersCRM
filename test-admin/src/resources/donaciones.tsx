@@ -157,7 +157,7 @@ export const DonacionEdit = () => (
             <SelectInput label="Campaña" source="campana" choices={[
                 { id: 'reproductiva', name: 'Salud Reproductiva' },
                 { id: 'agua', name: 'Campaña de Agua' },
-                { id: 'nutricion', name: 'Nutricion' }
+                { id: 'nutricion', name: 'Nutricion' },
                 { id: 'sin campaña', name: 'Sin Campaña' }
             ]} validate={validateNotEmpty}/>
             <DateInput label="Fecha" source="fecha" validate={validateNotEmpty}/>
