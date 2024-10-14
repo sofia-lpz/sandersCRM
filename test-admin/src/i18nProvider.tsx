@@ -1,5 +1,4 @@
 import { TranslationMessages } from "ra-core";
-
 const spanishMessages: TranslationMessages = {
   ra: {
     comments: {
@@ -35,6 +34,7 @@ const spanishMessages: TranslationMessages = {
       remove: "Borrar",
       remove_filter: "Borrar filtro",
       save: "Guardar",
+      save_query: "Guardar consulta",
       search: "Buscar",
       show: "Mostrar",
       sort: "Ordenar",
@@ -46,10 +46,12 @@ const spanishMessages: TranslationMessages = {
       auth_check_error: "Por favor inicie sesión para continuar",
       logout: "Cerrar Sesión",
       password: "Contraseña",
-      sign_in: "Acceder",
-      sign_in_error: "La autenticación falló, por favor, vuelva a intentarlo",
-      user_menu: "Perfil",
-      username: "Usuario"
+      username: "Nombre de usuario",
+      login: "Iniciar sesión",
+      register: "Registrarse",
+      forgot_password: "¿Olvidaste tu contraseña?",
+      submit: "Enviar",
+      reset: "Restablecer"
     },
     boolean: {
       true: "Sí",
@@ -68,7 +70,7 @@ const spanishMessages: TranslationMessages = {
       },
       image: {
         upload_several:
-          "Arrastre algunas imagénes para subir o haga clic para seleccionarlas.",
+          "Arrastre algunas imágenes para subir o haga clic para seleccionarlas.",
         upload_single:
           "Arrastre alguna imagen para subir o haga clic para seleccionarla."
       },
@@ -147,22 +149,13 @@ const spanishMessages: TranslationMessages = {
       invite: "¿Quiere agregar una?",
       list: "Lista de %{name}",
       loading: "Cargando",
-      not_found: "No encontrado",
-      show: "%{name} #%{id}"
-    },
-    validation: {
-      email: "Debe ser un correo electrónico válido",
-      maxLength: "Debe contener %{max} caracteres o menos",
-      maxValue: "Debe ser %{max} o menos",
-      minLength: "Debe contener %{min} caracteres al menos",
-      minValue: "Debe ser al menos %{min}",
-      number: "Debe ser un número",
-      oneOf: "Debe ser uno de: %{options}",
-      regex: "Debe coincidir con un formato específico (regexp): %{pattern}",
-      required: "Requerido"
+      not_found: "No encontrado"
     }
   }
 };
+
+export default spanishMessages;
+
 
 
 import polyglotI18nProvider from 'ra-i18n-polyglot';
