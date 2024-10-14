@@ -167,6 +167,13 @@ export const deleteUsuario = async (req, res) => {
         return;
     }
     try {
+        const user = await crmService.getOneUsuario(req.params.id);
+        if (user.role === 'admin') {
+            const adminCount = await crmService.countAdminUsers();
+            if (adminCount <= 1) {
+                return res.status(400).json({ error: "Cannot delete the last admin user" });
+            }
+        }
         const data = await crmService.deleteUsuario(req.params.id);
         res.json(data);
     } catch (error) {
