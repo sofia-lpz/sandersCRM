@@ -35,13 +35,23 @@ CREATE TABLE donaciones (
 
 DELIMITER //
 
-CREATE TRIGGER update_donantes_donaciones
+CREATE TRIGGER update_donantes_donaciones_after_insert
 AFTER INSERT ON donaciones
 FOR EACH ROW
 BEGIN
     UPDATE donantes
     SET donaciones = donaciones + 1
     WHERE id = NEW.id_donante;
+END;
+//
+
+CREATE TRIGGER update_donantes_donaciones_after_delete
+AFTER DELETE ON donaciones
+FOR EACH ROW
+BEGIN
+    UPDATE donantes
+    SET donaciones = donaciones - 1
+    WHERE id = OLD.id_donante;
 END;
 //
 
