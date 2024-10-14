@@ -7,22 +7,15 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="donate-button-container">
-        <div id="donate-button"></div>
-        <script src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js" charset="UTF-8"></script>
-        <script>
-        PayPal.Donation.Button({
-        env:'sandbox',
-        hosted_button_id:'LELTJ352VUTA4',
-        image: {
-        src:'https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif',
-        alt:'Donate with PayPal button',
-        title:'PayPal - The safer, easier way to pay online!',
-        }
-        }).render('#donate-button');
-        </script>
-        </div>
-        
+    <script async
+    src="https://js.stripe.com/v3/buy-button.js">
+  </script>
+  
+  <stripe-buy-button
+    buy-button-id="buy_btn_1Q9op7Fx2SgxhWlTx3HVURkP"
+    publishable-key="pk_test_51Q9oa6Fx2SgxhWlTA1NkyGtvFZIg0VU3HPCRlqLRgQxEVl7eAS8kFZVTvy4R1GpiYGy0IDoOV6Zmhg4JeenzkeRg00GPTiGYkP"
+  >
+  </stripe-buy-button>
             
     </div>
 </body>
