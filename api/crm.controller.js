@@ -80,18 +80,7 @@ export const createDonacion = async (req, res) => {
         const nombre_donante = donante.nombre;
         const cantidad = newData.cantidad;
 
-        const emailData = {
-            email: email_donante,
-            nombre: nombre_donante,
-            cantidad: cantidad,
-        };
-
-        const emailResult = await sendEmail(emailData);
-        if (emailResult.status === 200) {
-            console.log(`Email sent to ${email_donante}`);
-        } else {
-            console.error(emailResult.message);
-        }
+        const emailResult = await sendEmail(email_donante, nombre_donante, cantidad);
 
         res.json(newData);
     } catch (error) {
