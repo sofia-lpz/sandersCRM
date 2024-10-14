@@ -12,7 +12,14 @@ const spanishMessages: TranslationMessages = {
         body: "Cuerpo"
       }
     },
+    saved_queries: {
+      new_label: "Guardar consulta",
+      query_name: "Nombre de la consulta",
+      
+      new_dialog_title: "Guardar consulta",
+    },
     action: {
+      remove_all_filters: "Eliminar todos los filtros",
       add: "Añadir",
       add_filter: "Añadir filtro",
       back: "Ir atrás",
