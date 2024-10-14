@@ -2,19 +2,45 @@ import express from 'express';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import bodyParser from 'body-parser';
+import cors from 'cors';
+import https from 'https';
+import http from 'http';
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3004;
+const API = 8080; // HTTP port for non-secure traffic
 
+// Load SSL certificates
+const sslOptions = {
+  key: fs.readFileSync('../certificados_mock/server.key'),
+  cert: fs.readFileSync('../certificados_mock/server.cert')
+};
+
+// CORS configuration
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || 'https://localhost:5173', // Adjust as necessary
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true // Allow cookies and HTTP authentication
+};
+
+// Use CORS middleware with options
+app.use(cors(corsOptions));
+
+// Serve static files from the "public" directory
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
-app.listen(PORT, () => {
-  console.log("hola mundo desde el puerto" + PORT)
+// HTTPS server
+https.createServer(sslOptions, app).listen(PORT, () => {
+  console.log(`Server listening on HTTPS at port ${PORT}`);
 });
 
+// HTTP server
+
+
+// Serve the main HTML page
 app.get('/', (req, res) => {
   fs.readFile('./public/index.html', 'utf8', (err, html) => {
     if (err) {
@@ -26,10 +52,10 @@ app.get('/', (req, res) => {
   });
 });
 
-// Add the endpoint to handle the form submission
+// Endpoint to handle the form submission
 app.post('/submit-donation', async (req, res) => {
   try {
-    const donanteResponse = await fetch('http://localhost:8081/api/donantes', {
+    const donanteResponse = await fetch(`https://localhost:${API}/api/donantes`, { // Use HTTP_PORT for local API
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -39,7 +65,7 @@ app.post('/submit-donation', async (req, res) => {
         email: req.body.email,
         nombre: req.body.nombre,
         apellido: req.body.apellido
-    })
+      })
     });
 
     if (!donanteResponse.ok) {
@@ -50,7 +76,7 @@ app.post('/submit-donation', async (req, res) => {
 
     const donante = await donanteResponse.json();
 
-    const donacionResponse = await fetch('http://localhost:8081/api/donaciones', {
+    const donacionResponse = await fetch(`https://localhost:${API}/api/donaciones`, { // Use HTTP_PORT for local API
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -73,6 +99,6 @@ app.post('/submit-donation', async (req, res) => {
       res.status(donacionResponse.status).json(errorData);
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error });
   }
 });
