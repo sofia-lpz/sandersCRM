@@ -1,4 +1,5 @@
-import { Create, 
+import { 
+    Create, 
     SimpleForm, 
     TextInput, 
     DateInput, 
@@ -18,14 +19,10 @@ import { Create,
     SimpleShowLayout,
     ChipField,
     RadioButtonGroupInput,
-    CreateButton,
-    FilterButton,
-    FilterForm,
-    Pagination,
     SearchInput,
-    FetchRelatedRecords
- } from 'react-admin';
- import { Stack } from '@mui/material'; 
+    SimpleList,
+} from 'react-admin';
+import { useMediaQuery, Theme } from "@mui/material";
 
 const validateNotEmpty = [required()];
 const validateCantidad = [required(), (value: number) => (value > 0 ? undefined : 'Cantidad must be greater than zero')];
@@ -33,7 +30,7 @@ const validateCantidad = [required(), (value: number) => (value > 0 ? undefined 
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
-const DonacionesExporter = async (donaciones, fetchRelatedRecords: FetchRelatedRecords) => {
+const DonacionesExporter = async (donaciones, fetchRelatedRecords) => {
     const currentDate = new Date().toLocaleDateString('es-MX');
     const doc = new jsPDF();
 
@@ -43,9 +40,9 @@ const DonacionesExporter = async (donaciones, fetchRelatedRecords: FetchRelatedR
     doc.text(`Reporte de Donaciones - Creado: ${currentDate}`, 10, 10);
 
     const tableColumns = ['ID', 'Donante', 'Campaña', 'Fecha', 'Cantidad', 'Tipo', 'Estado', 'Pais'];
-    const tableRows: string[][] = [];
+    const tableRows = [];
 
-    const donantes = await fetchRelatedRecords<any>(donaciones, 'id_donante', 'donantes');
+    const donantes = await fetchRelatedRecords(donaciones, 'id_donante', 'donantes');
     const formatter = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN',
@@ -85,31 +82,46 @@ const DonacionesFilters = [
         { id: 'reproductiva', name: 'Salud Reproductiva' },
         { id: 'agua', name: 'Campaña de Agua' },
         { id: 'nutricion', name: 'Nutricion' }
-        ]} />,
+    ]} />,
     <DateInput label="Fecha Desde" source="fecha_gte" />,
     <DateInput label="Fecha Hasta" source="fecha_lte" />,
-        <RadioButtonGroupInput label="Tipo" source="tipo" choices={[
-            { id: 'digital', name: 'Digital' },
-            { id: 'efectivo', name: 'Efectivo' }
-        ]} />
+    <RadioButtonGroupInput label="Tipo" source="tipo" choices={[
+        { id: 'digital', name: 'Digital' },
+        { id: 'efectivo', name: 'Efectivo' }
+    ]} />
 ];
 
-export const DonacionList = () => (
-    <List filters = {DonacionesFilters} exporter={DonacionesExporter}>
-        <Datagrid>
-            <TextField label="ID" source="id" />
-            <ReferenceField label="Donante" source="id_donante" reference="donantes">
-                <TextField source="email" />
-            </ReferenceField>
-            <ChipField label="Campaña" source="campana" />
-            <DateField label="Fecha" source="fecha" />
-            <NumberField label="Cantidad" source="cantidad" options={{ style: 'currency', currency: 'MXN' }}/>
-            <TextField label="Tipo" source="tipo" />
-            <TextField label="Estado" source="estado" />
-            <TextField label="Pais" source="pais" />
-        </Datagrid>
-    </List>
-);
+export const DonacionList = () => {
+    const isSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+    const formatter = new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        currency: 'MXN',
+    });
+    return (
+        <List filters={DonacionesFilters} exporter={DonacionesExporter}>
+            {isSmall ? (
+                <SimpleList
+                    primaryText={(record) => formatter.format(record.cantidad)}
+                    secondaryText={(record) => record.campana}
+                    tertiaryText={(record) => record.fecha.slice(0, 10)}
+                />
+            ) : (
+                <Datagrid>
+                    <TextField label="ID" source="id" />
+                    <ReferenceField label="Donante" source="id_donante" reference="donantes">
+                        <TextField source="email" />
+                    </ReferenceField>
+                    <ChipField label="Campaña" source="campana" />
+                    <DateField label="Fecha" source="fecha" />
+                    <NumberField label="Cantidad" source="cantidad" options={{ style: 'currency', currency: 'MXN' }}/>
+                    <TextField label="Tipo" source="tipo" />
+                    <TextField label="Estado" source="estado" />
+                    <TextField label="Pais" source="pais" />
+                </Datagrid>
+            )}
+        </List>
+    );
+};
 
 export const DonacionCreate = () => (
     <Create>

@@ -1,4 +1,5 @@
-import { Create, 
+import { 
+    Create, 
     SimpleForm, 
     TextInput, 
     required,
@@ -9,29 +10,22 @@ import { Create,
     email,
     List,
     Datagrid,
-    Confirm,
     SearchInput,
-    ReferenceInput,
-    AutocompleteInput,
-    SelectInput,
-    DateInput,
-    RadioButtonGroupInput,
-    FilterForm,
-    FilterButton,
-    CreateButton,
-    ListBase,
     NumberField,
- } from 'react-admin';
+    SimpleList
+} from 'react-admin';
+import { useMediaQuery, Theme } from "@mui/material";
 
- import { Stack } from '@mui/material';
- import { MyToolbar } from '../components/Donante_toolbar';
 
- const validateNotEmpty = [required()];
- const validateEmail = [email()];
+import { Stack } from '@mui/material';
+import { MyToolbar } from '../components/Donante_toolbar';
 
- import jsPDF from 'jspdf';
- import autoTable from 'jspdf-autotable';
- 
+const validateNotEmpty = [required()];
+const validateEmail = [email()];
+
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
 const DonantesExporter = (donantes) => {
     const currentDate = new Date().toLocaleDateString('es-MX');
     const doc = new jsPDF();
@@ -64,23 +58,34 @@ const DonantesExporter = (donantes) => {
     doc.save('donantes_report.pdf');
 };
 
- const DonantesFilters = [
+const DonantesFilters = [
     <SearchInput source="q" alwaysOn />,
     <TextInput label="Numero de Donaciones" source="donaciones" />,
 ];
 
- export const DonanteList = () => (
-    <List filters={DonantesFilters} exporter={DonantesExporter}>
-        <Datagrid>
-            <TextField label="ID" source="id" />
-            <TextField label="Nombre" source="nombre" />
-            <TextField label="Apellido" source="apellido" />
-            <TextField label="Email" source="email" />
-            <TextField label="Telefono" source="telefono" />
-            <NumberField label="# de Donaciones" source="donaciones" />
-        </Datagrid>
-    </List>
-);
+export const DonanteList = () => {
+    const isSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+    return (
+        <List filters={DonantesFilters} exporter={DonantesExporter}>
+            {isSmall ? (
+                <SimpleList
+                    primaryText={(record) => record.nombre}
+                    secondaryText={(record) => record.apellido}
+                    tertiaryText={(record) => record.email}
+                />
+            ) : (
+                <Datagrid>
+                    <TextField label="ID" source="id" />
+                    <TextField label="Nombre" source="nombre" />
+                    <TextField label="Apellido" source="apellido" />
+                    <TextField label="Email" source="email" />
+                    <TextField label="Telefono" source="telefono" />
+                    <NumberField label="# de Donaciones" source="donaciones" />
+                </Datagrid>
+            )}
+        </List>
+    );
+};
 
 export const DonanteCreate = () => (
     <Create>
@@ -114,6 +119,6 @@ export const DonanteEdit = () => (
             <TextInput label="Apellido" source="apellido" validate={validateNotEmpty}/>
             <TextInput label="Email" source="email" validate={validateEmail}/>
             <TextInput label="Telefono" source="telefono"/>
-        </SimpleForm >
+        </SimpleForm>
     </Edit>
 );
