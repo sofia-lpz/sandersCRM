@@ -59,7 +59,7 @@ app.post('/webhook', async (req, res) => {
       console.log('Apellido:', apellido);
 
       // Prepare to register donor
-      const donanteResponse = await fetch(`https://18.189.43.182:8080/api/donantes`, {
+      const donanteResponse = await fetch(`https://10.189.43.182:${process.env.API}/api/donantes`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -71,7 +71,7 @@ app.post('/webhook', async (req, res) => {
           apellido: apellido
         })
       });
-
+      console.log(donanteResponse)
       if (!donanteResponse.ok) {
         const errorData = await donanteResponse.json();
         console.error('Error registering donor:', errorData);
@@ -81,7 +81,7 @@ app.post('/webhook', async (req, res) => {
       const donante = await donanteResponse.json();
 
       // Now register the donation
-      const donacionResponse = await fetch(`https://18.189.43.182:8080/api/donaciones`, {
+      const donacionResponse = await fetch(`https://10.189.43.182:${process.env.API}/api/donaciones`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -96,7 +96,7 @@ app.post('/webhook', async (req, res) => {
           pais: donorAddress.country || 'Sin registro' // Default value
         })
       });
-
+      console.log("donacion iniciada")
       if (!donacionResponse.ok) {
         const errorData = await donacionResponse.json();
         console.error('Error registering donation:', errorData);

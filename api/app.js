@@ -10,8 +10,8 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const FRONTEND_URL = process.env.FRONTEND_URL || 'https://localhost:5173';
-const MOCK_URL = process.env.MOCK_URL || 'http://localhost:9090';
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://18.189.43.182:5173';
+const MOCK_URL = process.env.MOCK_URL || 'https://18.189.43.182:443';
 
 // Load SSL certificates
 const sslOptions = {
