@@ -24,10 +24,46 @@ import { Create,
     Pagination,
     SearchInput
  } from 'react-admin';
- import { Stack } from '@mui/material';
+ import { Stack } from '@mui/material'; 
+
+import jsPDF from 'jspdf';
+ import autoTable from 'jspdf-autotable';
 
 const validateNotEmpty = [required()];
 const validateCantidad = [required(), (value: number) => (value > 0 ? undefined : 'Cantidad must be greater than zero')];
+
+
+const DonacionesExporter = (donaciones) => {
+    const doc = new jsPDF();
+    doc.text('Donaciones Report', 10, 10);
+
+    // Define the table columns
+    const tableColumns = ['ID', 'Donante', 'Campaña', 'Fecha', 'Cantidad', 'Tipo', 'Estado', 'Pais'];
+    const tableRows = [];
+
+    // Populate the table rows with the fetched data
+    donaciones.forEach((donacion) => {
+        const row = [
+            donacion.id.toString(),
+            donacion.id_donante.toString(),
+            donacion.campana,
+            donacion.fecha,
+            donacion.cantidad.toString(),
+            donacion.tipo,
+            donacion.estado,
+            donacion.pais,
+        ];
+        tableRows.push(row);
+    });
+
+    autoTable(doc, {
+        head: [tableColumns],
+        body: tableRows,
+    });
+
+    // Save the PDF document
+    doc.save('donaciones_report.pdf');
+};
 
 const DonacionesFilters = [
     <SearchInput source="q" alwaysOn />,
@@ -49,7 +85,7 @@ const DonacionesFilters = [
 ];
 
 export const DonacionList = () => (
-    <List filters = {DonacionesFilters}>
+    <List filters = {DonacionesFilters} exporter={DonacionesExporter}>
         <Datagrid>
             <TextField label="ID" source="id" />
             <ReferenceField label="Donante" source="id_donante" reference="donantes">
