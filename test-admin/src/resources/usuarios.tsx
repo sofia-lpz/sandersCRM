@@ -28,6 +28,32 @@ const validatePasswordsMatch = (value: string, allValues: { password: string }) 
     return value === allValues.password ? undefined : 'Passwords do not match';
 };
 
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
+const UsuariosExporter = (usuarios) => {
+    const doc = new jsPDF();
+    doc.text('Usuarios de CRM', 10, 10);
+
+    const tableColumns = ['ID', 'Nombre de Usuario', 'Rol'];
+    const tableRows = [];
+
+    usuarios.forEach((usuario) => {
+        const row = [
+            usuario.id.toString(),
+            usuario.username,
+            usuario.role,
+        ];
+        tableRows.push(row);
+    });
+
+    autoTable(doc, {
+        head: [tableColumns],
+        body: tableRows,
+    });
+
+    doc.save('usuarios_report.pdf');
+};
 const UsuariosFilters = [
     <SearchInput source="q" alwaysOn />,
     <TextInput label="Nombre de Usuario" source="username" />,
@@ -38,7 +64,7 @@ const UsuariosFilters = [
 ];
 
 export const UsuarioList = () => (
-    <List filters={UsuariosFilters}>
+    <List filters={UsuariosFilters} exporter={UsuariosExporter}>
         <Datagrid>
             <TextField label="ID" source="id" />
             <TextField label="Username" source="username" />

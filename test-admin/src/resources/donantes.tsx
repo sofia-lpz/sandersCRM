@@ -29,13 +29,43 @@ import { Create,
  const validateNotEmpty = [required()];
  const validateEmail = [email()];
 
+ import jsPDF from 'jspdf';
+ import autoTable from 'jspdf-autotable';
+ 
+const DonantesExporter = (donantes) => {
+    const doc = new jsPDF();
+    doc.text('Reporte de Donantes', 10, 10);
+
+    const tableColumns = ['ID', 'Nombre', 'Apellido', 'Email', 'Telefono', '# de Donaciones'];
+    const tableRows = [];
+
+    donantes.forEach((donante) => {
+        const row = [
+            donante.id.toString(),
+            donante.nombre,
+            donante.apellido,
+            donante.email,
+            donante.telefono,
+            donante.donaciones,
+        ];
+        tableRows.push(row);
+    });
+
+    autoTable(doc, {
+        head: [tableColumns],
+        body: tableRows,
+    });
+
+    doc.save('donantes_report.pdf');
+};
+
  const DonantesFilters = [
     <SearchInput source="q" alwaysOn />,
     <TextInput label="Numero de Donaciones" source="donaciones" />,
 ];
 
  export const DonanteList = () => (
-    <List filters={DonantesFilters}>
+    <List filters={DonantesFilters} exporter={DonantesExporter}>
         <Datagrid>
             <TextField label="ID" source="id" />
             <TextField label="Nombre" source="nombre" />
