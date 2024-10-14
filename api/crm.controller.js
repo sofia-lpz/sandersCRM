@@ -56,7 +56,10 @@ export const updateDonacion = async (req, res) => {
     } else if (req.body.cantidad <= 0) {
         res.status(400).json({ error: "Cantidad must be greater than 0" });
         return;
+    } else if (req.body.fecha.length > 10) {
+        req.body.fecha = req.body.fecha.slice(0, 10);
     }
+    console.log(req.body.fecha);
     try {
         const data = await crmService.updateDonacion(req.params.id, req.body);
         res.json(data);

@@ -18,7 +18,6 @@ import { Create,
     FilterForm,
     RadioButtonGroupInput,
     SearchInput,
-    ListBase,
 } from 'react-admin';
 import { useState } from 'react';
 import PersonIcon from '@mui/icons-material/Person';
@@ -38,23 +37,14 @@ const UsuariosFilters = [
     ]} />,
 ];
 
-const ListToolbar = () => (
-    <Stack direction="row" justifyContent="center">
-        <FilterForm filters={UsuariosFilters} />
-        <FilterButton filters={UsuariosFilters} />
-        <CreateButton />
-    </Stack>
-)
-
 export const UsuarioList = () => (
-    <ListBase>
-        <ListToolbar />
+    <List filters={UsuariosFilters}>
         <Datagrid>
             <TextField label="ID" source="id" />
             <TextField label="Username" source="username" />
             <TextField label="Role" source="role" />
         </Datagrid>
-    </ListBase>
+    </List>
 );
 
 export const UsuarioCreate = () => {

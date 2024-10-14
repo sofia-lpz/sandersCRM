@@ -21,7 +21,6 @@ import { Create,
     CreateButton,
     FilterButton,
     FilterForm,
-    ListBase,
     Pagination,
     SearchInput
  } from 'react-admin';
@@ -49,17 +48,8 @@ const DonacionesFilters = [
         ]} />
 ];
 
-const ListToolbar = () => (
-    <Stack direction="row" justifyContent="space-between">
-        <FilterForm filters={DonacionesFilters} />
-        <FilterButton filters={DonacionesFilters} />
-        <CreateButton />
-    </Stack>
-)
-
 export const DonacionList = () => (
-    <ListBase>
-        <ListToolbar />
+    <List filters = {DonacionesFilters}>
         <Datagrid>
             <TextField label="ID" source="id" />
             <ReferenceField label="Donante" source="id_donante" reference="donantes">
@@ -72,7 +62,7 @@ export const DonacionList = () => (
             <TextField label="Estado" source="estado" />
             <TextField label="Pais" source="pais" />
         </Datagrid>
-    </ListBase>
+    </List>
 );
 
 export const DonacionCreate = () => (
