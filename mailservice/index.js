@@ -39,8 +39,8 @@ const sendThankYouEmail = (email) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: 'Thank You!',
-    text: 'Thank you for your support!'
+    subject: 'Donacion Sanders MX',
+    text: 'Muchas gracias por tu apoyo, queremos que sepas que tu donacion sera ocupado para una buena causa bla bla bla'
   };
 
   transporter.sendMail(mailOptions, (error, info) => {

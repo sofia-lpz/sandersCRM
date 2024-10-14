@@ -30,3 +30,6 @@ mailservice/.env
 
 
 test-admin/.env
+
+
+/paypalclient/.env
