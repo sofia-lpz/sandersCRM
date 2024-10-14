@@ -124,6 +124,16 @@ export const getDonantes = async (req) => {
     }
 }
 
+export const getDonanteByEmail = async (email) => {
+    try {
+        const result = await db.getDonanteByEmail(email);
+        return result;
+    }
+    catch (error) {
+        throw error;
+    }
+}
+
 export const updateDonante = async (id, updateData) => {
     try {
         const result = await db.updateDonante(Number(id), updateData);
