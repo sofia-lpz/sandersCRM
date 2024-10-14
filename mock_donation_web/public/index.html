@@ -3,34 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagina mock, donacion a Sanders</title>
+    <title>Fundación Sanders - Donaciones</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
+    <script async src="https://js.stripe.com/v3/buy-button.js"></script>
 </head>
 <body>
     <header>
-        <h1>Dona a Sanders</h1>
+        <h1>Fundación Sanders</h1>
+        <h2>¡Ayúdanos a hacer la diferencia!</h2>
     </header>
     <main>
-        <form id="donation-form">
-            <label for="telefono">Teléfono:</label>
-            <input type="text" name="telefono" id="telefono" value="Sin registro" required>
-            <label for="email">Email:</label>
-            <input type="email" name="email" id="email" value="Sin registro" required>
-            <label for="nombre">Nombre:</label>
-            <input type="text" name="nombre" id="nombre" value="Sin registro" required>
-            <label for="apellido">Apellido:</label>
-            <input type="text" name="apellido" id="apellido" value="Sin registro" required>
-            <label for="campana">Campaña:</label>
-            <select name="campana" id="campana" required>
-                <option value="reproductiva">Salud Reproductiva</option>
-                <option value="agua">Campaña de Agua</option>
-                <option value="nutricion">Nutricion</option>
-            </select>
-            <label for="cantidad">Cantidad:</label>
-            <input type="number" step="0.01" name="cantidad" id="cantidad" required>
-            <button type="submit">Donate</button>
-        </form>
+        <section>
+            <h3>Donar es sencillo</h3>
+            <p>Haz clic en el botón a continuación para realizar tu donación. Cada aporte cuenta y puede ayudar a mejorar la vida de muchas personas.</p>
+        </section>
+        <stripe-buy-button
+          buy-button-id="buy_btn_1Q9op7Fx2SgxhWlTx3HVURkP"
+          publishable-key="pk_test_51Q9oa6Fx2SgxhWlTA1NkyGtvFZIg0VU3HPCRlqLRgQxEVl7eAS8kFZVTvy4R1GpiYGy0IDoOV6Zmhg4JeenzkeRg00GPTiGYkP">
+        </stripe-buy-button>
     </main>
+    <footer>
+        <p>© 2024 Fundación Sanders. Todos los derechos reservados.</p>
+    </footer>
 </body>
 </html>
