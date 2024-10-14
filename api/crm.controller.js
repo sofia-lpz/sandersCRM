@@ -79,8 +79,9 @@ export const createDonacion = async (req, res) => {
         const email_donante = donante.email;
         const nombre_donante = donante.nombre;
         const cantidad = newData.cantidad;
+        const campana = newData.campana;
 
-        const emailResult = await sendEmail(email_donante, nombre_donante, cantidad);
+        const emailResult = await sendEmail(email_donante, nombre_donante, cantidad, campana);
 
         res.json(newData);
     } catch (error) {
