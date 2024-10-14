@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import * as crmService from './crm.service.js';
 import { response } from 'express';
-import { sendEmail } from './mailclient.js';
+import { sendEmail } from './services/mailclient.js';
 
 export const login = async (req, res) => {
     try {

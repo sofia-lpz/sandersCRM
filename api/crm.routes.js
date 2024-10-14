@@ -2,7 +2,6 @@ import express from 'express';
 import * as crmController from './crm.controller.js';
 import { verifyToken } from './middleware/auth.js';
 import { checkAdminRole } from './middleware/role.js';
-import * as mailClient from './mailclient.js';
 
 const router = express.Router();
 
