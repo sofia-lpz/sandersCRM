@@ -117,7 +117,7 @@ export const UsuarioCreate = () => {
 
 export const UsuarioEdit = () => (
     <Edit>
-        <SimpleForm toolbar={<MyToolbar />}>
+        <SimpleForm>
             <TextInput label="Username" source="username" validate={validateNotEmpty}/>
             <SelectInput label="Role" source="role" choices={[
                 { id: 'admin', name: 'Admin' },
