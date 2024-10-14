@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import * as crmService from './crm.service.js';
 import { response } from 'express';
+import { sendEmail } from './mailclient.js';
 
 export const login = async (req, res) => {
     try {
@@ -73,6 +74,25 @@ export const updateDonacion = async (req, res) => {
 export const createDonacion = async (req, res) => {
     try {
         const newData = await crmService.createDonacion(req);
+
+        const donante = await crmService.getOneDonante(newData.id_donante);
+        const email_donante = donante.email;
+        const nombre_donante = donante.nombre;
+        const cantidad = newData.cantidad;
+
+        const emailData = {
+            email: email_donante,
+            nombre: nombre_donante,
+            cantidad: cantidad,
+        };
+
+        const emailResult = await sendEmail(emailData);
+        if (emailResult.status === 200) {
+            console.log(`Email sent to ${email_donante}`);
+        } else {
+            console.error(emailResult.message);
+        }
+
         res.json(newData);
     } catch (error) {
         res.status(500).json({ error: error.message });
