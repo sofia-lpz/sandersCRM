@@ -33,8 +33,13 @@ import { Create,
  import autoTable from 'jspdf-autotable';
  
 const DonantesExporter = (donantes) => {
+    const currentDate = new Date().toLocaleDateString('es-MX');
     const doc = new jsPDF();
-    doc.text('Reporte de Donantes', 10, 10);
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    
+    doc.text(`Reporte de Donantes - Creado: ${currentDate}`, 10, 10);
 
     const tableColumns = ['ID', 'Nombre', 'Apellido', 'Email', 'Telefono', '# de Donaciones'];
     const tableRows = [];
