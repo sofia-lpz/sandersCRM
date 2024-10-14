@@ -23,10 +23,10 @@ CREATE TABLE donantes (
 CREATE TABLE donaciones (
     id int NOT NULL AUTO_INCREMENT,
     id_donante int NOT NULL,
-    campana enum('reproductiva', 'agua', 'nutricion') NOT NULL,
+    campana enum('reproductiva', 'agua', 'nutricion', 'sin campaña') NOT NULL DEFAULT 'sin campaña',
     fecha date NOT NULL,
     cantidad float NOT NULL,
-    tipo enum('digital', 'efectivo', 'especie') NOT NULL,
+    tipo enum('digital', 'efectivo') NOT NULL,
     estado varchar(50) NOT NULL DEFAULT 'Sin registro',
     pais varchar(50) NOT NULL DEFAULT 'Sin registro',
     PRIMARY KEY (id),
