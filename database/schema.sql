@@ -12,9 +12,11 @@ CREATE TABLE usuarios (
 
 CREATE TABLE donantes (
     id int NOT NULL AUTO_INCREMENT,
+    telefono varchar(50) NOT NULL DEFAULT 'Sin registro',
     email varchar(50) NOT NULL DEFAULT 'Sin registro',
     nombre varchar(50) NOT NULL DEFAULT 'Sin registro',
     apellido varchar(50) NOT NULL DEFAULT 'Sin registro',
+    donaciones int NOT NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
 
@@ -30,3 +32,27 @@ CREATE TABLE donaciones (
     PRIMARY KEY (id),
     CONSTRAINT fk_donaciones_donante FOREIGN KEY (id_donante) REFERENCES donantes(id) ON DELETE CASCADE
 );
+
+DELIMITER //
+
+CREATE TRIGGER update_donantes_donaciones_after_insert
+AFTER INSERT ON donaciones
+FOR EACH ROW
+BEGIN
+    UPDATE donantes
+    SET donaciones = donaciones + 1
+    WHERE id = NEW.id_donante;
+END;
+//
+
+CREATE TRIGGER update_donantes_donaciones_after_delete
+AFTER DELETE ON donaciones
+FOR EACH ROW
+BEGIN
+    UPDATE donantes
+    SET donaciones = donaciones - 1
+    WHERE id = OLD.id_donante;
+END;
+//
+
+DELIMITER ;

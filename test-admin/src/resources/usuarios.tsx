@@ -9,15 +9,43 @@ import { Create,
     Show,
     SimpleShowLayout,
     required,
-    PasswordInput
+    PasswordInput,
+    FilterList,
+    FilterListItem,
+    CardContentInner,
+    FilterButton,
+    CreateButton,
+    FilterForm,
+    RadioButtonGroupInput,
+    SearchInput,
 } from 'react-admin';
 import { useState } from 'react';
+import PersonIcon from '@mui/icons-material/Person';
+import { Stack } from '@mui/material';
 
 const validateNotEmpty = [required()];
-
 const validatePasswordsMatch = (value: string, allValues: { password: string }) => {
     return value === allValues.password ? undefined : 'Passwords do not match';
 };
+
+const UsuariosFilters = [
+    <SearchInput source="q" alwaysOn />,
+    <TextInput label="Nombre de Usuario" source="username" />,
+    <RadioButtonGroupInput label="Role" source="role" choices={[
+        { id: 'admin', name: 'Admin' },
+        { id: 'user', name: 'User' }
+    ]} />,
+];
+
+export const UsuarioList = () => (
+    <List filters={UsuariosFilters}>
+        <Datagrid>
+            <TextField label="ID" source="id" />
+            <TextField label="Username" source="username" />
+            <TextField label="Role" source="role" />
+        </Datagrid>
+    </List>
+);
 
 export const UsuarioCreate = () => {
     const [password, setPassword] = useState('');
@@ -48,14 +76,13 @@ export const UsuarioCreate = () => {
     );
 };
 
-export const UsuarioList = () => (
-    <List>
-        <Datagrid>
-            <TextField label="ID" source="id" />
-            <TextField label="Username" source="username" />
-            <TextField label="Role" source="role" />
-        </Datagrid>
-    </List>
+const UsuarioFilterList = () => (
+    <CardContentInner>
+        <FilterList label="Role" icon={<PersonIcon />}>
+            <FilterListItem label="Admin" value={{ role: 'admin' }} />
+            <FilterListItem label="User" value={{ role: 'user' }} />
+        </FilterList>
+    </CardContentInner>
 );
 
 export const UsuarioEdit = () => (

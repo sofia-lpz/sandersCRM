@@ -1,25 +1,25 @@
 -- Insert dummy data into donantes table
-INSERT INTO donantes (email, nombre, apellido) VALUES
-('john.doe@example.com', 'John', 'Doe'),
-('jane.smith@example.com', 'Jane', 'Smith'),
-('alice.jones@example.com', 'Alice', 'Jones'),
-('bob.brown@example.com', 'Bob', 'Brown'),
-('charlie.davis@example.com', 'Charlie', 'Davis'),
-('emily.clark@example.com', 'Emily', 'Clark'),
-('michael.johnson@example.com', 'Michael', 'Johnson'),
-('sarah.wilson@example.com', 'Sarah', 'Wilson'),
-('david.martin@example.com', 'David', 'Martin'),
-('linda.moore@example.com', 'Linda', 'Moore'),
-('james.taylor@example.com', 'James', 'Taylor'),
-('patricia.anderson@example.com', 'Patricia', 'Anderson'),
-('robert.thomas@example.com', 'Robert', 'Thomas'),
-('barbara.jackson@example.com', 'Barbara', 'Jackson'),
-('william.white@example.com', 'William', 'White'),
-('elizabeth.harris@example.com', 'Elizabeth', 'Harris'),
-('charles.lewis@example.com', 'Charles', 'Lewis'),
-('jennifer.walker@example.com', 'Jennifer', 'Walker'),
-('joseph.hall@example.com', 'Joseph', 'Hall'),
-('maria.allen@example.com', 'Maria', 'Allen');
+INSERT INTO donantes (email, nombre, apellido, telefono) VALUES
+('john.doe@example.com', 'John', 'Doe', '123-456-7890'),
+('jane.smith@example.com', 'Jane', 'Smith', '234-567-8901'),
+('alice.jones@example.com', 'Alice', 'Jones', '345-678-9012'),
+('bob.brown@example.com', 'Bob', 'Brown', '456-789-0123'),
+('charlie.davis@example.com', 'Charlie', 'Davis', '567-890-1234'),
+('emily.clark@example.com', 'Emily', 'Clark', '678-901-2345'),
+('michael.johnson@example.com', 'Michael', 'Johnson', '789-012-3456'),
+('sarah.wilson@example.com', 'Sarah', 'Wilson', '890-123-4567'),
+('david.martin@example.com', 'David', 'Martin', '901-234-5678'),
+('linda.moore@example.com', 'Linda', 'Moore', '012-345-6789'),
+('james.taylor@example.com', 'James', 'Taylor', '123-456-7890'),
+('patricia.anderson@example.com', 'Patricia', 'Anderson', '234-567-8901'),
+('robert.thomas@example.com', 'Robert', 'Thomas', '345-678-9012'),
+('barbara.jackson@example.com', 'Barbara', 'Jackson', '456-789-0123'),
+('william.white@example.com', 'William', 'White', '567-890-1234'),
+('elizabeth.harris@example.com', 'Elizabeth', 'Harris', '678-901-2345'),
+('charles.lewis@example.com', 'Charles', 'Lewis', '789-012-3456'),
+('jennifer.walker@example.com', 'Jennifer', 'Walker', '890-123-4567'),
+('joseph.hall@example.com', 'Joseph', 'Hall', '901-234-5678'),
+('maria.allen@example.com', 'Maria', 'Allen', '012-345-6789');
 
 -- Insert dummy data into donaciones table
 INSERT INTO donaciones (id_donante, campana, fecha, cantidad, tipo, estado, pais) VALUES

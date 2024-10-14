@@ -18,31 +18,51 @@ import { Create,
     SimpleShowLayout,
     ChipField,
     RadioButtonGroupInput,
+    CreateButton,
+    FilterButton,
+    FilterForm,
+    Pagination,
+    SearchInput
  } from 'react-admin';
+ import { Stack } from '@mui/material';
 
 const validateNotEmpty = [required()];
 const validateCantidad = [required(), (value: number) => (value > 0 ? undefined : 'Cantidad must be greater than zero')];
 
-import { Filter, useListContext } from 'react-admin';
-
-const DonacionFilter = (props) => (
-    <Filter {...props}>
-        <TextInput label="Pais" source="pais" />
-        <ReferenceInput label="Donante" source="id_donante" reference="donantes">
-            <AutocompleteInput optionText="nombre" />
-        </ReferenceInput>
-        <SelectInput label="Campaña" source="campana" choices={[
-            { id: 'reproductiva', name: 'Salud Reproductiva' },
-            { id: 'agua', name: 'Campaña de Agua' },
-            { id: 'nutricion', name: 'Nutricion' }
-        ]} />
-        <DateInput label="Fecha Desde" source="fecha_gte" />
-        <DateInput label="Fecha Hasta" source="fecha_lte" />
+const DonacionesFilters = [
+    <SearchInput source="q" alwaysOn />,
+    <TextInput label="Pais" source="pais" />,
+    <ReferenceInput label="Donante" source="id_donante" reference="donantes">
+        <AutocompleteInput optionText="nombre" />
+    </ReferenceInput>,
+    <SelectInput label="Campaña" source="campana" choices={[
+        { id: 'reproductiva', name: 'Salud Reproductiva' },
+        { id: 'agua', name: 'Campaña de Agua' },
+        { id: 'nutricion', name: 'Nutricion' }
+        ]} />,
+    <DateInput label="Fecha Desde" source="fecha_gte" />,
+    <DateInput label="Fecha Hasta" source="fecha_lte" />,
         <RadioButtonGroupInput label="Tipo" source="tipo" choices={[
             { id: 'digital', name: 'Digital' },
             { id: 'efectivo', name: 'Efectivo' }
         ]} />
-    </Filter>
+];
+
+export const DonacionList = () => (
+    <List filters = {DonacionesFilters}>
+        <Datagrid>
+            <TextField label="ID" source="id" />
+            <ReferenceField label="Donante" source="id_donante" reference="donantes">
+                <TextField source="nombre" />
+            </ReferenceField>
+            <ChipField label="Campaña" source="campana" />
+            <DateField label="Fecha" source="fecha" />
+            <NumberField label="Cantidad" source="cantidad" options={{ style: 'currency', currency: 'MXN' }}/>
+            <TextField label="Tipo" source="tipo" />
+            <TextField label="Estado" source="estado" />
+            <TextField label="Pais" source="pais" />
+        </Datagrid>
+    </List>
 );
 
 export const DonacionCreate = () => (
@@ -80,7 +100,7 @@ export const DonacionEdit = () => (
                 { id: 'nutricion', name: 'Nutricion' }
             ]} validate={validateNotEmpty}/>
             <DateInput label="Fecha" source="fecha" validate={validateNotEmpty}/>
-            <NumberInput label="Cantidad" source="cantidad" validate={validateCantidad}/>
+            <NumberInput label="Cantidad" source="cantidad" validate={validateCantidad} />
             <RadioButtonGroupInput label="Tipo" source="tipo" choices={[
                 { id: 'digital', name: 'Digital' },
                 { id: 'efectivo', name: 'Efectivo' }
@@ -89,23 +109,6 @@ export const DonacionEdit = () => (
             <TextInput label="Pais" source="pais" />
         </SimpleForm>
     </Edit>
-);
-
-export const DonacionList = () => (
-    <List filters={<DonacionFilter />}>
-        <Datagrid>
-            <TextField label="ID" source="id" />
-            <ReferenceField label="Donante" source="id_donante" reference="donantes">
-                <TextField source="nombre" />
-            </ReferenceField>
-            <ChipField label="Campaña" source="campana" />
-            <DateField label="Fecha" source="fecha" />
-            <NumberField label="Cantidad" source="cantidad" />
-            <TextField label="Tipo" source="tipo" />
-            <TextField label="Estado" source="estado" />
-            <TextField label="Pais" source="pais" />
-        </Datagrid>
-    </List>
 );
 
 export const DonacionShow = () => (
@@ -117,7 +120,7 @@ export const DonacionShow = () => (
             </ReferenceField>
             <ChipField label="Campaña" source="campana" />
             <DateField label="Fecha" source="fecha" />
-            <NumberField label="Cantidad" source="cantidad" />
+            <NumberField label="Cantidad" source="cantidad" options={{ style: 'currency', currency: 'MXN' }}/>
             <TextField label="Tipo" source="tipo" />
             <TextField label="Estado" source="estado" />
             <TextField label="Pais" source="pais" />

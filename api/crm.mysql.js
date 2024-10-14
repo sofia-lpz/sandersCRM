@@ -34,50 +34,67 @@ export async function getUserByUsername(username) {
 
 //Donaciones
 export const getDonaciones = async (req) => {
-try {
-        const connection = await connectToDB();
-        let query = "SELECT * FROM donaciones";
-        let params = [];
-        let ids = [];
-
-        const filters = [];
-
-        if ("id" in req.query) {
-            for (let index = 0; index < req.query.id.length; index++) {
-                ids.push(Number(req.query.id[index]));
+        try {
+            const connection = await connectToDB();
+            let query = "SELECT * FROM donaciones";
+            let params = [];
+            let ids = [];
+    
+            const filters = [];
+    
+            if ("id" in req.query) {
+                for (let index = 0; index < req.query.id.length; index++) {
+                    ids.push(Number(req.query.id[index]));
+                }
+                filters.push("id IN (" + ids.map(() => "?").join(",") + ")");
+                params = params.concat(ids);
             }
-            filters.push("id IN (" + ids.map(() => "?").join(",") + ")");
-            params = params.concat(ids);
-        }
-
-        for (const [key, value] of Object.entries(req.query)) {
-            if (key !== "_sort" && key !== "_order" && key !== "_start" && key !== "_end" && key !== "id") {
-                filters.push(`${connection.escapeId(key)} = ?`);
-                params.push(value);
+    
+            if ("q" in req.query) {
+                const searchValue = `%${req.query.q}%`;
+                filters.push("(tipo LIKE ? OR campana LIKE ? OR estado LIKE ? OR pais LIKE ?)");
+                params.push(searchValue, searchValue, searchValue, searchValue);
             }
+            
+            for (const [key, value] of Object.entries(req.query)) {
+                if (key !== "_sort" && key !== "_order" && key !== "_start" && key !== "_end" && key !== "id" && key !== "q" && key !== "fecha_gte" && key !== "fecha_lte") {
+                    filters.push(`${connection.escapeId(key)} = ?`);
+                    params.push(value);
+                }
+            }
+
+            if ("fecha_gte" in req.query) {
+                filters.push("fecha >= ?");
+                params.push(req.query.fecha_gte);
+            }
+
+            if ("fecha_lte" in req.query) {
+                filters.push("fecha <= ?");
+                params.push(req.query.fecha_lte);
+            }
+            
+            if (filters.length > 0) {
+                query += " WHERE " + filters.join(" AND ");
+            }
+    
+            // Sorting and pagination
+            if ("_sort" in req.query) {
+                let sortBy = req.query._sort;
+                let sortOrder = req.query._order === "ASC" ? "ASC" : "DESC";
+                let start = Number(req.query._start) || 0;
+                let end = Number(req.query._end) || 10;
+    
+                query += ` ORDER BY ${connection.escapeId(sortBy)} ${sortOrder} LIMIT ?, ?`;
+                params.push(start, end - start);
+            }
+
+            console.log(query);
+            const [data] = await connection.query(query, params);
+            return data;
+        } catch (error) {
+            throw error;
         }
-
-        if (filters.length > 0) {
-            query += " WHERE " + filters.join(" AND ");
-        }
-
-        // Sorting and pagination
-        if ("_sort" in req.query) {
-            let sortBy = req.query._sort;
-            let sortOrder = req.query._order === "ASC" ? "ASC" : "DESC";
-            let start = Number(req.query._start) || 0;
-            let end = Number(req.query._end) || 10;
-
-            query += ` ORDER BY ${connection.escapeId(sortBy)} ${sortOrder} LIMIT ?, ?`;
-            params.push(start, end - start);
-        }
-
-        const [data] = await connection.query(query, params);
-        return data;
-    } catch (error) {
-        throw error;
     }
-};
 
 export async function updateDonacion(id, updateData) {
     try{
@@ -167,13 +184,19 @@ export async function getUsuarios(req) {
             params = params.concat(ids);
         }
 
+        if ("q" in req.query) {
+            const searchValue = `%${req.query.q}%`;
+            filters.push("(username LIKE ? OR role LIKE ?)");
+            params.push(searchValue, searchValue);
+        }
+        
         for (const [key, value] of Object.entries(req.query)) {
-            if (key !== "_sort" && key !== "_order" && key !== "_start" && key !== "_end" && key !== "id") {
+            if (key !== "_sort" && key !== "_order" && key !== "_start" && key !== "_end" && key !== "id" && key !== "q") {
                 filters.push(`${connection.escapeId(key)} = ?`);
                 params.push(value);
             }
         }
-
+        
         if (filters.length > 0) {
             query += " WHERE " + filters.join(" AND ");
         }
@@ -189,6 +212,7 @@ export async function getUsuarios(req) {
             params.push(start, end - start);
         }
 
+        console.log(query);
         const [data] = await connection.query(query, params);
         return data;
     } catch (error) {
@@ -280,13 +304,19 @@ export async function getDonantes(req) {
             params = params.concat(ids);
         }
 
+        if ("q" in req.query) {
+            const searchValue = `%${req.query.q}%`;
+            filters.push("(telefono LIKE ? OR email LIKE ? OR nombre LIKE ? OR apellido LIKE ?)");
+            params.push(searchValue, searchValue, searchValue, searchValue);
+        }
+        
         for (const [key, value] of Object.entries(req.query)) {
-            if (key !== "_sort" && key !== "_order" && key !== "_start" && key !== "_end" && key !== "id") {
+            if (key !== "_sort" && key !== "_order" && key !== "_start" && key !== "_end" && key !== "id" && key !== "q") {
                 filters.push(`${connection.escapeId(key)} = ?`);
                 params.push(value);
             }
         }
-
+        
         if (filters.length > 0) {
             query += " WHERE " + filters.join(" AND ");
         }
@@ -302,6 +332,7 @@ export async function getDonantes(req) {
             params.push(start, end - start);
         }
 
+        console.log(query);
         const [data] = await connection.query(query, params);
         return data;
     } catch (error) {
