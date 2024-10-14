@@ -22,33 +22,38 @@ import { Create,
     FilterButton,
     FilterForm,
     Pagination,
-    SearchInput
+    SearchInput,
+    FetchRelatedRecords
  } from 'react-admin';
  import { Stack } from '@mui/material'; 
-
-import jsPDF from 'jspdf';
- import autoTable from 'jspdf-autotable';
 
 const validateNotEmpty = [required()];
 const validateCantidad = [required(), (value: number) => (value > 0 ? undefined : 'Cantidad must be greater than zero')];
 
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
-const DonacionesExporter = (donaciones) => {
+const DonacionesExporter = async (donaciones, fetchRelatedRecords: FetchRelatedRecords) => {
     const doc = new jsPDF();
     doc.text('Donaciones Report', 10, 10);
 
-    // Define the table columns
     const tableColumns = ['ID', 'Donante', 'Campaña', 'Fecha', 'Cantidad', 'Tipo', 'Estado', 'Pais'];
-    const tableRows = [];
+    const tableRows: string[][] = [];
 
-    // Populate the table rows with the fetched data
+    const donantes = await fetchRelatedRecords<any>(donaciones, 'id_donante', 'donantes');
+    const formatter = new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        currency: 'MXN',
+    });
+
     donaciones.forEach((donacion) => {
+        const donante = donantes[donacion.id_donante];
         const row = [
             donacion.id.toString(),
-            donacion.id_donante.toString(),
+            donante ? donante.nombre : 'Unknown',
             donacion.campana,
-            donacion.fecha,
-            donacion.cantidad.toString(),
+            donacion.fecha.slice(0, 10),
+            formatter.format(donacion.cantidad),
             donacion.tipo,
             donacion.estado,
             donacion.pais,
