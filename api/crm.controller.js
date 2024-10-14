@@ -239,10 +239,32 @@ export const updateDonante = async (req, res) => {
     }
 };
 
+export const getDonanteByEmail = async (req, res) => {
+    if (!req.params.email) {
+        res.status(400).json({ error: "Email is required" });
+        return;
+    }
+    try {
+        const data = await crmService.getDonanteByEmail(req.params.email);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
 export const createDonante = async (req, res) => {
     try {
-        const newData = await crmService.createDonante(req);
-        res.json(newData);
+        const donante_existente = await crmService.getDonanteByEmail(req.body.email);
+        if (donante_existente) { // Check if donante_existente is not null or undefined
+            res.status(409).json({ 
+                error: `Donante with email ${donante_existente.email} already exists`, 
+                donante: donante_existente 
+            });
+            return;
+        } else {
+            const newData = await crmService.createDonante(req);
+            res.json(newData);
+        }
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

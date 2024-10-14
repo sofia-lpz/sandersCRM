@@ -39,6 +39,16 @@ export async function getUserByUsername(username) {
     return rows[0];
 }
 
+export async function getDonanteByEmail(email) {
+    const conn = await connectToDB();
+    const [rows] = await conn.execute(
+        "SELECT * FROM donantes WHERE email = ?",
+        [email]
+    );
+    conn.end();
+    return rows[0];
+}
+
 //Donaciones
 export const getDonaciones = async (req) => {
         try {
@@ -100,6 +110,8 @@ export const getDonaciones = async (req) => {
             return data;
         } catch (error) {
             throw error;
+        } finally {
+            connection.end();
         }
     }
 
@@ -224,6 +236,8 @@ export async function getUsuarios(req) {
         return data;
     } catch (error) {
         throw error;
+    } finally {
+        connection.end();
     }
 }
 
@@ -344,6 +358,8 @@ export async function getDonantes(req) {
         return data;
     } catch (error) {
         throw error;
+    } finally {
+        connection.end();
     }
 }
 
