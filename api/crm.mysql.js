@@ -52,8 +52,8 @@ export const getDonaciones = async (req) => {
     
             if ("q" in req.query) {
                 const searchValue = `%${req.query.q}%`;
-                filters.push("(tipo LIKE ? OR campana LIKE ? OR estado LIKE ? OR pais LIKE ?)");
-                params.push(searchValue, searchValue, searchValue, searchValue);
+                filters.push("(tipo LIKE ? OR campana LIKE ? OR estado LIKE ? OR pais LIKE ? OR cantidad LIKE ?)");
+                params.push(searchValue, searchValue, searchValue, searchValue, searchValue);
             }
             
             for (const [key, value] of Object.entries(req.query)) {

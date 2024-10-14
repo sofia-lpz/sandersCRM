@@ -61,18 +61,21 @@ const Dashboard: React.FC = () => {
         acc.totalByType[1].value += quantity;
       }
 
-      // For total donations over time
-      const date = new Date(donation.fecha).toLocaleDateString();
-      if (!acc.donationsOverTime[date]) {
-        acc.donationsOverTime[date] = { date, total: 0 };
+      // For total donations over time (by month)
+      const date = new Date(donation.fecha);
+      const monthYear = `${date.getMonth() + 1}/${date.getFullYear()}`; // Format as MM/YYYY
+      if (!acc.donationsOverTime[monthYear]) {
+        acc.donationsOverTime[monthYear] = { date: monthYear, total: 0 };
       }
-      acc.donationsOverTime[date].total += quantity;
+      acc.donationsOverTime[monthYear].total += quantity;
 
       // For campaign totals
-      if (!acc.campaigns[donation.campana]) {
-        acc.campaigns[donation.campana] = { name: donation.campana, value: 0 };
+      if (donation.campana) { // Ensure campaign name is not undefined or empty
+        if (!acc.campaigns[donation.campana]) {
+          acc.campaigns[donation.campana] = { name: donation.campana, value: 0 };
+        }
+        acc.campaigns[donation.campana].value += quantity;
       }
-      acc.campaigns[donation.campana].value += quantity;
 
       return acc;
     },
@@ -93,10 +96,16 @@ const Dashboard: React.FC = () => {
   const totalDonations = processedData.totalByType.reduce((acc, data) => acc + data.value, 0);
 
   // Colors for the pie charts
-  const DIGITAL_EFECTIVO_COLORS = ['#094D92', '#053B06'];
+  const DIGITAL_EFECTIVO_COLORS = ['#1f77b4', '#ff7f0e'];
 
   // Calculate how many times the goal has been crossed
   const timesGoalCrossed = Math.floor(totalDonations / goal);
+
+  // Formatter for currency
+  const currencyFormatter = new Intl.NumberFormat('es-MX', {
+    style: 'currency',
+    currency: 'MXN',
+  });
 
   return (
     <Card style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
@@ -105,7 +114,7 @@ const Dashboard: React.FC = () => {
 
         {/* Display total donations above the pie chart */}
         <Typography variant="h6" style={{ marginBottom: '20px' }}>
-          Total Recaudado: ${totalDonations}
+          Total Recaudado: {currencyFormatter.format(totalDonations)}
         </Typography>
 
         {/* Digital and Efectivo Donations Chart */}
@@ -117,13 +126,13 @@ const Dashboard: React.FC = () => {
               cy="50%"
               outerRadius="80%"
               dataKey="value"
-              label
+              label={(entry) => currencyFormatter.format(entry.value)}
             >
               {processedData.totalByType.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={DIGITAL_EFECTIVO_COLORS[index % DIGITAL_EFECTIVO_COLORS.length]} />
               ))}
             </Pie>
-            <Tooltip />
+            <Tooltip formatter={(value) => currencyFormatter.format(value)} />
           </PieChart>
         </Box>
 
@@ -145,7 +154,6 @@ const Dashboard: React.FC = () => {
         />
 
         {/* Total Goal Achievement Chart */}
-       
         <Typography variant="h5">
           Cuantos sistemas se pueden construir: {timesGoalCrossed}
         </Typography>
@@ -156,9 +164,9 @@ const Dashboard: React.FC = () => {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="date" />
           <YAxis />
-          <Tooltip />
+          <Tooltip formatter={(value) => currencyFormatter.format(value)} />
           <Legend />
-          <Line type="monotone" dataKey="total" stroke="#8884d8" activeDot={{ r: 8 }} />
+          <Line type="monotone" dataKey="total" stroke="#1f77b4" activeDot={{ r: 8 }} />
         </LineChart>
 
         {/* Donations by Campaign Bar Chart */}
@@ -167,9 +175,9 @@ const Dashboard: React.FC = () => {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />
-          <Tooltip />
+          <Tooltip formatter={(value) => currencyFormatter.format(value)} />
           <Legend />
-          <Bar dataKey="value" fill="#82ca9d" />
+          <Bar dataKey="value" fill="#ff7f0e" />
         </BarChart>
       </CardContent>
     </Card>
