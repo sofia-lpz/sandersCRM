@@ -1,8 +1,9 @@
 import fetch from 'node-fetch';
 
-const googleScriptUrl = process.env.GOOGLE_SCRIPT_URL;
+const googleScriptUrl = "https://script.google.com/macros/s/AKfycbxW75E9cUl3N33b7OedWXFRggJXXcODb-JH9xbQbuWADC35uIlsEXolXrqbKADITKii/exec";
 
-export async function sendEmailToGoogleScript(recipient, name, donationAmount) {
+export async function sendEmail(recipient, name, donationAmount) {
+  console.log('Sending email to:', recipient);
 
   const data = {
     recipient: recipient,
