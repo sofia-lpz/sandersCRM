@@ -110,6 +110,8 @@ export const getDonaciones = async (req) => {
             return data;
         } catch (error) {
             throw error;
+        } finally {
+            connection.end();
         }
     }
 
@@ -234,6 +236,8 @@ export async function getUsuarios(req) {
         return data;
     } catch (error) {
         throw error;
+    } finally {
+        connection.end();
     }
 }
 
@@ -354,6 +358,8 @@ export async function getDonantes(req) {
         return data;
     } catch (error) {
         throw error;
+    } finally {
+        connection.end();
     }
 }
 
