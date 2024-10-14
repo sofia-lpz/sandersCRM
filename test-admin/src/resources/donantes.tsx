@@ -20,6 +20,7 @@ import { Create,
     FilterButton,
     CreateButton,
     ListBase,
+    NumberField,
  } from 'react-admin';
 
  import { Stack } from '@mui/material';
@@ -50,6 +51,7 @@ const ListToolbar = () => (
             <TextField label="Apellido" source="apellido" />
             <TextField label="Email" source="email" />
             <TextField label="Telefono" source="telefono" />
+            <NumberField label="# de Donaciones" source="donaciones" />
         </Datagrid>
     </ListBase>
 );
@@ -61,6 +63,7 @@ export const DonanteCreate = () => (
             <TextInput label="Apellido" source="apellido" validate={validateNotEmpty}/>
             <TextInput label="Email" source="email" validate={validateEmail}/>
             <TextInput label="Telefono" source="telefono"/>
+            <NumberField label="# de Donaciones" source="donaciones" />
         </SimpleForm>
     </Create>
 );
@@ -73,6 +76,7 @@ export const DonanteShow = () => (
             <TextField label="Apellido" source="apellido" />
             <TextField label="Email" source="email" />
             <TextField label="Telefono" source="telefono" />
+            <NumberField label="# de Donaciones" source="donaciones" />
         </SimpleShowLayout>
     </Show>
 );
