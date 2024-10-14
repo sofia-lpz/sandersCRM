@@ -50,7 +50,7 @@ const DonacionesExporter = async (donaciones, fetchRelatedRecords: FetchRelatedR
         const donante = donantes[donacion.id_donante];
         const row = [
             donacion.id.toString(),
-            donante ? donante.nombre : 'Unknown',
+            donante ? donante.email : 'Error de registro',
             donacion.campana,
             donacion.fecha.slice(0, 10),
             formatter.format(donacion.cantidad),
@@ -74,7 +74,7 @@ const DonacionesFilters = [
     <SearchInput source="q" alwaysOn />,
     <TextInput label="Pais" source="pais" />,
     <ReferenceInput label="Donante" source="id_donante" reference="donantes">
-        <AutocompleteInput optionText="nombre" />
+        <AutocompleteInput optionText="email" />
     </ReferenceInput>,
     <SelectInput label="Campaña" source="campana" choices={[
         { id: 'reproductiva', name: 'Salud Reproductiva' },
@@ -94,7 +94,7 @@ export const DonacionList = () => (
         <Datagrid>
             <TextField label="ID" source="id" />
             <ReferenceField label="Donante" source="id_donante" reference="donantes">
-                <TextField source="nombre" />
+                <TextField source="email" />
             </ReferenceField>
             <ChipField label="Campaña" source="campana" />
             <DateField label="Fecha" source="fecha" />
@@ -110,7 +110,7 @@ export const DonacionCreate = () => (
     <Create>
         <SimpleForm>
             <ReferenceInput label="Donante" source="id_donante" reference="donantes">
-                <AutocompleteInput optionText="nombre" validate={validateNotEmpty}/>
+                <AutocompleteInput optionText="email" validate={validateNotEmpty}/>
             </ReferenceInput>
             <SelectInput label="Campaña" source="campana" choices={[
                 { id: 'reproductiva', name: 'Salud Reproductiva' },
@@ -133,7 +133,7 @@ export const DonacionEdit = () => (
     <Edit>
         <SimpleForm>
             <ReferenceInput label="Donante" source="id_donante" reference="donantes">
-                <AutocompleteInput optionText="nombre" validate={validateNotEmpty}/>
+                <AutocompleteInput optionText="email" validate={validateNotEmpty}/>
             </ReferenceInput>
             <SelectInput label="Campaña" source="campana" choices={[
                 { id: 'reproductiva', name: 'Salud Reproductiva' },
@@ -157,7 +157,7 @@ export const DonacionShow = () => (
         <SimpleShowLayout>
             <TextField label="ID" source="id" />
             <ReferenceField label="Donante" source="id_donante" reference="donantes">
-                <TextField source="nombre" />
+                <TextField source="email" />
             </ReferenceField>
             <ChipField label="Campaña" source="campana" />
             <DateField label="Fecha" source="fecha" />
