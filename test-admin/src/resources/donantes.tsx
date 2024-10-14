@@ -34,17 +34,8 @@ import { Create,
     <TextInput label="Numero de Donaciones" source="donaciones" />,
 ];
 
-const ListToolbar = () => (
-    <Stack direction="row" justifyContent="space-between">
-        <FilterForm filters={DonantesFilters} />
-        <FilterButton filters={DonantesFilters} />
-        <CreateButton />
-    </Stack>
-)
-
  export const DonanteList = () => (
-    <ListBase>
-        <ListToolbar />
+    <List filters={DonantesFilters}>
         <Datagrid>
             <TextField label="ID" source="id" />
             <TextField label="Nombre" source="nombre" />
@@ -53,7 +44,7 @@ const ListToolbar = () => (
             <TextField label="Telefono" source="telefono" />
             <NumberField label="# de Donaciones" source="donaciones" />
         </Datagrid>
-    </ListBase>
+    </List>
 );
 
 export const DonanteCreate = () => (
