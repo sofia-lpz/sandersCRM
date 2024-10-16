@@ -17,7 +17,7 @@
     "@vitejs/plugin-basic-ssl": "^1.1.0",
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.3",
-    "nodemon": "^3.1.4",
+    "nodemon": "^3.1.7",
     "ra-data-json-server": "^5.2.0",
     "react": "^18.3.0",
     "react-admin": "^5.1.0",
