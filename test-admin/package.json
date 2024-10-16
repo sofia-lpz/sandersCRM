@@ -20,7 +20,7 @@
     "nodemon": "^3.1.4",
     "ra-data-json-server": "^5.2.0",
     "react": "^18.3.0",
-    "react-admin": "^5.1.0",
+    "react-admin": "^5.2.1",
     "react-dom": "^18.3.0",
     "recharts": "^2.12.7",
     "vite-plugin-mkcert": "^1.17.6"
