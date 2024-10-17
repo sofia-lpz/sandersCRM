@@ -8,6 +8,7 @@ import { useDataProvider } from 'react-admin';
 
 const MyDashboard = () => {
     const dataProvider = useDataProvider();
+    const [totalNumberDonations, setTotalNumberDonations] = useState(0);
     const [totalDonations, setTotalDonations] = useState(0);
     const [totalDonors, setTotalDonors] = useState(0);
     const [pieChartData, setPieChartData] = useState<{ name: string; value: number }[]>([]);
@@ -70,8 +71,10 @@ const MyDashboard = () => {
                     { name: 'Donaciones en Efectivo', value: totalPhysicalDonations }
                 ];
                 const campaignData = Array.from(campaignMap, ([campana, ingresos]) => ({ campana, ingresos }));
+                const totalNumberDonations = filteredData.length;
 
                 setTotalDonors(totalDonors);
+                setTotalNumberDonations(totalNumberDonations);
                 setPieChartData(pieChartData);
                 setTotalDigitalDonations(totalDigitalDonations);
                 setTotalPhysicalDonations(totalPhysicalDonations);
@@ -105,7 +108,7 @@ const MyDashboard = () => {
                 <Grid item xs={12} md={3}>
                     <Card>
                         <CardContent>
-                            <Typography variant="h5" align="center">Donaciones Total</Typography>
+                            <Typography variant="h5" align="center">Donaciones</Typography>
                             <Legend number={totalDonations} currency={true} />
                         </CardContent>
                     </Card>
@@ -113,8 +116,16 @@ const MyDashboard = () => {
                 <Grid item xs={12} md={3}>
                     <Card>
                         <CardContent>
-                            <Typography variant="h5" align="center">Donantes Total</Typography>
+                            <Typography variant="h5" align="center">Donantes</Typography>
                             <Legend number={totalDonors} currency={false} />
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid item xs={12} md={3}>
+                    <Card>
+                        <CardContent>
+                            <Typography variant="h5" align="center">Numero de Donaciones</Typography>
+                            <Legend number={totalNumberDonations} currency={false} />
                         </CardContent>
                     </Card>
                 </Grid>
