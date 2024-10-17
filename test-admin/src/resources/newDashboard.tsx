@@ -113,7 +113,7 @@ const MyDashboard = () => {
                         <Grid item xs={12} md={6}>
                             <Card>
                                 <CardContent>
-                                    <Typography variant="h5" align="center">Donaciones</Typography>
+                                    <Typography variant="h5" align="center">Total de Donaciones</Typography>
                                     <Legend number={totalDonations} currency={true} />
                                 </CardContent>
                             </Card>
