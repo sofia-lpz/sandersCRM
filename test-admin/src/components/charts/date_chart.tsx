@@ -8,7 +8,12 @@ interface MyDateChartProps {
 
 const DateChart: React.FC<MyDateChartProps> = ({ data }) => {
   const theme = useTheme();
-  const axisColor = theme.palette.mode === 'dark' ? 'white' : 'black';
+  const isDarkMode = theme.palette.mode === 'dark';
+  const axisColor = isDarkMode ? 'white' : 'black';
+  const backgroundColor = isDarkMode ? '#333' : 'white';
+  const textColor = isDarkMode ? 'white' : 'black';
+  const gridColor = isDarkMode ? '#444' : '#ccc';
+  const lineColor = isDarkMode ? '#00D7C9' : '#007BFF';
 
   // Map full month names to abbreviated forms
   const abbreviatedData = data.map(item => {
@@ -32,7 +37,7 @@ const DateChart: React.FC<MyDateChartProps> = ({ data }) => {
   return (
     <ResponsiveContainer width="100%" height={400}>
       <LineChart data={abbreviatedData} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
-        <CartesianGrid strokeDasharray="3 3" />
+        <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
         <XAxis 
           dataKey="month" 
           stroke={axisColor} 
@@ -46,7 +51,8 @@ const DateChart: React.FC<MyDateChartProps> = ({ data }) => {
           tickFormatter={(value) => `$${value.toLocaleString()}`} 
         />
         <Tooltip 
-          itemStyle={{ backgroundColor: 'white', color: 'black' }} 
+          contentStyle={{ backgroundColor, color: textColor }} 
+          itemStyle={{ color: textColor }} 
           formatter={(value) => `$${value.toLocaleString()}`} 
           labelFormatter={(label) => `Mes: ${label}`}
         />
@@ -54,7 +60,7 @@ const DateChart: React.FC<MyDateChartProps> = ({ data }) => {
           layout="horizontal"
           align="center"
           verticalAlign="top"
-          wrapperStyle={{ paddingBottom: 20 }} // Add padding to move the legend further away
+          wrapperStyle={{ paddingBottom: 20, color: textColor }} // Add padding to move the legend further away
           formatter={(value) => {
             if (value === 'value') {
               return 'Ingresos';
@@ -62,7 +68,7 @@ const DateChart: React.FC<MyDateChartProps> = ({ data }) => {
             return value;
           }}
         />
-        <Line type="monotone" dataKey="value" stroke="#00D7C9" activeDot={{ r: 10 }} />
+        <Line type="monotone" dataKey="value" stroke={lineColor} strokeWidth={3} activeDot={{ r: 10 }} />
       </LineChart>
     </ResponsiveContainer>
   );
