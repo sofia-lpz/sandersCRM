@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import MyPieChart from '../components/charts/pie_chart';
 import DateChart from '../components/charts/date_chart';
+import BarChart from '../components/charts/bar_chart';
 import Legend from '../components/charts/legend';
 import { Card, CardContent, Typography, Grid, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { useDataProvider } from 'react-admin';
 
 const MyDashboard = () => {
     const dataProvider = useDataProvider();
+    const [totalNumberDonations, setTotalNumberDonations] = useState(0);
     const [totalDonations, setTotalDonations] = useState(0);
     const [totalDonors, setTotalDonors] = useState(0);
     const [pieChartData, setPieChartData] = useState<{ name: string; value: number }[]>([]);
@@ -15,6 +17,7 @@ const MyDashboard = () => {
     const [totalPhysicalDonations, setTotalPhysicalDonations] = useState(0);
     const [dateChartData, setDateChartData] = useState<{ month: string; value: number }[]>([]);
     const [selectedYear, setSelectedYear] = useState<number | 'all'>('all');
+    const [campaignData, setCampaignData] = useState<{ campana: string; ingresos: number }[]>([]);
 
     const getMonthName = (dateString: string) => {
         const monthNames = [
@@ -30,39 +33,12 @@ const MyDashboard = () => {
     }
 
     useEffect(() => {
-        dataProvider.getDashboardData()
-            .then(data => {
-                const total = data.reduce((sum, donation) => sum + donation.value, 0);
-                setTotalDonations(total);
-
-                const totalDonantes = data.reduce((sum, donation) => sum + donation.donantes, 0);
-                setTotalDonors(totalDonantes);
-
-                const totalDonacionesDigitales = data
-                    .filter(donation => donation.name === 'Digital')
-                    .reduce((sum, donation) => sum + donation.value, 0);
-                setTotalDigitalDonations(totalDonacionesDigitales);
-
-                const totalDonacionesFisicas = data
-                    .filter(donation => donation.name === 'Efectivo')
-                    .reduce((sum, donation) => sum + donation.value, 0);
-                setTotalPhysicalDonations(totalDonacionesFisicas);
-
-                setPieChartData([
-                    { name: 'Digital', value: totalDonacionesDigitales },
-                    { name: 'Efectivo', value: totalDonacionesFisicas }
-                ]);
-            })
-            .catch(error => {
-                console.error('Error fetching dashboard data:', error);
-            });
-    }, [dataProvider]);
-
-    useEffect(() => {
-        console.log('Fetching data for year:', selectedYear); // Debugging log
         dataProvider.getList('donaciones', {})
             .then(({ data }) => {
-                setDonacionesData(data);
+                // Filter data based on selected year
+                const filteredData = selectedYear === 'all' ? data : data.filter(donation => getYear(donation.fecha) === selectedYear);
+
+                setDonacionesData(filteredData);
 
                 // Initialize monthMap with all months set to 0
                 const monthMap = new Map<string, number>([
@@ -70,17 +46,41 @@ const MyDashboard = () => {
                     ['Jul', 0], ['Ago', 0], ['Sep', 0], ['Oct', 0], ['Nov', 0], ['Dic', 0]
                 ]);
 
-                data.forEach(donation => {
-                    const year = getYear(donation.fecha);
-                    if (selectedYear === 'all' || year === selectedYear) {
-                        const month = getMonthName(donation.fecha);
-                        monthMap.set(month, monthMap.get(month)! + donation.cantidad);
-                    }
+                // Dynamically create campaignMap
+                const campaignNames = [...new Set(filteredData.map(donation => donation.campana))];
+                const campaignMap = new Map<string, number>();
+                campaignNames.forEach(campaign => campaignMap.set(campaign, 0));
+
+                filteredData.forEach(donation => {
+                    const month = getMonthName(donation.fecha);
+                    monthMap.set(month, monthMap.get(month)! + donation.cantidad);
+
+                    const campaign = donation.campana;
+                    campaignMap.set(campaign, campaignMap.get(campaign)! + donation.cantidad);
                 });
 
-                const chartData = Array.from(monthMap, ([month, value]) => ({ month, value }));
-                console.log('Filtered chartData:', chartData); // Debugging log
-                setDateChartData(chartData);
+                const dateChartData = Array.from(monthMap, ([month, value]) => ({ month, value }));
+                const totalDonations = filteredData.reduce((acc: number, donation: any) => acc + donation.cantidad, 0);
+                const totalDonors = new Set(filteredData.map((donation: any) => donation.id_donante)).size;
+                const digitalDonations = filteredData.filter((donation: any) => donation.tipo === 'digital');
+                const physicalDonations = filteredData.filter((donation: any) => donation.tipo === 'efectivo');
+                const totalDigitalDonations = digitalDonations.reduce((acc: number, donation: any) => acc + donation.cantidad, 0);
+                const totalPhysicalDonations = physicalDonations.reduce((acc: number, donation: any) => acc + donation.cantidad, 0);
+                const pieChartData = [
+                    { name: 'Donaciones Digitales', value: totalDigitalDonations },
+                    { name: 'Donaciones en Efectivo', value: totalPhysicalDonations }
+                ];
+                const campaignData = Array.from(campaignMap, ([campana, ingresos]) => ({ campana, ingresos }));
+                const totalNumberDonations = filteredData.length;
+
+                setTotalDonors(totalDonors);
+                setTotalNumberDonations(totalNumberDonations);
+                setPieChartData(pieChartData);
+                setTotalDigitalDonations(totalDigitalDonations);
+                setTotalPhysicalDonations(totalPhysicalDonations);
+                setTotalDonations(totalDonations);
+                setDateChartData(dateChartData);
+                setCampaignData(campaignData);
             })
             .catch(error => {
                 console.error('Error fetching donaciones data:', error);
@@ -94,49 +94,67 @@ const MyDashboard = () => {
     };
 
     return (
-        <Grid container spacing={1}>
-            <Grid item xs={12} md={3}>
-                <Card>
-                    <CardContent>
-                        <Typography variant="h5" align="center">Donaciones Total</Typography>
-                        <Legend number={totalDonations} currency={true} />
-                    </CardContent>
-                </Card>
+        <>
+            <FormControl fullWidth>
+                <InputLabel>Año</InputLabel>
+                <Select value={selectedYear} onChange={handleYearChange}>
+                    <MenuItem value="all">Todos los años</MenuItem>
+                    {[2020, 2021, 2022, 2023, 2024].map(year => (
+                        <MenuItem key={year} value={year}>{year}</MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
+            <Grid container spacing={1}>
+                <Grid item xs={12} md={3}>
+                    <Card>
+                        <CardContent>
+                            <Typography variant="h5" align="center">Donaciones</Typography>
+                            <Legend number={totalDonations} currency={true} />
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid item xs={12} md={3}>
+                    <Card>
+                        <CardContent>
+                            <Typography variant="h5" align="center">Donantes</Typography>
+                            <Legend number={totalDonors} currency={false} />
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid item xs={12} md={3}>
+                    <Card>
+                        <CardContent>
+                            <Typography variant="h5" align="center">Numero de Donaciones</Typography>
+                            <Legend number={totalNumberDonations} currency={false} />
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <Card>
+                        <CardContent>
+                            <Typography variant="h5" align="center">Donaciones por Campaña</Typography>
+                            <BarChart data={campaignData} />
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <Card>
+                        <CardContent>
+                            <Typography variant="h5" align="center">Donaciones por tipo</Typography>
+                            <MyPieChart data={pieChartData} />
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <Card>
+                        <CardContent>
+                            <Typography variant="h5" align="center">Donaciones por mes</Typography>
+                            <DateChart data={dateChartData} />
+                        </CardContent>
+                    </Card>
+                </Grid>
             </Grid>
-            <Grid item xs={12} md={3}>
-                <Card>
-                    <CardContent>
-                        <Typography variant="h5" align="center">Donantes Total</Typography>
-                        <Legend number={totalDonors} currency={false} />
-                    </CardContent>
-                </Card>
-            </Grid>
-            <Grid item xs={12} md={6}>
-                <Card>
-                    <CardContent>
-                        <Typography variant="h5" align="center">Donaciones por tipo</Typography>
-                        <MyPieChart data={pieChartData} />
-                    </CardContent>
-                </Card>
-            </Grid>
-            <Grid item xs={12} md={6}>
-                <Card>
-                    <CardContent>
-                        <Typography variant="h5" align="center">Donaciones por mes</Typography>
-                        <FormControl fullWidth>
-                            <InputLabel>Año</InputLabel>
-                            <Select value={selectedYear} onChange={handleYearChange}>
-                                <MenuItem value="all">Todos los años</MenuItem>
-                                {[2020, 2021, 2022, 2023, 2024].map(year => (
-                                    <MenuItem key={year} value={year}>{year}</MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <DateChart data={dateChartData} />
-                    </CardContent>
-                </Card>
-            </Grid>
-        </Grid>
+        </>
     );
 };
 
