@@ -5,8 +5,6 @@ import { checkAdminRole } from './middleware/role.js';
 
 const router = express.Router();
 
-router.post('/sudouser', crmController.createUsuario);
-
 // Login endpoint (no token required)
 router.post('/login', crmController.login);
 

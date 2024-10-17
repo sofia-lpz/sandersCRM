@@ -107,7 +107,13 @@ export const getDonaciones = async (req) => {
 
             console.log(query);
             const [data] = await connection.query(query, params);
-            return data;
+
+            const formattedData = data.map(row => ({
+                ...row,
+                fecha: new Date(row.fecha).toISOString().split('T')[0] // Format date as YYYY-MM-DD
+            }));
+
+            return formattedData;
         } catch (error) {
             throw error;
         }
@@ -427,20 +433,23 @@ export async function createDonante(req) {
 export async function getDonacionesDashboardTotal() {
     const conn = await connectToDB();
     const [rows] = await conn.execute(
-        "SELECT tipo, SUM(cantidad) AS total FROM donaciones GROUP BY tipo"
+        `SELECT tipo, SUM(cantidad) AS total, COUNT(DISTINCT id_donante) AS donantes 
+         FROM donaciones 
+         GROUP BY tipo`
     );
     conn.end();
 
     const result = rows.map(row => ({
         name: row.tipo.charAt(0).toUpperCase() + row.tipo.slice(1), // Capitalize first letter
-        value: row.total
+        value: row.total,
+        donantes: row.donantes
     }));
 
     // Ensure all types are included, even if they have no donations
     const types = ['Digital', 'Efectivo'];
     const formattedResult = types.map(type => {
         const found = result.find(r => r.name === type);
-        return found ? found : { name: type, value: 0 };
+        return found ? found : { name: type, value: 0, donantes: 0 };
     });
 
     return formattedResult;

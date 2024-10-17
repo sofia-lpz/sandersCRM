@@ -12,7 +12,7 @@ import { UsuarioCreate, UsuarioList, UsuarioEdit, UsuarioShow } from "./resource
 import { DonanteCreate, DonanteEdit, DonanteShow, DonanteList } from "./resources/donantes";
 
 import i18nProvider from './i18nProvider';
-import Dashboard from './resources/Dashboard';
+import Dashboard from './resources/newDashboard';
 
 const fake = {
   translate: key => key,
