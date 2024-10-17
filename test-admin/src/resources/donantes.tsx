@@ -21,7 +21,7 @@ import { Stack } from '@mui/material';
 import { MyToolbar } from '../components/Donante_toolbar';
 
 const validateNotEmpty = [required()];
-const validateEmail = [email()];
+const validateEmail = [email(), required()];
 
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
