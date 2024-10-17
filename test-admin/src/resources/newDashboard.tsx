@@ -14,7 +14,7 @@ const MyDashboard = () => {
     const [totalDigitalDonations, setTotalDigitalDonations] = useState(0);
     const [totalPhysicalDonations, setTotalPhysicalDonations] = useState(0);
     const [dateChartData, setDateChartData] = useState<{ month: string; value: number }[]>([]);
-    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+    const [selectedYear, setSelectedYear] = useState<number | 'all'>('all');
 
     const getMonthName = (dateString: string) => {
         const monthNames = [
@@ -72,7 +72,7 @@ const MyDashboard = () => {
 
                 data.forEach(donation => {
                     const year = getYear(donation.fecha);
-                    if (year === selectedYear) {
+                    if (selectedYear === 'all' || year === selectedYear) {
                         const month = getMonthName(donation.fecha);
                         monthMap.set(month, monthMap.get(month)! + donation.cantidad);
                     }
@@ -88,7 +88,7 @@ const MyDashboard = () => {
     }, [dataProvider, selectedYear]);
 
     const handleYearChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        const newYear = event.target.value as number;
+        const newYear = event.target.value as number | 'all';
         console.log('Year changed to:', newYear); // Debugging log
         setSelectedYear(newYear);
     };
@@ -126,7 +126,8 @@ const MyDashboard = () => {
                         <FormControl fullWidth>
                             <InputLabel>Año</InputLabel>
                             <Select value={selectedYear} onChange={handleYearChange}>
-                                {[2021, 2022, 2023].map(year => (
+                                <MenuItem value="all">Todos los años</MenuItem>
+                                {[2020, 2021, 2022, 2023, 2024].map(year => (
                                     <MenuItem key={year} value={year}>{year}</MenuItem>
                                 ))}
                             </Select>
