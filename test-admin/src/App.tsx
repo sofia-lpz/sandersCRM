@@ -3,7 +3,6 @@ import {
   Resource,
 } from "react-admin";
 
-import { Layout } from "./Layout";
 import dataProvider from "./providers/dataProvider";
 import authProvider from './providers/authProvider';
 
