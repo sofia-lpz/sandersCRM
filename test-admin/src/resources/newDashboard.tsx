@@ -105,29 +105,33 @@ const MyDashboard = () => {
                 </Select>
             </FormControl>
             <Grid container spacing={1}>
-                <Grid item xs={12} md={3}>
-                    <Card>
-                        <CardContent>
-                            <Typography variant="h5" align="center">Donaciones</Typography>
-                            <Legend number={totalDonations} currency={true} />
-                        </CardContent>
-                    </Card>
-                </Grid>
-                <Grid item xs={12} md={3}>
-                    <Card>
-                        <CardContent>
-                            <Typography variant="h5" align="center">Donantes</Typography>
-                            <Legend number={totalDonors} currency={false} />
-                        </CardContent>
-                    </Card>
-                </Grid>
-                <Grid item xs={12} md={3}>
-                    <Card>
-                        <CardContent>
-                            <Typography variant="h5" align="center">Numero de Donaciones</Typography>
-                            <Legend number={totalNumberDonations} currency={false} />
-                        </CardContent>
-                    </Card>
+                <Grid item xs={12} md={6}>
+                    <Grid container spacing={1}>
+                        <Grid item xs={12} md={6}>
+                            <Card>
+                                <CardContent>
+                                    <Typography variant="h5" align="center">Donaciones</Typography>
+                                    <Legend number={totalDonations} currency={true} />
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Card>
+                                <CardContent>
+                                    <Typography variant="h5" align="center">Donantes</Typography>
+                                    <Legend number={totalDonors} currency={false} />
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Card>
+                                <CardContent>
+                                    <Typography variant="h5" align="center">Numero de Donaciones</Typography>
+                                    <Legend number={totalNumberDonations} currency={false} />
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    </Grid>
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <Card>
