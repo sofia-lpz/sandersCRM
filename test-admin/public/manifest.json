@@ -1,6 +1,6 @@
 {
-    "short_name": "test-admin",
-    "name": "{{name}}",
+    "short_name": "Sanders-CRM",
+    "name": "Sanders-CRM",
     "icons": [
         {
             "src": "favicon.ico",
