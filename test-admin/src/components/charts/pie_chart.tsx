@@ -1,13 +1,20 @@
 import React from 'react';
+import { useTheme } from '@mui/material/styles';
 import { PieChart, Pie, Tooltip, Cell, Legend } from 'recharts';
 
-const COLORS = ['#0088FE', '#00C49F'];
+const LIGHT_COLORS = ['#0088FE', '#007825'];
+const DARK_COLORS = ['#0088FE', '#00C49F'];
 
 interface MyDonutChartProps {
   data: { name: string; value: number }[];
 }
 
 const MyDonutChart: React.FC<MyDonutChartProps> = ({ data }) => {
+  
+  const theme = useTheme();
+  const isLightTheme = theme.palette.mode === 'light';
+  const COLORS = isLightTheme ? LIGHT_COLORS : DARK_COLORS;
+
   // Calculate the total value for percentage calculation
   const totalValue = data.reduce((sum, entry) => sum + entry.value, 0);
 
