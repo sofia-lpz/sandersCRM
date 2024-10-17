@@ -107,7 +107,13 @@ export const getDonaciones = async (req) => {
 
             console.log(query);
             const [data] = await connection.query(query, params);
-            return data;
+
+            const formattedData = data.map(row => ({
+                ...row,
+                fecha: new Date(row.fecha).toISOString().split('T')[0] // Format date as YYYY-MM-DD
+            }));
+
+            return formattedData;
         } catch (error) {
             throw error;
         }
