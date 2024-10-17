@@ -1,7 +1,7 @@
 import { fetchUtils } from 'react-admin';
 import jsonServerProvider from 'ra-data-json-server';
 
-const apiUrl = 'https://localhost:8080/api';
+const apiUrl = process.env.VITE_API_URL
 
 const httpClient = (url, options = {}) => {
     if (!options.headers) {
