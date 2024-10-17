@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import MyPieChart from '../components/charts/pie_chart';
 import DateChart from '../components/charts/date_chart';
+import BarChart from '../components/charts/bar_chart';
 import Legend from '../components/charts/legend';
 import { Card, CardContent, Typography, Grid, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { useDataProvider } from 'react-admin';
@@ -15,6 +16,7 @@ const MyDashboard = () => {
     const [totalPhysicalDonations, setTotalPhysicalDonations] = useState(0);
     const [dateChartData, setDateChartData] = useState<{ month: string; value: number }[]>([]);
     const [selectedYear, setSelectedYear] = useState<number | 'all'>('all');
+    const [campaignData, setCampaignData] = useState<{ campana: string; ingresos: number }[]>([]);
 
     const getMonthName = (dateString: string) => {
         const monthNames = [
@@ -43,9 +45,17 @@ const MyDashboard = () => {
                     ['Jul', 0], ['Ago', 0], ['Sep', 0], ['Oct', 0], ['Nov', 0], ['Dic', 0]
                 ]);
 
+                // Dynamically create campaignMap
+                const campaignNames = [...new Set(filteredData.map(donation => donation.campana))];
+                const campaignMap = new Map<string, number>();
+                campaignNames.forEach(campaign => campaignMap.set(campaign, 0));
+
                 filteredData.forEach(donation => {
                     const month = getMonthName(donation.fecha);
                     monthMap.set(month, monthMap.get(month)! + donation.cantidad);
+
+                    const campaign = donation.campana;
+                    campaignMap.set(campaign, campaignMap.get(campaign)! + donation.cantidad);
                 });
 
                 const dateChartData = Array.from(monthMap, ([month, value]) => ({ month, value }));
@@ -59,12 +69,15 @@ const MyDashboard = () => {
                     { name: 'Donaciones Digitales', value: totalDigitalDonations },
                     { name: 'Donaciones en Efectivo', value: totalPhysicalDonations }
                 ];
+                const campaignData = Array.from(campaignMap, ([campana, ingresos]) => ({ campana, ingresos }));
+
                 setTotalDonors(totalDonors);
                 setPieChartData(pieChartData);
                 setTotalDigitalDonations(totalDigitalDonations);
                 setTotalPhysicalDonations(totalPhysicalDonations);
                 setTotalDonations(totalDonations);
                 setDateChartData(dateChartData);
+                setCampaignData(campaignData);
             })
             .catch(error => {
                 console.error('Error fetching donaciones data:', error);
@@ -102,6 +115,14 @@ const MyDashboard = () => {
                         <CardContent>
                             <Typography variant="h5" align="center">Donantes Total</Typography>
                             <Legend number={totalDonors} currency={false} />
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <Card>
+                        <CardContent>
+                            <Typography variant="h5" align="center">Donaciones por Campaña</Typography>
+                            <BarChart data={campaignData} />
                         </CardContent>
                     </Card>
                 </Grid>
