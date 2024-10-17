@@ -50,7 +50,6 @@ export const getDonaciones = async (req, res) => {
     }
 }
 
-// TODO: Add validation for the fields in updates: robustness
 export const updateDonacion = async (req, res) => {
     if (!req.body.id_donante || !req.body.campana || !req.body.fecha || !req.body.cantidad || !req.body.tipo) {
         res.status(400).json({ error: "Data is required" });

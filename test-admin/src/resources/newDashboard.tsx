@@ -171,7 +171,7 @@ const MyDashboard = () => {
             </Grid>
             <style jsx>{`
                 .fixed-height {
-                    height: 200px; /* Adjust this value as needed */
+                    height: 200px;
                 }
             `}</style>
         </>
