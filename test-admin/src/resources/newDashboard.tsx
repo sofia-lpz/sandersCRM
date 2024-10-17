@@ -15,7 +15,7 @@ const MyDashboard = () => {
     const [donacionesData, setDonacionesData] = useState([]);
     const [totalDigitalDonations, setTotalDigitalDonations] = useState(0);
     const [totalPhysicalDonations, setTotalPhysicalDonations] = useState(0);
-    const [dateChartData, setDateChartData] = useState<{ month: string; value: number }[]>([]);
+    const [dateChartData, setDateChartData] = useState<{ month: string; ingresos: number }[]>([]);
     const [selectedYear, setSelectedYear] = useState<number | 'all'>('all');
     const [campaignData, setCampaignData] = useState<{ campana: string; ingresos: number }[]>([]);
 
@@ -59,7 +59,7 @@ const MyDashboard = () => {
                     campaignMap.set(campaign, campaignMap.get(campaign)! + donation.cantidad);
                 });
 
-                const dateChartData = Array.from(monthMap, ([month, value]) => ({ month, value }));
+                const dateChartData = Array.from(monthMap, ([month, ingresos]) => ({ month, ingresos }));
                 const totalDonations = filteredData.reduce((acc: number, donation: any) => acc + donation.cantidad, 0);
                 const totalDonors = new Set(filteredData.map((donation: any) => donation.id_donante)).size;
                 const digitalDonations = filteredData.filter((donation: any) => donation.tipo === 'digital');

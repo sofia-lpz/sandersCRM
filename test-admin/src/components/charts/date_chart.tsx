@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 interface MyDateChartProps {
-  data: { month: string; value: number }[];
+  data: { month: string; ingresos: number }[];
 }
 
 const DateChart: React.FC<MyDateChartProps> = ({ data }) => {
@@ -33,7 +33,7 @@ const DateChart: React.FC<MyDateChartProps> = ({ data }) => {
           verticalAlign="top"
           wrapperStyle={{ paddingBottom: 20, color: textColor }} 
         />
-        <Line type="monotone" dataKey="value" stroke={lineColor} />
+        <Line type="monotone" dataKey="ingresos" stroke={lineColor} />
       </LineChart>
     </ResponsiveContainer>
   );
