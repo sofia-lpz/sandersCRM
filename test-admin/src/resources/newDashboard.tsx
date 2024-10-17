@@ -18,6 +18,7 @@ const MyDashboard = () => {
     const [dateChartData, setDateChartData] = useState<{ month: string; ingresos: number }[]>([]);
     const [selectedYear, setSelectedYear] = useState<number | 'all'>('all');
     const [campaignData, setCampaignData] = useState<{ campana: string; ingresos: number }[]>([]);
+    const [averageDonation, setAverageDonation] = useState(0);
 
     const getMonthName = (dateString: string) => {
         const monthNames = [
@@ -72,8 +73,10 @@ const MyDashboard = () => {
                 ];
                 const campaignData = Array.from(campaignMap, ([campana, ingresos]) => ({ campana, ingresos }));
                 const totalNumberDonations = filteredData.length;
+                const averageDonation = totalDonations / totalNumberDonations;
 
                 setTotalDonors(totalDonors);
+                setAverageDonation(averageDonation);
                 setTotalNumberDonations(totalNumberDonations);
                 setPieChartData(pieChartData);
                 setTotalDigitalDonations(totalDigitalDonations);
@@ -105,7 +108,7 @@ const MyDashboard = () => {
                 </Select>
             </FormControl>
             <Grid container spacing={1}>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} className="fixed-height">
                     <Grid container spacing={1}>
                         <Grid item xs={12} md={6}>
                             <Card>
@@ -128,6 +131,14 @@ const MyDashboard = () => {
                                 <CardContent>
                                     <Typography variant="h5" align="center">Numero de Donaciones</Typography>
                                     <Legend number={totalNumberDonations} currency={false} />
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Card>
+                                <CardContent>
+                                    <Typography variant="h5" align="center">Promedio de Donación</Typography>
+                                    <Legend number={averageDonation} currency={true} />
                                 </CardContent>
                             </Card>
                         </Grid>
@@ -158,6 +169,11 @@ const MyDashboard = () => {
                     </Card>
                 </Grid>
             </Grid>
+            <style jsx>{`
+                .fixed-height {
+                    height: 200px; /* Adjust this value as needed */
+                }
+            `}</style>
         </>
     );
 };

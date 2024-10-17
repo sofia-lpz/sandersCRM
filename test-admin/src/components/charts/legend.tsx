@@ -17,7 +17,7 @@ const Legend: React.FC<LegendProps> = ({ number, currency }) => {
 
 const styles = {
     container: {
-        padding: '20px',
+        padding: '37px',
         textAlign: 'center',
         fontSize: '24px',
         fontWeight: 'bold',
