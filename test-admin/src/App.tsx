@@ -14,16 +14,8 @@ import { DonanteCreate, DonanteEdit, DonanteShow, DonanteList } from "./resource
 import i18nProvider from './i18nProvider';
 import Dashboard from './resources/newDashboard';
 
-const fake = {
-  translate: key => key,
-  changeLocale: locale => Promise.resolve(),
-  getLocale: () => 'en',
-}
-
-
 export const App = () => (
   <Admin
-    layout={Layout}
     dataProvider={dataProvider}
     authProvider={authProvider}
     i18nProvider={i18nProvider}
