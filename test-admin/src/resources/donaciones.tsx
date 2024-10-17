@@ -84,6 +84,8 @@ const DonacionesFilters = [
         { id: 'nutricion', name: 'Nutricion' },
         { id: 'sin campaña', name: 'Sin Campaña' },
     ]} />,
+    <NumberInput label="Cantidad minima" source="cantidad_min" />,
+    <NumberInput label="Cantidad maxima" source="cantidad_max" />,
     <DateInput label="Fecha Desde" source="fecha_gte" />,
     <DateInput label="Fecha Hasta" source="fecha_lte" />,
     <RadioButtonGroupInput label="Tipo" source="tipo" choices={[

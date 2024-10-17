@@ -74,7 +74,7 @@ export const getDonaciones = async (req) => {
             }
             
             for (const [key, value] of Object.entries(req.query)) {
-                if (key !== "_sort" && key !== "_order" && key !== "_start" && key !== "_end" && key !== "id" && key !== "q" && key !== "fecha_gte" && key !== "fecha_lte") {
+                if (key !== "_sort" && key !== "_order" && key !== "_start" && key !== "_end" && key !== "id" && key !== "q" && key !== "fecha_gte" && key !== "fecha_lte" && key !== "cantidad_min" && key !== "cantidad_max") {
                     filters.push(`${connection.escapeId(key)} = ?`);
                     params.push(value);
                 }
@@ -88,6 +88,16 @@ export const getDonaciones = async (req) => {
             if ("fecha_lte" in req.query) {
                 filters.push("fecha <= ?");
                 params.push(req.query.fecha_lte);
+            }
+
+            if ("cantidad_min" in req.query) {
+                filters.push("cantidad >= ?");
+                params.push(req.query.cantidad_min);
+            }
+
+            if ("cantidad_max" in req.query) {
+                filters.push("cantidad <= ?");
+                params.push(req.query.cantidad_max);
             }
             
             if (filters.length > 0) {
