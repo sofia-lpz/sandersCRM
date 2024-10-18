@@ -102,6 +102,7 @@ const MyDashboard = () => {
                     value={selectedYear}
                     onChange={handleYearChange}
                     aria-labelledby="year-select-label"
+                    aria-label="Seleccionar Año"
                 >
                     <MenuItem value="all">Todos los años</MenuItem>
                     {[2020, 2021, 2022, 2023, 2024].map(year => (

@@ -90,35 +90,35 @@ export const DonanteList = () => {
 export const DonanteCreate = () => (
     <Create>
         <SimpleForm>
-            <TextInput label="Nombre" source="nombre" validate={validateNotEmpty}/>
-            <TextInput label="Apellido" source="apellido" validate={validateNotEmpty}/>
-            <TextInput label="Email" source="email" validate={validateEmail}/>
-            <TextInput label="Telefono" source="telefono"/>
-            <NumberField label="# de Donaciones" source="donaciones" />
+            <TextInput label="Nombre" source="nombre" validate={validateNotEmpty} aria-label="Nombre"/>
+            <TextInput label="Apellido" source="apellido" validate={validateNotEmpty} aria-label="Apellido"/>
+            <TextInput label="Email" source="email" validate={validateEmail} aria-label="Correo Electrónico"/>
+            <TextInput label="Telefono" source="telefono" aria-label="Teléfono"/>
+            <NumberField label="# de Donaciones" source="donaciones" aria-label="Número de Donaciones"/>
         </SimpleForm>
     </Create>
-);
-
-export const DonanteShow = () => (
-    <Show>
-        <SimpleShowLayout>
-            <TextField label="ID" source="id" />
-            <TextField label="Nombre" source="nombre" />
-            <TextField label="Apellido" source="apellido" />
-            <TextField label="Email" source="email" />
-            <TextField label="Telefono" source="telefono" />
-            <NumberField label="# de Donaciones" source="donaciones" />
-        </SimpleShowLayout>
-    </Show>
 );
 
 export const DonanteEdit = () => (
     <Edit>
         <SimpleForm toolbar={<MyToolbar />}>
-            <TextInput label="Nombre" source="nombre" validate={validateNotEmpty}/>
-            <TextInput label="Apellido" source="apellido" validate={validateNotEmpty}/>
-            <TextInput label="Email" source="email" validate={validateEmail}/>
-            <TextInput label="Telefono" source="telefono"/>
+            <TextInput label="Nombre" source="nombre" validate={validateNotEmpty} aria-label="Nombre"/>
+            <TextInput label="Apellido" source="apellido" validate={validateNotEmpty} aria-label="Apellido"/>
+            <TextInput label="Email" source="email" validate={validateEmail} aria-label="Correo Electrónico"/>
+            <TextInput label="Telefono" source="telefono" aria-label="Teléfono"/>
         </SimpleForm>
     </Edit>
+);
+
+export const DonanteShow = () => (
+    <Show>
+        <SimpleShowLayout>
+            <TextField label="ID" source="id" aria-label="ID"/>
+            <TextField label="Nombre" source="nombre" aria-label="Nombre"/>
+            <TextField label="Apellido" source="apellido" aria-label="Apellido"/>
+            <TextField label="Email" source="email" aria-label="Correo Electrónico"/>
+            <TextField label="Telefono" source="telefono" aria-label="Teléfono"/>
+            <NumberField label="# de Donaciones" source="donaciones" aria-label="Número de Donaciones"/>
+        </SimpleShowLayout>
+    </Show>
 );

@@ -28,12 +28,13 @@ export const App = () => (
             edit={UsuarioEdit}
             create={UsuarioCreate}
             show={UsuarioShow}
+            options={{ label: 'Usuarios', ariaLabel: 'Gestión de Usuarios' }}
           />
         )}
         <Resource
           name="dashboard"
           list={Dashboard}
-          options={{ label: 'Dashboard' }}
+          options={{ label: 'Dashboard', ariaLabel: 'Dashboard' }}
         />
         <Resource
           name="donaciones"
@@ -41,6 +42,7 @@ export const App = () => (
           list={DonacionList}
           edit={DonacionEdit}
           show={DonacionShow}
+          options={{ label: 'Donaciones', ariaLabel: 'Gestión de Donaciones' }}
         />
         <Resource
           name="donantes"
@@ -48,6 +50,7 @@ export const App = () => (
           edit={DonanteEdit}
           show={DonanteShow}
           create={DonanteCreate}
+          options={{ label: 'Donantes', ariaLabel: 'Gestión de Donantes' }}
         />
       </>
     )}

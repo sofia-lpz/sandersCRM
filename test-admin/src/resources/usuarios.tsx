@@ -93,22 +93,24 @@ export const UsuarioCreate = () => {
     return (
         <Create>
             <SimpleForm>
-                <TextInput label="Username" source="username" validate={validateNotEmpty}/>
+                <TextInput label="Username" source="username" validate={validateNotEmpty} aria-label="Nombre de Usuario"/>
                 <SelectInput label="Role" source="role" choices={[
                     { id: 'admin', name: 'Admin' },
                     { id: 'user', name: 'User' }
-                ]} validate={validateNotEmpty}/>
+                ]} validate={validateNotEmpty} aria-label="Rol"/>
                 <PasswordInput 
                     label="Password"
                     source="password" 
                     validate={validateNotEmpty} 
                     onChange={(e) => setPassword(e.target.value)}
+                    aria-label="Contraseña"
                 />
                 <PasswordInput 
                     label="Confirm Password"
                     source="confirmPassword" 
                     validate={[required(), validatePasswordsMatch]} 
                     onChange={(e) => setConfirmPassword(e.target.value)}
+                    aria-label="Confirmar Contraseña"
                 />
             </SimpleForm>
         </Create>
@@ -118,11 +120,11 @@ export const UsuarioCreate = () => {
 export const UsuarioEdit = () => (
     <Edit>
         <SimpleForm>
-            <TextInput label="Username" source="username" validate={validateNotEmpty}/>
+            <TextInput label="Username" source="username" validate={validateNotEmpty} aria-label="Nombre de Usuario"/>
             <SelectInput label="Role" source="role" choices={[
                 { id: 'admin', name: 'Admin' },
                 { id: 'user', name: 'User' }
-            ]} validate={validateNotEmpty}/>
+            ]} validate={validateNotEmpty} aria-label="Rol"/>
         </SimpleForm>
     </Edit>
 );
@@ -130,9 +132,9 @@ export const UsuarioEdit = () => (
 export const UsuarioShow = () => (
     <Show>
         <SimpleShowLayout>
-            <TextField label="ID" source="id" />
-            <TextField label="Username" source="username" />
-            <TextField label="Role" source="role" />
+            <TextField label="ID" source="id" aria-label="ID"/>
+            <TextField label="Username" source="username" aria-label="Nombre de Usuario"/>
+            <TextField label="Role" source="role" aria-label="Rol"/>
         </SimpleShowLayout>
     </Show>
 );

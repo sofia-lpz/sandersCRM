@@ -130,22 +130,22 @@ export const DonacionCreate = () => (
     <Create>
         <SimpleForm>
             <ReferenceInput label="Donante" source="id_donante" reference="donantes">
-                <AutocompleteInput optionText="email" validate={validateNotEmpty}/>
+                <AutocompleteInput optionText="email" validate={validateNotEmpty} aria-label="Donante"/>
             </ReferenceInput>
             <SelectInput label="Campaña" source="campana" choices={[
                 { id: 'reproductiva', name: 'Salud Reproductiva' },
                 { id: 'agua', name: 'Campaña de Agua' },
                 { id: 'nutricion', name: 'Nutricion' },
                 { id: 'sin campaña', name: 'Sin Campaña' }
-            ]} validate={validateNotEmpty}/>
-            <DateInput label="Fecha" source="fecha" validate={validateNotEmpty}/>
-            <NumberInput label="Cantidad" source="cantidad" validate={validateCantidad} />
+            ]} validate={validateNotEmpty} aria-label="Campaña"/>
+            <DateInput label="Fecha" source="fecha" validate={validateNotEmpty} aria-label="Fecha"/>
+            <NumberInput label="Cantidad" source="cantidad" validate={validateCantidad} aria-label="Cantidad"/>
             <RadioButtonGroupInput label="Tipo" source="tipo" choices={[
                 { id: 'digital', name: 'Digital' },
                 { id: 'efectivo', name: 'Efectivo' }
-            ]} validate={validateNotEmpty}/>
-            <TextInput label="Estado" source="estado" />
-            <TextInput label="Pais" source="pais" />
+            ]} validate={validateNotEmpty} aria-label="Tipo"/>
+            <TextInput label="Estado" source="estado" aria-label="Estado"/>
+            <TextInput label="Pais" source="pais" aria-label="Pais"/>
         </SimpleForm>
     </Create>
 );
@@ -154,22 +154,22 @@ export const DonacionEdit = () => (
     <Edit>
         <SimpleForm>
             <ReferenceInput label="Donante" source="id_donante" reference="donantes">
-                <AutocompleteInput optionText="email" validate={validateNotEmpty}/>
+                <AutocompleteInput optionText="email" validate={validateNotEmpty} aria-label="Donante"/>
             </ReferenceInput>
             <SelectInput label="Campaña" source="campana" choices={[
                 { id: 'reproductiva', name: 'Salud Reproductiva' },
                 { id: 'agua', name: 'Campaña de Agua' },
                 { id: 'nutricion', name: 'Nutricion' },
                 { id: 'sin campaña', name: 'Sin Campaña' }
-            ]} validate={validateNotEmpty}/>
-            <DateInput label="Fecha" source="fecha" validate={validateNotEmpty}/>
-            <NumberInput label="Cantidad" source="cantidad" validate={validateCantidad} />
+            ]} validate={validateNotEmpty} aria-label="Campaña"/>
+            <DateInput label="Fecha" source="fecha" validate={validateNotEmpty} aria-label="Fecha"/>
+            <NumberInput label="Cantidad" source="cantidad" validate={validateCantidad} aria-label="Cantidad"/>
             <RadioButtonGroupInput label="Tipo" source="tipo" choices={[
                 { id: 'digital', name: 'Digital' },
                 { id: 'efectivo', name: 'Efectivo' }
-            ]} validate={validateNotEmpty}/>
-            <TextInput label="Estado" source="estado" />
-            <TextInput label="Pais" source="pais" />
+            ]} validate={validateNotEmpty} aria-label="Tipo"/>
+            <TextInput label="Estado" source="estado" aria-label="Estado"/>
+            <TextInput label="Pais" source="pais" aria-label="Pais"/>
         </SimpleForm>
     </Edit>
 );
