@@ -14,7 +14,6 @@ const httpClient = (url, options = {}) => {
 
 const dataProvider = jsonServerProvider(apiUrl, httpClient);
 
-// Add custom method to dataProvider
 dataProvider.getDashboardData = () => {
     return fetch(`${apiUrl}/dashboard/donaciones/total`, { 
         method: 'GET',

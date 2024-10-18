@@ -16,20 +16,18 @@ const MyDonutChart: React.FC<MyDonutChartProps> = ({ data }) => {
   const isLightTheme = theme.palette.mode === 'light';
   const COLORS = isLightTheme ? LIGHT_COLORS : DARK_COLORS;
 
-  // Calculate the total value for percentage calculation
   const totalValue = data.reduce((sum, entry) => sum + entry.value, 0);
 
-  // If there is no data, set a default value
   const chartData = data.length === 0 ? [{ name: 'No Data', value: 0 }] : data;
 
   return (
     <PieChart width={500} height={500}>
       <Pie
         data={chartData}
-        cx="50%" // Center horizontally
-        cy="50%" // Center vertically
-        innerRadius={80}  // Add innerRadius to make it a donut chart
-        outerRadius={150}  // Increased outerRadius for larger chart
+        cx="50%" 
+        cy="50%" 
+        innerRadius={80} 
+        outerRadius={150} 
         fill="#8884d8"
         dataKey="value"
         label={({ value }) => `$${value.toLocaleString()}`}
@@ -41,7 +39,7 @@ const MyDonutChart: React.FC<MyDonutChartProps> = ({ data }) => {
       <Tooltip />
       <Legend
         layout="vertical"
-        wrapperStyle={{ fontSize: '17px', marginTop: '0px' }} // Increased font size and moved closer
+        wrapperStyle={{ fontSize: '17px', marginTop: '0px' }}
         formatter={(value, entry) => {
           const percentage = totalValue === 0 ? 0 : ((entry.payload.value / totalValue) * 100).toFixed(0);
           return `${value}: ${percentage}%`;

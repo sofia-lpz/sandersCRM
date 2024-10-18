@@ -1,9 +1,10 @@
 import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK, AUTH_GET_PERMISSIONS } from 'react-admin';
 
 export default (type, params) => {
+    const url = process.env.VITE_API_URL || "https://localhost:8080/api";
     if (type === AUTH_LOGIN) {
         const { username, password } = params;
-        const request = new Request('https://localhost:8080/api/login', {
+        const request = new Request(`${url}/login`, {
             method: 'POST',
             body: JSON.stringify({ username, password }),
             headers: new Headers({ 'Content-Type': 'application/json' }),
@@ -17,19 +18,19 @@ export default (type, params) => {
             })
             .then(({ token, role }) => {
                 localStorage.setItem('token', token);
-                localStorage.setItem('role', role); // Store the user role
+                localStorage.setItem('role', role);
             });
     }
     if (type === AUTH_LOGOUT) {
         localStorage.removeItem('token');
-        localStorage.removeItem('role'); // Remove the user role
+        localStorage.removeItem('role');
         return Promise.resolve();
     }
     if (type === AUTH_ERROR) {
         const { status } = params;
         if (status === 401 || status === 403) {
             localStorage.removeItem('token');
-            localStorage.removeItem('role'); // Remove the user role
+            localStorage.removeItem('role');
             return Promise.reject();
         }
         return Promise.resolve();

@@ -1,4 +1,3 @@
--- Insert dummy data into donantes table
 INSERT INTO donantes (email, nombre, apellido, telefono) VALUES
 ('john.doe@example.com', 'John', 'Doe', '123-456-7890'),
 ('jane.smith@example.com', 'Jane', 'Smith', '234-567-8901'),
@@ -21,7 +20,6 @@ INSERT INTO donantes (email, nombre, apellido, telefono) VALUES
 ('joseph.hall@example.com', 'Joseph', 'Hall', '901-234-5678'),
 ('maria.allen@example.com', 'Maria', 'Allen', '012-345-6789');
 
--- Insert dummy data into donaciones table
 INSERT INTO donaciones (id_donante, campana, fecha, cantidad, tipo, estado, pais) VALUES
 (1, 'reproductiva', '2023-01-15', 100, 'digital', 'California', 'USA'),
 (2, 'agua', '2023-02-20', 200, 'efectivo', 'Ontario', 'Canada'),

@@ -176,12 +176,11 @@ import polyglotI18nProvider from 'ra-i18n-polyglot';
 
 const messages: { [key: string]: TranslationMessages } = {
   es: spanishMessages,
-  // Add other languages here if needed
 };
 
 const i18nProvider = polyglotI18nProvider(
-  (locale) => messages[locale] || messages['es'], // Default to Spanish
-  'es' // Default locale
+  (locale) => messages[locale] || messages['es'],
+  'es'
 );
 
 export default i18nProvider;
