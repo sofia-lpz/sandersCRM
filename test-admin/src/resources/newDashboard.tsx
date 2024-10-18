@@ -36,18 +36,15 @@ const MyDashboard = () => {
     useEffect(() => {
         dataProvider.getList('donaciones', {})
             .then(({ data }) => {
-                // Filter data based on selected year
                 const filteredData = selectedYear === 'all' ? data : data.filter(donation => getYear(donation.fecha) === selectedYear);
 
                 setDonacionesData(filteredData);
 
-                // Initialize monthMap with all months set to 0
                 const monthMap = new Map<string, number>([
                     ['Ene', 0], ['Feb', 0], ['Mar', 0], ['Abr', 0], ['May', 0], ['Jun', 0],
                     ['Jul', 0], ['Ago', 0], ['Sep', 0], ['Oct', 0], ['Nov', 0], ['Dic', 0]
                 ]);
 
-                // Dynamically create campaignMap
                 const campaignNames = [...new Set(filteredData.map(donation => donation.campana))];
                 const campaignMap = new Map<string, number>();
                 campaignNames.forEach(campaign => campaignMap.set(campaign, 0));
@@ -73,7 +70,7 @@ const MyDashboard = () => {
                 ];
                 const campaignData = Array.from(campaignMap, ([campana, ingresos]) => ({ campana, ingresos }));
                 const totalNumberDonations = filteredData.length;
-                const averageDonation = totalDonations / totalNumberDonations;
+                const averageDonation = totalNumberDonations > 0 ? totalDonations / totalNumberDonations : 0;
 
                 setTotalDonors(totalDonors);
                 setAverageDonation(averageDonation);
@@ -92,15 +89,20 @@ const MyDashboard = () => {
 
     const handleYearChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         const newYear = event.target.value as number | 'all';
-        console.log('Year changed to:', newYear); // Debugging log
         setSelectedYear(newYear);
     };
 
     return (
         <>
             <FormControl fullWidth>
-                <InputLabel>Año</InputLabel>
-                <Select value={selectedYear} onChange={handleYearChange}>
+                <InputLabel id="year-select-label">Año</InputLabel>
+                <Select
+                    labelId="year-select-label"
+                    id="year-select"
+                    value={selectedYear}
+                    onChange={handleYearChange}
+                    aria-labelledby="year-select-label"
+                >
                     <MenuItem value="all">Todos los años</MenuItem>
                     {[2020, 2021, 2022, 2023, 2024].map(year => (
                         <MenuItem key={year} value={year}>{year}</MenuItem>
@@ -111,33 +113,33 @@ const MyDashboard = () => {
                 <Grid item xs={12} md={6} className="fixed-height">
                     <Grid container spacing={1}>
                         <Grid item xs={12} md={6}>
-                            <Card>
+                            <Card role="region" aria-labelledby="total-donations-title">
                                 <CardContent>
-                                    <Typography variant="h5" align="center">Total de Donaciones</Typography>
+                                    <Typography id="total-donations-title" variant="h5" align="center">Total de Donaciones</Typography>
                                     <Legend number={totalDonations} currency={true} />
                                 </CardContent>
                             </Card>
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <Card>
+                            <Card role="region" aria-labelledby="total-donors-title">
                                 <CardContent>
-                                    <Typography variant="h5" align="center">Donantes</Typography>
+                                    <Typography id="total-donors-title" variant="h5" align="center">Donantes</Typography>
                                     <Legend number={totalDonors} currency={false} />
                                 </CardContent>
                             </Card>
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <Card>
+                            <Card role="region" aria-labelledby="total-number-donations-title">
                                 <CardContent>
-                                    <Typography variant="h5" align="center">Numero de Donaciones</Typography>
+                                    <Typography id="total-number-donations-title" variant="h5" align="center">Número de Donaciones</Typography>
                                     <Legend number={totalNumberDonations} currency={false} />
                                 </CardContent>
                             </Card>
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <Card>
+                            <Card role="region" aria-labelledby="average-donation-title">
                                 <CardContent>
-                                    <Typography variant="h5" align="center">Promedio de Donación</Typography>
+                                    <Typography id="average-donation-title" variant="h5" align="center">Promedio de Donación</Typography>
                                     <Legend number={averageDonation} currency={true} />
                                 </CardContent>
                             </Card>
@@ -145,25 +147,25 @@ const MyDashboard = () => {
                     </Grid>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Card>
+                    <Card role="region" aria-labelledby="campaign-donations-title">
                         <CardContent>
-                            <Typography variant="h5" align="center">Donaciones por Campaña</Typography>
+                            <Typography id="campaign-donations-title" variant="h5" align="center">Donaciones por Campaña</Typography>
                             <BarChart data={campaignData} />
                         </CardContent>
                     </Card>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Card>
+                    <Card role="region" aria-labelledby="donations-by-type-title">
                         <CardContent>
-                            <Typography variant="h5" align="center">Donaciones por tipo</Typography>
+                            <Typography id="donations-by-type-title" variant="h5" align="center">Donaciones por Tipo</Typography>
                             <MyPieChart data={pieChartData} />
                         </CardContent>
                     </Card>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Card>
+                    <Card role="region" aria-labelledby="donations-by-month-title">
                         <CardContent>
-                            <Typography variant="h5" align="center">Donaciones por mes</Typography>
+                            <Typography id="donations-by-month-title" variant="h5" align="center">Donaciones por Mes</Typography>
                             <DateChart data={dateChartData} />
                         </CardContent>
                     </Card>

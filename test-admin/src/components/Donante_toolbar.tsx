@@ -8,7 +8,7 @@ export const MyToolbar = () => (
         <DeleteWithConfirmButton
                 label="Eliminar"
                 confirmTitle={`Eliminar donante`}
-                confirmContent="Estas seguro que quieres eliminar a este donante? Esto eliminara sus donaciones."
+                confirmContent="¿Estas seguro que quieres eliminar a este donante? Esto eliminara sus donaciones."
             />
     </Toolbar>
 );
