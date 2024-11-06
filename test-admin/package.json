@@ -23,7 +23,7 @@
     "react": "^18.3.0",
     "react-admin": "^5.1.0",
     "react-dom": "^18.3.0",
-    "recharts": "^2.12.7",
+    "recharts": "^2.13.0",
     "vite-plugin-mkcert": "^1.17.6"
   },
   "devDependencies": {
