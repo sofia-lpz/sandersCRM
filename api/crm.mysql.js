@@ -129,7 +129,7 @@ export const getDonaciones = async (req) => {
         }
     }
 
-export async function updateDonacion(id, updateData) {
+export async function updateDonacion(updateData) {
     try{
     const conn = await connectToDB();
 
@@ -137,12 +137,12 @@ export async function updateDonacion(id, updateData) {
     const values = Object.values(updateData);
     const setClause = keys.map(key => `${key} = ?`).join(', ');
     
-    values.push(id);
+    values.push(updateData.id);
     const query = `UPDATE donaciones SET ${setClause} WHERE id = ?`;
     
     await conn.execute(query, values);
     
-    const [updatedRow] = await conn.execute("SELECT * FROM donaciones WHERE id = ?", [id]);
+    const [updatedRow] = await conn.execute("SELECT * FROM donaciones WHERE id = ?", [updateData.id]);
     conn.end();
     return updatedRow[0];
     }
